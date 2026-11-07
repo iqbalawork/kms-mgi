@@ -176,24 +176,24 @@ var HEALTH_FLAGS = {
 
 var HEALTH_ORDER = ['hard', 'easy', 'healthy', 'thin'];
 
-var FLAG_COLORS = { best: '#1e6b43', weakest: '#b42318', normal: '#878787', hover: '#5c5c5a' };
+var FLAG_COLORS = { best: '#10B981', weakest: '#EF4444', normal: '#94A3B8', hover: '#64748B' };
 
-var DD_INDEX_COLOR = '#3d5166';
+var DD_INDEX_COLOR = '#4F46E5';
 
 var GRADE_TINTS = {
   A: 'border-emerald-200 bg-emerald-50/70',
   B: 'border-blue-200 bg-blue-50/70',
-  C: 'border-slate-200 bg-slate-50/70',
+  C: 'border-amber-200 bg-amber-50/70',
   D: 'border-orange-200 bg-orange-50/70',
   E: 'border-red-200 bg-red-50/70'
 };
 
-var GRADE_COLORS = { A: '#1e6b43', B: '#1f5c99', C: '#878787', D: '#b07a1e', E: '#b42318' };
+var GRADE_COLORS = { A: '#10B981', B: '#3B82F6', C: '#F59E0B', D: '#F97316', E: '#EF4444' };
 
 var BAND_META = {
-  success: { label: 'Excellent',       icon: 'workspace_premium', hex: '#1e6b43' },
-  info:    { label: 'Good',            icon: 'thumb_up',          hex: '#1f5c99' },
-  danger:  { label: 'Needs Attention', icon: 'flag',              hex: '#b42318' }
+  success: { label: 'Excellent',       icon: 'workspace_premium', hex: '#10B981' },
+  info:    { label: 'Good',            icon: 'thumb_up',          hex: '#3B82F6' },
+  danger:  { label: 'Needs Attention', icon: 'flag',              hex: '#EF4444' }
 };
 
 var FISCAL_STATES = {

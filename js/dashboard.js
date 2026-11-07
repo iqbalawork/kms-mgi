@@ -1,8 +1,8 @@
 'use strict';
 
 var DASH_COLORS = {
-  maroon: '#8f2925', success: '#1e6b43', info: '#1f5c99', danger: '#b42318', notFilled: '#e2958c',
-  warning: '#b07a1e', progress: '#e0b45f', muted: '#878787', slate: '#e2e2e0', grid: '#efefee', surface: '#FFFFFF', ink: '#5c5c5a'
+  maroon: '#8B1E1E', success: '#10B981', info: '#3B82F6', danger: '#EF4444', notFilled: '#F87171',
+  warning: '#F59E0B', progress: '#FBBF24', muted: '#94A3B8', slate: '#E2E8F0', grid: '#F1F5F9', surface: '#FFFFFF', ink: '#334155'
 };
 
 function initDashboard() {
@@ -202,14 +202,14 @@ function dashOptions(extra) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: 'rgba(38,38,38,0.96)',
+        backgroundColor: 'rgba(15,23,42,0.94)',
         titleColor: '#FFFFFF',
-        bodyColor: '#e2e2e0',
-        footerColor: '#b5b5b3',
-        borderColor: 'rgba(181,181,179,0.25)',
+        bodyColor: '#E2E8F0',
+        footerColor: '#94A3B8',
+        borderColor: 'rgba(148,163,184,0.25)',
         borderWidth: 1,
         padding: 12,
-        cornerRadius: 6,
+        cornerRadius: 10,
         caretSize: 6,
         boxPadding: 6,
         usePointStyle: true,
@@ -259,22 +259,27 @@ function ensureChartTheme() {
   var defaults = window.Chart.defaults;
   defaults.font.family = window.getComputedStyle(document.body).fontFamily;
   defaults.font.size = 12;
-  defaults.color = '#6b6b68';
+  defaults.color = '#64748B';
   defaults.borderColor = DASH_COLORS.grid;
   if (defaults.scale) {
     if (defaults.scale.grid) defaults.scale.grid.color = DASH_COLORS.grid;
     if (defaults.scale.border) defaults.scale.border.display = false;
     if (defaults.scale.ticks) {
-      defaults.scale.ticks.color = '#6b6b68';
+      defaults.scale.ticks.color = DASH_COLORS.muted;
       defaults.scale.ticks.padding = 8;
     }
   }
-  if (defaults.elements && defaults.elements.bar) defaults.elements.bar.borderRadius = 4;
+  if (defaults.elements && defaults.elements.bar) defaults.elements.bar.borderRadius = 6;
   if (defaults.elements && defaults.elements.line) defaults.elements.line.borderWidth = 2;
 }
 
-function dashGradient() {
-  return 'rgba(61,81,102,0.08)';
+function dashGradient(context) {
+  var chart = context.chart;
+  if (!chart || !chart.chartArea) return 'rgba(51,65,85,0.08)';
+  var g = chart.ctx.createLinearGradient(0, chart.chartArea.top, 0, chart.chartArea.bottom);
+  g.addColorStop(0, 'rgba(51,65,85,0.12)');
+  g.addColorStop(1, 'rgba(51,65,85,0)');
+  return g;
 }
 
 function renderDashboard() {
