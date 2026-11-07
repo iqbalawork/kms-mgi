@@ -16,6 +16,7 @@ Live: `https://iqbalawork.github.io/kms-mgi/`
 | `js/core.js` | `gasRpc()`: fetch POST ke backend, batas waktu, pemetaan error |
 | `js/logo.js` | Logo MGI (Base64) |
 | `js/state.js` ... `js/main.js` | Aplikasi klien, satu berkas per fitur (lihat di bawah) |
+| `assets/favicon.png`, `assets/apple-touch-icon.png` | Lambang MGI resmi dari design system MGI untuk ikon tab browser dan ikon layar utama ponsel (latar putih) |
 | `.nojekyll` | Supaya GitHub Pages menyajikan berkas apa adanya |
 
 Tidak ada token, sandi, atau ID Sheet di folder ini. Sesi login disimpan di `localStorage`
