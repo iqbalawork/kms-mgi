@@ -10,8 +10,9 @@ Live: `https://iqbalawork.github.io/kms-mgi/`
 | Berkas | Isi |
 | :--- | :--- |
 | `index.html` | Kerangka SPA: layar login, sidebar, top bar, semua halaman |
-| `css/app.css` | Token desain dan komponen kustom |
-| `js/tailwind.config.js` | Konfigurasi Tailwind (warna, spasi, bayangan) untuk Tailwind CDN |
+| `css/app.css` | Token design system MGI di `:root` (`--brand-red`, `--ink`, `--success`, `--focus-ring`, ...) dan komponen kustom yang memakai `var(--token)` |
+| `js/tailwind.config.js` | Nilai token Tailwind dari design system MGI, termasuk palet `slate`, `emerald`, `red`, `amber`, `blue` yang dipetakan ke warna MGI |
+| `assets/mgi-mark-white.png` | Lambang MGI versi putih untuk panel login gelap (dari aset design system) |
 | `js/config.js` | Hanya `GAS_URL`, URL `/exec` web app Apps Script |
 | `js/core.js` | `gasRpc()`: fetch POST ke backend, batas waktu, pemetaan error |
 | `js/logo.js` | Logo MGI (Base64) |
@@ -20,6 +21,19 @@ Live: `https://iqbalawork.github.io/kms-mgi/`
 
 Tidak ada token, sandi, atau ID Sheet di folder ini. Sesi login disimpan di `localStorage`
 browser sebagai token yang ditandatangani server.
+
+## Design system MGI
+
+Tampilan mengikuti design system MGI (artifact "MGI"): Fira Sans dan Fira Mono, merah `#8F2925`,
+netral hangat, status yang lolos kontras 4,5:1, sudut kecil, garis lebih utama dari bayangan, tanpa
+gradien, dan cincin fokus solid. Aturan saat mengubah tampilan:
+
+- Pakai token, jangan hex baru: kelas Tailwind kustom (`text-text-muted`, `bg-status-success-subtle`, ...)
+  atau `var(--token)` di `app.css`. Tes `verify.js` menolak hex slate lama dan gradien.
+- Teks status memakai `text-status-*-text` atau `text-status-*`; keduanya lolos kontras.
+- Warna grafik diambil dari `DASH_COLORS`, `FLAG_COLORS`, `GRADE_COLORS` di `js/state.js` dan `js/dashboard.js`.
+- Pengecualian yang disengaja: bahasa Inggris dan format angka Inggris (aturan aplikasi internal di
+  design system), ikon Material Symbols, bentuk chip bulat, dan tanda "-" untuk nilai kosong di tabel padat.
 
 ## Berkas aplikasi per fitur
 

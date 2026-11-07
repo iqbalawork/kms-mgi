@@ -731,7 +731,7 @@ function deepDiveChartConfig(data, k) {
       var value = fmtKpiValue(c.realization);
       marks.bars.push(f === 'best' ? { index: n, text: 'Best • ' + value, color: FLAG_COLORS.best, strong: true }
         : f === 'weakest' ? { index: n, text: 'Weakest • ' + value, color: FLAG_COLORS.weakest, strong: true }
-        : { index: n, text: value, color: '#475569', strong: false });
+        : { index: n, text: value, color: '#5c5c5a', strong: false });
     }
     if (c && isNum(c.weighted)) marks.index.push({ index: n, text: num(c.weighted, 2) + '%' });
   });
@@ -773,7 +773,7 @@ function deepDiveChartConfig(data, k) {
           data: idx.map(function (i) { var c = cell(i); return c && isNum(c.weighted) ? c.weighted : null; }),
           yAxisID: 'y1',
           borderColor: DD_INDEX_COLOR,
-          backgroundColor: 'rgba(79,70,229,0.12)',
+          backgroundColor: 'rgba(61,81,102,0.12)',
           pointBackgroundColor: '#FFFFFF',
           pointBorderColor: DD_INDEX_COLOR,
           pointBorderWidth: 2,
