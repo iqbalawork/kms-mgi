@@ -15,11 +15,38 @@ Live: `https://iqbalawork.github.io/kms-mgi/`
 | `js/config.js` | Hanya `GAS_URL`, URL `/exec` web app Apps Script |
 | `js/core.js` | `gasRpc()`: fetch POST ke backend, batas waktu, pemetaan error |
 | `js/logo.js` | Logo MGI (Base64) |
-| `js/app.js` | Aplikasi klien (`MGI`) |
+| `js/state.js` ... `js/main.js` | Aplikasi klien, satu berkas per fitur (lihat di bawah) |
 | `.nojekyll` | Supaya GitHub Pages menyajikan berkas apa adanya |
 
 Tidak ada token, sandi, atau ID Sheet di folder ini. Sesi login disimpan di `localStorage`
 browser sebagai token yang ditandatangani server.
+
+## Berkas aplikasi per fitur
+
+Dimuat berurutan oleh `index.html` setelah `config.js`, `core.js`, dan `logo.js`. Setiap berkas diawali
+`'use strict';` dan berbagi ruang global, jadi nama fungsi harus unik. `main.js` selalu terakhir:
+berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi.
+
+| Berkas | Fitur |
+| :--- | :--- |
+| `state.js` | State `S` dan konstanta |
+| `util.js` | `api` (retry, prefetch), `esc`, `$`, format angka, toast |
+| `auth.js` | Boot, login, ganti password, sign out |
+| `access-year.js` | Peran, Report Access, tahun fiskal, Yearly Theme |
+| `account-help.js` | Menu akun dan chat WhatsApp |
+| `shell.js` | Scoring Guide, navigasi, sidebar |
+| `dashboard.js` | Dashboard |
+| `my-kpis.js`, `my-kpis-submit.js` | My KPIs dan submit |
+| `mapping.js`, `mapping-workspace.js` | Mapping KPI |
+| `kpi-health.js` | KPI Health |
+| `master-kpis.js`, `master-kpis-edit.js` | Master KPIs |
+| `summary.js`, `summary-periods.js`, `summary-table.js` | Summary Report dan Submission Periods |
+| `annual.js` | Annual Recap |
+| `perf-report.js`, `report-pdf.js` | Laporan per karyawan dan PDF-nya |
+| `org-report.js`, `org-report-ui.js`, `org-report-annual.js` | Report perusahaan (bulanan dan tahunan) |
+| `evaluation.js`, `evaluation-edit.js` | Performance Evaluation |
+| `settings-performance.js`, `settings.js` | System Settings |
+| `main.js` | Objek `MGI` dan start aplikasi |
 
 ## Mengatur URL backend
 
