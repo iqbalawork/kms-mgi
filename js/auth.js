@@ -19,11 +19,60 @@ function showScreen(id) {
   if (id !== 'app-shell') document.body.classList.remove('has-help');
 }
 
+function identityOf(user) {
+  if (!user) return '';
+  return [user.NIK, !!user.isAdmin, !!user.isOwner, JSON.stringify(user.reportScope === undefined ? null : user.reportScope), user.year].join('|');
+}
+
+function watchBootTouch(on) {
+  var mark = function () { S.bootTouched = true; };
+  if (on) {
+    S.bootTouched = false;
+    S.bootTouchMark = mark;
+    ['input', 'pointerdown', 'keydown'].forEach(function (t) { document.addEventListener(t, mark, true); });
+    return;
+  }
+  if (!S.bootTouchMark) return;
+  var prev = S.bootTouchMark;
+  ['input', 'pointerdown', 'keydown'].forEach(function (t) { document.removeEventListener(t, prev, true); });
+  S.bootTouchMark = null;
+}
+
+function applyFreshBoot(shown, res) {
+  watchBootTouch(false);
+  if (identityOf(shown.user) !== identityOf(res.user)) {
+    window.location.reload();
+    return;
+  }
+  if (JSON.stringify(shown) === JSON.stringify(res)) return;
+  enterApp(res.user);
+  if (S.bootTouched) {
+    toast('Newer data is available. Reload the page to see it.', 'info');
+    return;
+  }
+  seedPrefetch(res.prefetch);
+  if (S.view) go(S.view);
+}
+
 function resolveSession() {
   var hadToken = !!S.token;
+  var cached = readBootCache();
+  var shown = cached ? cached.res : null;
+  if (shown) {
+    watchBootTouch(true);
+    seedPrefetch(shown.prefetch);
+    enterApp(shown.user);
+  }
   return api('bootstrap')
     .then(function (res) {
       var user = res && res.user;
+      if (user && user.authorized) writeBootCache(res);
+      else clearBootCache();
+      if (shown && user && user.authorized) {
+        applyFreshBoot(shown, res);
+        return;
+      }
+      watchBootTouch(false);
       seedPrefetch(res && res.prefetch);
       if (user && user.authorized) {
         enterApp(user);
@@ -37,6 +86,11 @@ function resolveSession() {
       }
     })
     .catch(function (err) {
+      if (shown && S.user) {
+        watchBootTouch(false);
+        toast('Showing your last loaded data. ' + err.message, 'warning');
+        return;
+      }
       showDenied(err.message, 'not detected');
     });
 }

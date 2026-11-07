@@ -11,7 +11,8 @@ Live: `https://iqbalawork.github.io/kms-mgi/`
 | :--- | :--- |
 | `index.html` | Kerangka SPA: layar login, sidebar, top bar, semua halaman |
 | `css/app.css` | Token desain dan komponen kustom |
-| `js/tailwind.config.js` | Konfigurasi Tailwind (warna, spasi, bayangan) untuk Tailwind CDN |
+| `tailwind.config.js` | Tema Tailwind (warna, spasi, bayangan). Sumber build, tidak dimuat browser |
+| `css/tailwind.css` | Utilitas Tailwind hasil kompilasi (sekitar 9 KB gzip), menggantikan Tailwind Play CDN. Bangun ulang dengan `node tools/build-css.js` setiap menambah kelas Tailwind baru |
 | `js/config.js` | Hanya `GAS_URL`, URL `/exec` web app Apps Script |
 | `js/core.js` | `gasRpc()`: fetch POST ke backend, batas waktu, pemetaan error |
 | `js/logo.js` | Logo MGI (Base64) |
@@ -48,6 +49,11 @@ berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi
 | `evaluation.js`, `evaluation-edit.js` | Performance Evaluation |
 | `settings-performance.js`, `settings.js` | System Settings |
 | `main.js` | Objek `MGI` dan start aplikasi |
+
+## Performa
+
+- **Layar pertama instan:** hasil `bootstrap` terakhir disimpan di `localStorage` (`mgi_kpi_boot`, maksimal 12 jam, hanya untuk sesi yang sama). Saat aplikasi dibuka, data itu tampil seketika, lalu diperbarui dari server. Bila data berubah dan pengguna belum menyentuh apa pun, tampilan dirender ulang. Bila sudah, muncul toast untuk reload. Peran yang berubah membuat halaman di-reload. Cache dihapus saat sign out atau sesi berganti.
+- **Tailwind statis:** `css/tailwind.css` dimuat setelah `css/app.css` (urutan cascade sama seperti CDN dulu). `node tools/build-css.js --check` memastikan berkasnya mutakhir, dan `verify.js` menolak kelas tema yang belum ikut dikompilasi.
 
 ## Mengatur URL backend
 

@@ -93,9 +93,41 @@ function loadToken() {
 function saveToken(token) {
   S.token = token || '';
   S.prefetch = {};
+  clearBootCache();
   try {
     if (S.token) window.localStorage.setItem(TOKEN_KEY, S.token);
     else window.localStorage.removeItem(TOKEN_KEY);
+  } catch (e) {
+    return;
+  }
+}
+
+function readBootCache() {
+  if (!S.token) return null;
+  try {
+    var c = JSON.parse(window.localStorage.getItem(BOOT_CACHE_KEY) || 'null');
+    if (!c || c.token !== S.token || !c.res || !c.res.user || !c.res.user.authorized) return null;
+    return Date.now() - c.at >= 0 && Date.now() - c.at < BOOT_CACHE_TTL_MS ? c : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function writeBootCache(res) {
+  if (!S.token || !res || !res.user || !res.user.authorized) {
+    clearBootCache();
+    return;
+  }
+  try {
+    window.localStorage.setItem(BOOT_CACHE_KEY, JSON.stringify({ token: S.token, at: Date.now(), res: res }));
+  } catch (e) {
+    clearBootCache();
+  }
+}
+
+function clearBootCache() {
+  try {
+    window.localStorage.removeItem(BOOT_CACHE_KEY);
   } catch (e) {
     return;
   }

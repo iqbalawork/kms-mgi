@@ -277,6 +277,10 @@ var UPLOAD_KEYS = ['Year', 'Division', 'Department', 'Position', 'KPI_Name', 'Me
 
 var TOKEN_KEY = 'mgi_kpi_session';
 
+var BOOT_CACHE_KEY = 'mgi_kpi_boot';
+
+var BOOT_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
+
 var AUTH_LOST = /Please sign in to continue|session has expired/;
 
 var BUSY_LOCK = /system is busy/i;
