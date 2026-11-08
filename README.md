@@ -119,12 +119,13 @@ git push -u origin main
 Lalu di GitHub: **Settings > Pages > Build and deployment**, *Source* **Deploy from a branch**,
 *Branch* **main** dan **/ (root)**, **Save**, centang **Enforce HTTPS**.
 
-Update berikutnya:
+Update berikutnya (dari folder proyek induk, cap versi dulu, lalu push dari folder ini):
 
 ```bash
+node tools/stamp-assets.js
 git add .
 git commit -m "Deskripsi perubahan"
 git push
 ```
 
-Setelah push, buka situs dengan `Ctrl + Shift + R` supaya cache browser lama tidak terpakai.
+`stamp-assets.js` menambahkan `?v=<hash isi file>` ke setiap script dan CSS lokal di `index.html`. File yang berubah langsung diunduh ulang oleh browser, sehingga halaman baru tidak pernah memakai script lama dari cache. File yang tidak berubah tetap memakai cache.
