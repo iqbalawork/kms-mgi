@@ -33,7 +33,7 @@ function loadAdminAccess() {
       renderAdminAccess();
     })
     .catch(function (err) {
-      $('admins-control').innerHTML = '<p class="text-body-md text-status-danger-text text-center">' + esc(err.message) + '</p>';
+      $('admins-control').innerHTML = loadErrorHtml(err.message, 'loadAdminAccess');
       toast(err.message, 'error');
     });
 }
@@ -240,7 +240,7 @@ function loadRatingBands() {
       renderBandPanel();
     })
     .catch(function (err) {
-      $('bands-control').innerHTML = '<p class="text-body-md text-status-danger-text text-center">' + esc(err.message) + '</p>';
+      $('bands-control').innerHTML = loadErrorHtml(err.message, 'loadRatingBands');
       toast(err.message, 'error');
     });
 }

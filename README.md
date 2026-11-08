@@ -53,7 +53,22 @@ berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi
 ## Performa
 
 - **Layar pertama instan:** hasil `bootstrap` terakhir disimpan di `localStorage` (`mgi_kpi_boot`, maksimal 12 jam, hanya untuk sesi yang sama). Saat aplikasi dibuka, data itu tampil seketika, lalu diperbarui dari server. Bila data berubah dan pengguna belum menyentuh apa pun, tampilan dirender ulang. Bila sudah, muncul toast untuk reload. Peran yang berubah membuat halaman di-reload. Cache dihapus saat sign out atau sesi berganti.
+- **Font ikon dipangkas:** Material Symbols hanya memuat ikon dan sumbu yang dipakai (sekitar 50 KB, sebelumnya 4 MB), dengan `display=block` supaya nama ikon tidak sempat tampil sebagai teks. Setelah memakai ikon baru, jalankan `node tools/icons.js .` lalu tempel URL font barunya ke `index.html`.
+- **Chart.js `defer`:** tidak lagi menahan tampilan pertama.
+- **Ilustrasi tanpa unduhan:** empty state, error muat, layar tanpa akses, dan panel login memakai SVG inline (sprite `<symbol id="art-...">` di awal `<body>`) dan pola CSS. Tidak ada gambar yang diunduh.
 - **Tailwind statis:** `css/tailwind.css` dimuat setelah `css/app.css` (urutan cascade sama seperti CDN dulu). `node tools/build-css.js --check` memastikan berkasnya mutakhir, dan `verify.js` menolak kelas tema yang belum ikut dikompilasi.
+
+## Aksesibilitas dan alur
+
+- Setiap halaman punya link sendiri (`#/my-kpis`, `#/summary`, dan seterusnya). Back/Forward berpindah halaman dan refresh membuka halaman yang sama. Link ke halaman yang tidak boleh dibuka peran tersebut kembali ke halaman awal.
+- Isian My KPIs yang belum dikirim tidak bisa hilang diam-diam. Pindah menu, ganti bulan, atau Back meminta konfirmasi, dan menutup tab memunculkan peringatan browser. Peringatan yang sama berlaku untuk Evaluation, Mapping, dan Categories yang belum disimpan.
+- Remove pada Report Access meminta konfirmasi dulu.
+- Navigasi keyboard:
+  - menu sidebar berupa tombol;
+  - tombol "Skip to content" muncul pada Tab pertama;
+  - modal menahan Tab di dalamnya, menutup dengan Esc (bila klik di luar juga menutupnya), dan mengembalikan fokus;
+  - kotak centang Report Access bisa dicentang dengan keyboard.
+- Toast dibacakan pembaca layar, dan panel yang gagal dimuat menampilkan tombol Try again.
 
 ## Mengatur URL backend
 

@@ -266,9 +266,7 @@ function renderKpiHealth() {
   $('mkh-tbody').innerHTML = list.map(kpiHealthRowHtml).join('');
   $('mkh-empty').innerHTML = !empty ? '' :
     '<div class="bg-surface-card rounded-xl border border-dashed border-border-medium p-space-xl text-center">' +
-      '<span class="material-symbols-outlined text-[40px] text-text-muted">monitor_heart</span>' +
-      '<p class="text-body-md text-text-secondary mt-2">' +
-        ((d.kpis || []).length ? 'No KPIs match these filters.' : 'FY' + esc(d.year) + ' has no Master KPIs yet.') + '</p>' +
+      ((d.kpis || []).length ? emptyState('search', 'No KPIs match these filters.') : emptyState('empty', 'FY' + esc(d.year) + ' has no Master KPIs yet.')) +
     '</div>';
   schedulePins();
 }

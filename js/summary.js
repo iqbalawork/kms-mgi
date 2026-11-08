@@ -347,7 +347,7 @@ function nextSort(current, key, first) {
 
 function sortHead(label, key, sort, fn, cls, extra) {
   var on = !!(sort && sort.key === key);
-  return '<th class="' + (cls || '') + '" aria-sort="' + (!on ? 'none' : sort.dir > 0 ? 'ascending' : 'descending') + '">' +
+  return '<th scope="col" class="' + (cls || '') + '" aria-sort="' + (!on ? 'none' : sort.dir > 0 ? 'ascending' : 'descending') + '">' +
     '<button type="button" class="th-sort' + (on ? ' is-sorted' : '') + '" onclick="MGI.' + fn + '(\'' + key + '\')" title="Sort by ' + esc(label) + '">' +
       esc(label) + '<span class="material-symbols-outlined" aria-hidden="true">' + (!on ? 'unfold_more' : sort.dir > 0 ? 'arrow_upward' : 'arrow_downward') + '</span>' +
     '</button>' + (extra || '') + '</th>';

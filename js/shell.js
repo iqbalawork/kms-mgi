@@ -129,10 +129,11 @@ function navGroup(title, links) {
   head.textContent = title;
   wrap.appendChild(head);
 
-  var list = document.createElement('nav');
+  var list = document.createElement('div');
   list.className = 'flex flex-col gap-1';
   links.forEach(function (l) {
-    var a = document.createElement('a');
+    var a = document.createElement('button');
+    a.type = 'button';
     a.className = 'nav-link';
     a.dataset.view = l.id;
     a.title = l.label;
@@ -171,8 +172,34 @@ function initials(name) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+function skipToContent() {
+  var main = $('app-main');
+  if (main) main.focus();
+}
+
+function viewFromHash() {
+  var m = /^#\/([a-z-]+)$/.exec((window.location && window.location.hash) || '');
+  var view = m ? m[1] : '';
+  return view && VIEW_TITLES[view] && $('view-' + view) ? view : '';
+}
+
+function syncHash(view, replace) {
+  var want = '#/' + view;
+  if (!window.location || window.location.hash === want) return;
+  if ((replace || !viewFromHash()) && window.history && window.history.replaceState) window.history.replaceState(null, '', want);
+  else window.location.hash = want;
+}
+
+function onHashChange() {
+  if (!S.user) return;
+  var view = viewFromHash();
+  if (view && view !== S.view) go(view);
+  else if (!view && S.view) syncHash(S.view, true);
+}
+
 function go(view) {
-  if ((S.view === 'mapping' && isBasketDirty()) || (S.view === 'settings' && isCategoryDirty())) {
+  if ((S.view === 'mapping' && isBasketDirty()) || (S.view === 'settings' && isCategoryDirty()) || (S.view === 'my-kpis' && myKpisDirty())) {
+    if (S.view) syncHash(S.view, true);
     guardUnsaved(function () { go(view); });
     return;
   }
@@ -180,12 +207,15 @@ function go(view) {
   S.view = view;
   closeHelp(true);
   syncHelpFab();
+  syncHash(view);
   ['dashboard', 'my-kpis', 'guide', 'master-kpis', 'mapping', 'summary', 'evaluation', 'settings'].forEach(function (v) {
     var el = $('view-' + v);
     if (el) el.classList.toggle('hidden', v !== view);
   });
   document.querySelectorAll('#sidebar-nav .nav-link').forEach(function (a) {
     a.classList.toggle('is-active', a.dataset.view === view);
+    if (a.dataset.view === view) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
   });
   $('topbar-crumb').textContent = VIEW_TITLES[view] || '';
   toggleSidebar(false);

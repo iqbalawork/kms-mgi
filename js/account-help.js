@@ -41,7 +41,7 @@ function applyRole(user) {
       { id: 'mapping',  icon: 'tune',      label: 'Mapping KPI' },
       { id: 'settings', icon: 'settings',  label: 'System Settings' }
     ]));
-    go('dashboard');
+    go(viewFromHash() || 'dashboard');
   } else {
     var viewer = isReportViewer(user);
     var drop = ['view-mapping', 'view-settings', 'view-master-kpis', 'view-evaluation'];
@@ -58,12 +58,12 @@ function applyRole(user) {
         { id: 'summary',  icon: 'bar_chart', label: 'Summary Report' }
       ]));
     }
-    go('my-kpis');
+    go(viewFromHash() || 'my-kpis');
   }
 }
 
 function accountItem(icon, label, action, danger) {
-  return '<button type="button" role="menuitem" class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg text-body-sm font-medium transition-all duration-150 ' +
+  return '<button type="button" class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg text-body-sm font-medium transition-all duration-150 ' +
     (danger ? 'text-status-danger-text hover:bg-status-danger-subtle' : 'text-text-primary hover:bg-slate-100') + '" onclick="' + action + '">' +
     '<span class="material-symbols-outlined text-[18px]">' + icon + '</span>' + label + '</button>';
 }

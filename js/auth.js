@@ -4,6 +4,9 @@ function boot() {
   restorePageSizes();
   wirePinnedHeads();
   document.addEventListener('wheel', onNumberWheel, { passive: false });
+  wireModalHost();
+  window.addEventListener('beforeunload', onBeforeUnload);
+  window.addEventListener('hashchange', onHashChange);
   document.querySelectorAll('[data-mgi-logo]').forEach(function (img) {
     img.src = MGI_LOGO_B64;
   });

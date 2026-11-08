@@ -111,9 +111,11 @@ function pickPeriod(key) {
   var trigger = $('emp-month');
   closePeriodPicker(true);
   if (!trigger || !key || String(trigger.value) === String(key)) return;
-  trigger.value = key;
-  renderPeriodPicker();
-  loadMyKpis();
+  guardUnsaved(function () {
+    trigger.value = key;
+    renderPeriodPicker();
+    loadMyKpis();
+  });
 }
 
 function onPeriodTriggerKey(ev) {

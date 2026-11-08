@@ -958,8 +958,7 @@ function deepDiveCardHtml(data, role, k, i, prefix) {
 function deepDivePanelHtml(data, role, surface) {
   if (!role.kpis.length) {
     return '<div class="bg-surface-card rounded-xl border border-dashed border-border-medium p-space-xl text-center">' +
-      '<span class="material-symbols-outlined text-[40px] text-text-muted">query_stats</span>' +
-      '<p class="text-body-md text-text-secondary mt-2">No KPIs to analyse for this role.</p>' +
+      emptyState('chart', 'No KPIs to analyse for this role.') +
     '</div>';
   }
 

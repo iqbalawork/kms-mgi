@@ -80,7 +80,7 @@ function loadOverview() {
     })
     .catch(function (err) {
       $('map-emp-list').innerHTML =
-        '<p class="p-space-lg text-center text-status-danger">' + esc(err.message) + '</p>';
+        '<div class="p-space-lg">' + loadErrorHtml(err.message, 'loadOverview') + '</div>';
       toast(err.message, 'error');
     });
 }
@@ -158,15 +158,12 @@ function renderEmployeeList() {
   if (!rows.length) {
     $('map-emp-list').innerHTML =
       '<div class="p-space-2xl text-center">' +
-        '<span class="material-symbols-outlined text-[40px] text-text-muted">' +
-          (q ? 'search_off' : 'task_alt') + '</span>' +
-        '<p class="text-body-md text-text-secondary mt-2">' +
-          (q ? 'No employees match your search.'
-             : S.mapTab === 'unassigned'
-                 ? 'Every active employee already has a KPI mapping.'
-                 : S.mapTab === 'incomplete'
-                   ? 'Every assigned role adds up to 100%.'
-                   : 'No employees have been assigned yet.') + '</p>' +
+        (q ? emptyState('search', 'No employees match your search.')
+           : S.mapTab === 'unassigned'
+               ? emptyState('done', 'Every active employee already has a KPI mapping.')
+               : S.mapTab === 'incomplete'
+                 ? emptyState('done', 'Every assigned role adds up to 100%.')
+                 : emptyState('empty', 'No employees have been assigned yet.')) +
       '</div>';
     return;
   }

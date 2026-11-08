@@ -14,7 +14,7 @@ function loadMasterCatalog() {
     })
     .catch(function (err) {
       $('mk-tree').innerHTML =
-        '<div class="bg-surface-card rounded-xl border border-border-light p-space-xl text-center text-status-danger">' + esc(err.message) + '</div>';
+        '<div class="bg-surface-card rounded-xl border border-border-light p-space-xl">' + loadErrorHtml(err.message, 'loadMasterCatalog') + '</div>';
       toast(err.message, 'error');
     });
 }
@@ -205,9 +205,8 @@ function renderMasterTree() {
   if (!list.length) {
     host.innerHTML =
       '<div class="bg-surface-card rounded-xl border border-dashed border-border-medium p-space-xl text-center">' +
-        '<span class="material-symbols-outlined text-[40px] text-text-muted">library_books</span>' +
-        '<p class="text-body-md text-text-secondary mt-2">' +
-          (S.masterList.length ? 'No KPIs match these filters.' : 'No Master KPIs yet. Use Add KPIs or Bulk Upload.') + '</p>' +
+        (S.masterList.length ? emptyState('search', 'No KPIs match these filters.')
+                             : emptyState('empty', 'No Master KPIs yet. Use Add KPIs or Bulk Upload.', { fn: 'openBatchModal', icon: 'add', label: 'Add KPIs' })) +
       '</div>';
     return;
   }

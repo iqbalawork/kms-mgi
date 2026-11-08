@@ -75,7 +75,7 @@ function loadPeriodSettings() {
       renderPeriodControl();
     })
     .catch(function (err) {
-      $('period-control').innerHTML = '<p class="text-body-sm text-status-danger">' + esc(err.message) + '</p>';
+      $('period-control').innerHTML = loadErrorHtml(err.message, 'loadPeriodSettings');
     });
 }
 

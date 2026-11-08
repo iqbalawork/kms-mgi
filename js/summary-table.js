@@ -39,8 +39,7 @@ function renderSummaryTable() {
   if (!all.length) {
     $('sum-tbody').innerHTML =
       '<tr><td colspan="5" class="text-center py-space-2xl">' +
-        '<span class="material-symbols-outlined text-[40px] text-text-muted">search_off</span>' +
-        '<p class="text-body-md text-text-secondary mt-2">No data matches these filters.</p>' +
+        emptyState('search', 'No data matches these filters.') +
       '</td></tr>';
     $('sum-pagination').innerHTML = '';
     return;

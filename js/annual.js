@@ -172,10 +172,8 @@ function renderAnnualTable() {
   if (!all.length) {
     $('ann-tbody').innerHTML =
       '<tr><td colspan="15" class="text-center py-space-2xl">' +
-        '<span class="material-symbols-outlined text-[40px] text-text-muted">search_off</span>' +
-        '<p class="text-body-md text-text-secondary mt-2">' +
-          (S.annual && S.annual.rows.length ? 'No data matches these filters.'
-                                            : 'No KPI mappings found for ' + activeSumYear() + '.') + '</p>' +
+        (S.annual && S.annual.rows.length ? emptyState('search', 'No data matches these filters.')
+                                          : emptyState('empty', 'No KPI mappings found for ' + activeSumYear() + '.')) +
       '</td></tr>';
     $('ann-pagination').innerHTML = '';
     return;

@@ -66,7 +66,7 @@ function loadPerformanceSettings() {
       renderPerfPanel();
     })
     .catch(function (err) {
-      $('perf-control').innerHTML = '<p class="text-body-md text-status-danger-text text-center">' + esc(err.message) + '</p>';
+      $('perf-control').innerHTML = loadErrorHtml(err.message, 'loadPerformanceSettings');
       toast(err.message, 'error');
     });
 }

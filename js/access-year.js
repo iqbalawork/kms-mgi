@@ -45,7 +45,7 @@ function loadReportAccess() {
       renderReportAccess();
     })
     .catch(function (err) {
-      $('access-control').innerHTML = '<p class="text-body-md text-status-danger-text text-center">' + esc(err.message) + '</p>';
+      $('access-control').innerHTML = loadErrorHtml(err.message, 'loadReportAccess');
       toast(err.message, 'error');
     });
 }
@@ -125,7 +125,7 @@ function renderReportAccess() {
           '<h3 class="text-title-md text-text-primary">Report viewers</h3>' +
           '<div class="relative sm:w-72">' +
             '<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px] pointer-events-none">search</span>' +
-            '<input type="search" class="field !pl-10 !py-1.5" placeholder="Search viewers" value="' + esc(a.viewerQ) + '" oninput="MGI.onViewerSearch(this.value)">' +
+            '<input type="search" class="field !pl-10 !py-1.5" aria-label="Search viewers" placeholder="Search viewers" value="' + esc(a.viewerQ) + '" oninput="MGI.onViewerSearch(this.value)">' +
           '</div>' +
         '</div>' +
         '<div id="access-viewers" class="table-scroll"></div>' +
@@ -219,7 +219,8 @@ function renderAccessCandidates() {
           '<tbody>' + list.map(function (u) {
             var on = !!a.picked[u.NIK];
             return '<tr class="cursor-pointer' + (on ? ' access-picked' : '') + '" onclick="MGI.toggleAccessPick(\'' + esc(u.NIK) + '\')">' +
-              '<td><input type="checkbox" class="rounded border-border-medium pointer-events-none" tabindex="-1" aria-label="Select ' + esc(u.Full_Name) + '"' + (on ? ' checked' : '') + '></td>' +
+              '<td><input type="checkbox" class="rounded border-border-medium" aria-label="Select ' + esc(u.Full_Name) + '"' + (on ? ' checked' : '') +
+                ' onclick="event.stopPropagation()" onchange="MGI.toggleAccessPick(\'' + esc(u.NIK) + '\')"></td>' +
               '<td><div class="flex items-center gap-space-sm min-w-0"><span class="emp-avatar">' + esc(u.Initials || initials(u.Full_Name)) + '</span>' +
                 '<div class="flex flex-col min-w-0"><span class="font-semibold text-text-primary truncate">' + esc(u.Full_Name) + '</span>' +
                 '<span class="text-label-xs text-text-muted">' + esc(u.NIK) + '</span></div></div></td>' +
@@ -335,6 +336,39 @@ function setViewerScope(nik, scope) {
 }
 
 function removeViewer(nik) {
+  var d = S.reportAccess;
+  var u = d ? d.viewers.filter(function (v) { return String(v.NIK) === String(nik); })[0] : null;
+  if (!u) return;
+  S.removeViewerNik = String(nik);
+  $('modal-host').innerHTML =
+    '<div class="modal-backdrop" onclick="if(event.target===this)MGI.closeRemoveViewer()">' +
+      '<div class="modal-panel !max-w-md" role="dialog" aria-modal="true" aria-labelledby="remove-viewer-title">' +
+        '<div class="px-6 pt-6 pb-5 flex items-start gap-4">' +
+          '<span class="w-10 h-10 rounded-full bg-status-danger-subtle text-status-danger flex items-center justify-center shrink-0">' +
+            '<span class="material-symbols-outlined text-[22px]">person_remove</span></span>' +
+          '<div class="min-w-0">' +
+            '<h2 id="remove-viewer-title" class="text-title-lg text-text-primary">Remove report access?</h2>' +
+            '<p class="text-body-sm text-text-secondary mt-1"><strong>' + esc(u.Full_Name) + '</strong> (' + esc(u.NIK) + ') will no longer be able to open the company reports. You can grant access again at any time.</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="px-6 py-4 border-t border-border-light bg-slate-50/60 flex items-center justify-end gap-space-sm">' +
+          '<button type="button" class="btn btn-secondary" onclick="MGI.closeRemoveViewer()">Cancel</button>' +
+          '<button id="remove-viewer-confirm" type="button" class="btn btn-danger" onclick="MGI.confirmRemoveViewer()">' +
+            '<span class="material-symbols-outlined text-[18px]">person_remove</span> Remove access</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+}
+
+function closeRemoveViewer() {
+  S.removeViewerNik = null;
+  $('modal-host').innerHTML = '';
+}
+
+function confirmRemoveViewer() {
+  var nik = S.removeViewerNik;
+  closeRemoveViewer();
+  if (!nik) return;
   return saveReportAccess('removeReportAccess', [nik]);
 }
 
@@ -347,7 +381,7 @@ function loadFiscalYear() {
       renderFiscalPanel();
     })
     .catch(function (err) {
-      $('fiscal-control').innerHTML = '<p class="text-body-md text-status-danger-text text-center">' + esc(err.message) + '</p>';
+      $('fiscal-control').innerHTML = loadErrorHtml(err.message, 'loadFiscalYear');
       toast(err.message, 'error');
     });
 }
@@ -632,7 +666,7 @@ function loadYearThemes() {
       renderThemePanel();
     })
     .catch(function (err) {
-      $('theme-control').innerHTML = '<p class="text-body-md text-status-danger-text text-center">' + esc(err.message) + '</p>';
+      $('theme-control').innerHTML = loadErrorHtml(err.message, 'loadYearThemes');
       toast(err.message, 'error');
     });
 }

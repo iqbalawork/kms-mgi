@@ -141,6 +141,10 @@ function roleDirty(role) {
   return (role.items || []).some(function (item) { return item.Editable && itemChanged(item); });
 }
 
+function myKpisDirty() {
+  return ((S.dashboard && S.dashboard.roles) || []).some(function (r) { return roleDirty(r); });
+}
+
 function changesWord(n) {
   return n === 1 ? 'once' : n === 2 ? 'twice' : n + ' times';
 }

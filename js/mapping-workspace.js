@@ -38,13 +38,16 @@ function discardBasket() {
 
 function guardUnsaved(proceed) {
   var catDirty = isCategoryDirty();
-  if (!catDirty && !isBasketDirty()) { proceed(); return; }
+  var kpiDirty = !catDirty && S.view === 'my-kpis' && myKpisDirty();
+  if (!catDirty && !kpiDirty && !isBasketDirty()) { proceed(); return; }
 
   S.pendingProceed = proceed;
   var name = S.mapping && S.mapping.employee ? S.mapping.employee.Full_Name : 'this employee';
   var message = catDirty
     ? 'The <strong>Categories</strong> page has ' + categoryChangeCount() +
       ' unsaved changes. Leave and discard them?'
+    : kpiDirty
+    ? 'Your <strong>My KPIs</strong> entries for this month are not submitted yet. Leave and discard them?'
     : 'The KPI mapping for <strong>' + esc(name) +
       '</strong> has unsaved changes. Leave and discard them?';
 

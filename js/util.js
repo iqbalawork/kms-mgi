@@ -315,6 +315,7 @@ function toast(message, type) {
   var host = $('toast-host');
   var el = document.createElement('div');
   el.className = 'toast toast-' + (type || 'info');
+  if (type === 'error') el.setAttribute('role', 'alert');
   var icon = type === 'success' ? 'check_circle'
            : type === 'error'   ? 'error'
            : type === 'warning' ? 'warning' : 'info';
@@ -335,6 +336,24 @@ function toast(message, type) {
   };
   host.appendChild(el);
   setTimeout(dismiss, type === 'error' ? 7000 : 4000);
+}
+
+function emptyState(art, message, action) {
+  return '<div class="empty-state">' +
+    '<svg class="empty-art" width="120" height="96" viewBox="0 0 120 96" aria-hidden="true" focusable="false"><use href="#art-' + art + '"></use></svg>' +
+    '<p class="empty-state-text">' + message + '</p>' +
+    (action ? '<button type="button" class="btn btn-secondary !py-1.5 mt-1" onclick="MGI.' + action.fn + '()">' +
+      '<span class="material-symbols-outlined text-[18px]">' + action.icon + '</span> ' + esc(action.label) + '</button>' : '') +
+  '</div>';
+}
+
+function loadErrorHtml(message, retry) {
+  return '<div class="flex flex-col items-center gap-space-sm text-center" role="alert">' +
+    '<svg class="empty-art" width="120" height="96" viewBox="0 0 120 96" aria-hidden="true" focusable="false"><use href="#art-offline"></use></svg>' +
+    '<p class="text-body-md text-status-danger-text">' + esc(message) + '</p>' +
+    '<button type="button" class="btn btn-secondary !py-1.5" onclick="MGI.' + retry + '()">' +
+      '<span class="material-symbols-outlined text-[18px]">refresh</span> Try again</button>' +
+  '</div>';
 }
 
 function busy(btn, label) {
@@ -504,4 +523,88 @@ function onNumberWheel(e) {
   if (document.activeElement !== t) return;
   e.preventDefault();
   t.blur();
+}
+
+var MODAL_FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function modalPanel() {
+  var host = $('modal-host');
+  return host && host.querySelector ? host.querySelector('.modal-panel') : null;
+}
+
+function labelModal(panel) {
+  if (!panel.getAttribute('role')) panel.setAttribute('role', 'dialog');
+  if (!panel.getAttribute('aria-modal')) panel.setAttribute('aria-modal', 'true');
+  if (panel.getAttribute('aria-labelledby') || panel.getAttribute('aria-label')) return;
+  var title = panel.querySelector('h1, h2, h3');
+  if (title) {
+    if (!title.id) title.id = 'modal-title';
+    panel.setAttribute('aria-labelledby', title.id);
+  } else {
+    panel.setAttribute('aria-label', (panel.textContent || '').trim() || 'Dialog');
+  }
+}
+
+function focusModal(panel) {
+  var field = panel.querySelector('input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])');
+  var target = field || panel.querySelector(MODAL_FOCUSABLE);
+  if (!target) {
+    panel.setAttribute('tabindex', '-1');
+    target = panel;
+  }
+  target.focus();
+}
+
+function wireModalHost() {
+  var host = $('modal-host');
+  if (!host || typeof MutationObserver === 'undefined') return;
+  var opener = null;
+  new MutationObserver(function () {
+    var panel = modalPanel();
+    if (panel) {
+      labelModal(panel);
+      if (!opener) opener = document.activeElement;
+      if (!panel.contains(document.activeElement)) focusModal(panel);
+    } else if (opener) {
+      var back = opener;
+      opener = null;
+      if (back.focus && document.body.contains(back)) back.focus();
+    }
+  }).observe(host, { childList: true });
+  document.addEventListener('keydown', onModalKey);
+}
+
+function onModalKey(ev) {
+  var panel = modalPanel();
+  if (!panel) return;
+  if (ev.key === 'Escape') {
+    var backdrop = panel.parentNode;
+    if (backdrop && backdrop.getAttribute && backdrop.getAttribute('onclick')) {
+      ev.preventDefault();
+      backdrop.click();
+    }
+    return;
+  }
+  if (ev.key !== 'Tab') return;
+  var items = Array.prototype.filter.call(panel.querySelectorAll(MODAL_FOCUSABLE), function (el) { return el.offsetParent !== null; });
+  if (!items.length) { ev.preventDefault(); return; }
+  var first = items[0];
+  var last = items[items.length - 1];
+  if (ev.shiftKey && (document.activeElement === first || !panel.contains(document.activeElement))) {
+    ev.preventDefault();
+    last.focus();
+  } else if (!ev.shiftKey && (document.activeElement === last || !panel.contains(document.activeElement))) {
+    ev.preventDefault();
+    first.focus();
+  }
+}
+
+function hasUnsavedWork() {
+  return (S.view === 'my-kpis' && myKpisDirty()) || evalDirty() || isBasketDirty() || isCategoryDirty();
+}
+
+function onBeforeUnload(ev) {
+  if (!hasUnsavedWork()) return;
+  ev.preventDefault();
+  ev.returnValue = '';
 }
