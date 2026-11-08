@@ -7,6 +7,8 @@
   <link rel="icon" type="image/png" href="./assets/favicon.png">
   <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
   <meta name="theme-color" content="#8B1E1E">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="preconnect" href="https://script.google.com">
   <link rel="preconnect" href="https://script.googleusercontent.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/app.css">
   <link rel="stylesheet" href="./css/tailwind.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
 
 <body class="bg-surface-page text-text-primary text-body-md">
@@ -679,7 +681,7 @@
                     <p class="text-sm font-medium text-slate-900">Drag &amp; drop the filled template, or <span class="text-primary-container font-semibold underline underline-offset-2">click to browse</span></p>
                     <p class="text-xs text-slate-500 mt-0.5">.csv or .xlsx, up to 500 rows. If any row has a problem, nothing is saved.</p>
                   </div>
-                  <input id="mku-file" type="file" class="hidden" accept=".csv,.xlsx">
+                  <input id="mku-file" type="file" aria-label="Upload KPI file" class="hidden" accept=".csv,.xlsx">
                 </div>
                 <div class="flex flex-col gap-2 min-w-0 lg:w-[380px] shrink-0">
                   <div id="mku-summary" class="upload-summary"></div>
@@ -746,7 +748,7 @@
                 <div id="map-tabs" class="seg"></div>
                 <div class="relative flex-1 sm:max-w-xs sm:ml-auto">
                   <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px] pointer-events-none">search</span>
-                  <input id="map-emp-search" type="search" class="field !pl-10"
+                  <input id="map-emp-search" type="search" aria-label="Search employees" class="field !pl-10"
                          placeholder="Search NIK, name or email" oninput="MGI.renderEmployeeList()">
                 </div>
                 <button class="btn btn-primary shrink-0" onclick="MGI.openBulkAssign()"
@@ -797,16 +799,16 @@
                     <button class="text-xs text-primary-container font-semibold rounded-md px-1.5 py-0.5 transition-all duration-150 hover:bg-brand-50" onclick="MGI.resetCatalogueFilter()">Reset Filter</button>
                   </div>
                   <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
-                    <select id="map-f-division" class="field !py-1.5 !text-label-sm" onchange="MGI.onFilterChange()"></select>
-                    <select id="map-f-department" class="field !py-1.5 !text-label-sm" onchange="MGI.onFilterChange()"></select>
-                    <select id="map-f-position" class="field !py-1.5 !text-label-sm" onchange="MGI.onFilterChange()"></select>
+                    <select id="map-f-division" aria-label="Filter by division" class="field !py-1.5 !text-label-sm" onchange="MGI.onFilterChange()"></select>
+                    <select id="map-f-department" aria-label="Filter by department" class="field !py-1.5 !text-label-sm" onchange="MGI.onFilterChange()"></select>
+                    <select id="map-f-position" aria-label="Filter by position" class="field !py-1.5 !text-label-sm" onchange="MGI.onFilterChange()"></select>
                   </div>
                   <p id="map-filter-note" class="text-label-xs text-text-muted mt-space-sm"></p>
                 </div>
 
                 <div class="relative mb-space-sm">
                   <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px] pointer-events-none">search</span>
-                  <input id="map-search" type="search" class="field !pl-10"
+                  <input id="map-search" type="search" aria-label="Search KPIs" class="field !pl-10"
                          placeholder="Search KPIs by name or metric"
                          oninput="MGI.renderCatalogue()">
                 </div>
@@ -1048,7 +1050,7 @@
                       <p class="text-sm font-medium text-slate-900">Drop the filled file, or <span class="text-primary-container font-semibold underline underline-offset-2">browse</span></p>
                       <p class="text-xs text-slate-500 mt-0.5">.xlsx or .csv, up to 500 rows. If any row has a problem, nothing is saved.</p>
                     </div>
-                    <input id="ei-file" type="file" class="hidden" accept=".csv,.xlsx">
+                    <input id="ei-file" type="file" aria-label="Upload evaluation file" class="hidden" accept=".csv,.xlsx">
                   </div>
                   <div id="ei-summary" class="upload-summary"></div>
                   <div class="flex flex-wrap items-center gap-2">
