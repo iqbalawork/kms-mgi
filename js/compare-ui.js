@@ -667,5 +667,5 @@ function syncCompareHead() {
   var host = $('sum-compare');
   var bar = $('cmp-sticky');
   if (!host || !host.style || !host.style.setProperty || !bar || !bar.offsetHeight) return;
-  host.style.setProperty('--cmp-head', (64 + bar.offsetHeight + 8) + 'px');
+  host.style.setProperty('--cmp-head', (64 + bar.offsetHeight) + 'px');
 }

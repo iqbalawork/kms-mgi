@@ -442,6 +442,9 @@
     transition: all .15s cubic-bezier(.4,0,.2,1);
   }
   .role-group-head:hover { background: rgba(241, 245, 249, .8); }
+  .role-group-head.is-static { cursor: default; user-select: text; }
+  .role-group-head.is-static:hover { background: #F8FAFC; }
+  .emp-dirty-dot { width: .5rem; height: .5rem; border-radius: 9999px; background: #DC2626; flex-shrink: 0; }
   .role-group-head.is-invalid { background: #FEF2F2; border-bottom-color: #FECACA; }
   .role-group-head.is-invalid:hover { background: #FEE2E2; }
   .role-group-body { padding: .75rem; display: flex; flex-direction: column; gap: .5rem; }
@@ -648,6 +651,11 @@
   .mk-role.is-inactive > .role-group-head { background: #F1F5F9; }
   .mk-role > .role-group-body { padding: 0; }
   .mk-table { min-width: 1180px; }
+  #mk-tree .role-group:not(.is-collapsed) { overflow: visible; }
+  @media (min-width: 1024px) {
+    #mk-tree .mk-division:not(.is-collapsed) > .role-group-head { position: sticky; top: var(--mk-top, 9.5rem); z-index: 12; border-radius: .625rem .625rem 0 0; box-shadow: 0 1px 0 #E2E8F0; }
+    #mk-tree .mk-role:not(.is-collapsed) > .role-group-head { position: sticky; top: calc(var(--mk-top, 9.5rem) + var(--mk-div-h, 3rem)); z-index: 11; border-radius: .625rem .625rem 0 0; box-shadow: 0 1px 0 #E2E8F0; }
+  }
   .mk-table thead th, .mk-table tbody td { padding: .625rem .875rem; }
   .mk-table tbody tr.mk-row-inactive td { color: #94A3B8; }
   .grade-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 1.75rem; height: 1.75rem; padding: 0 .375rem; border-radius: .5rem; border: 1px solid transparent; font-size: 13px; font-weight: 800; line-height: 1; }

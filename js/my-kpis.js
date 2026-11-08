@@ -196,7 +196,6 @@ function loadMyKpis(keep) {
   var periodKey = picked.year + '-' + picked.month;
   if (S.empMonth !== periodKey) {
     S.empMonth = periodKey;
-    S.empCollapsed = {};
     S.empHistoryOpen = false;
   }
   if (!keep) {
@@ -388,7 +387,7 @@ function continueFilling() {
     return p.filled < p.required || !p.evidenceOk;
   })[0] || roles[0];
   if (!target) return;
-  if (S.empCollapsed[target.key]) toggleEmpRole(target.key);
+  if (S.empRole !== target.key) setEmpRole(target.key);
   var section = roleEl('data-role-section', target.key);
   if (section && section.scrollIntoView) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   var empty = target.items.filter(function (it) {
@@ -445,6 +444,7 @@ function renderMyKpis() {
         '</p>' +
       '</div>';
   } else {
+    S.empRole = pickEmpRole(roles);
     $('emp-roles').innerHTML = roles.map(roleSection).join('');
     roles.forEach(function (r) {
       wireDropzone(r.key);
@@ -455,13 +455,14 @@ function renderMyKpis() {
 
   renderEmpHistory();
   renderSubmitState();
+  renderRoleTabs();
 }
 
 function roleSection(r) {
   var d = S.dashboard;
   var key = esc(r.key);
   var multi = (d.roles || []).length > 1;
-  var collapsed = !!S.empCollapsed[r.key];
+  var hiddenRole = multi && r.key !== S.empRole;
   var readOnly = !!r.inactiveRole;
   var scored = r.items.some(function (it) { return isNum(it.Score); });
   var progress = roleProgress(r);
@@ -474,10 +475,7 @@ function roleSection(r) {
       ? '<span class="pill pill-neutral !text-[11px]" title="Only HR / Admin can allow another change this month"><span class="material-symbols-outlined text-[14px]">lock</span>No changes left</span>'
       : '<span class="pill ' + (changes.left === 1 ? 'pill-warning' : 'pill-neutral') + ' !text-[11px]" title="Every new submission after the first uses one change">' +
           '<span class="material-symbols-outlined text-[14px]">history</span>' + plural(changes.left, 'change') + ' left</span>';
-  var stage = !progress.required && !progress.evidence ? null
-            : progress.filled >= progress.required && progress.evidenceOk ? ['pill-success', 'check_circle', 'Submitted']
-            : progress.filled || progress.evidence ? ['pill-info', 'pending', 'In progress']
-            : ['pill-neutral', 'radio_button_unchecked', 'Not started'];
+  var stage = roleStage(r);
   var fileBase = d.period + '_' + d.employee.NIK + '_' + roleSlugJs(r.position, r.department);
   var accept = S.user.allowedExt.map(function (e) { return '.' + e; }).join(',');
   var tags = S.user.allowedExt.map(function (e) {
@@ -485,10 +483,7 @@ function roleSection(r) {
   }).join('') + '<span class="pill pill-neutral !text-[11px]">Max ' + S.user.maxFileMb + ' MB</span>';
 
   var head =
-    '<div class="role-group-head !px-space-lg !py-space-md" onclick="MGI.toggleEmpRole(\'' + key + '\')"' +
-      ' title="Click to expand or collapse this role">' +
-      '<span class="material-symbols-outlined text-[22px] text-text-secondary" data-chevron>' +
-        (collapsed ? 'expand_more' : 'expand_less') + '</span>' +
+    '<div class="role-group-head is-static !px-space-lg !py-space-md">' +
       '<span class="material-symbols-outlined text-[22px] ' + (readOnly ? 'text-text-muted' : 'text-primary-container') + '">work</span>' +
       '<h2 class="text-title-lg ' + (readOnly ? 'text-text-secondary' : 'text-text-primary') + '">' + esc(r.label) + '</h2>' +
       (readOnly
@@ -601,7 +596,8 @@ function roleSection(r) {
       '</div>' +
     '</div>';
 
-  return '<section class="role-group shadow-level-1 shrink-0 !mt-0 scroll-mt-36' + (collapsed ? ' is-collapsed' : '') + '" data-role-section="' + key + '">' +
+  return '<section class="role-group shadow-level-1 shrink-0 !mt-0 scroll-mt-48' + (hiddenRole ? ' hidden' : '') + '" data-role-section="' + key + '"' +
+    (multi ? ' role="tabpanel" aria-label="' + esc(r.label) + '"' : '') + '>' +
     head +
     '<div class="role-group-body !p-0 !gap-0">' + table + evidence + receipt + submit + '</div>' +
   '</section>';
@@ -672,13 +668,95 @@ function renderEmpHistory() {
     '</section>';
 }
 
-function toggleEmpRole(key) {
-  S.empCollapsed[key] = !S.empCollapsed[key];
+function roleStage(r) {
+  var progress = roleProgress(r);
+  return !progress.required && !progress.evidence ? null
+       : progress.filled >= progress.required && progress.evidenceOk ? ['pill-success', 'check_circle', 'Submitted']
+       : progress.filled || progress.evidence ? ['pill-info', 'pending', 'In progress']
+       : ['pill-neutral', 'radio_button_unchecked', 'Not started'];
+}
+
+function pickEmpRole(roles) {
+  if (!roles.length) return '';
+  if (S.empRole && roles.some(function (r) { return r.key === S.empRole; })) return S.empRole;
+  var open = roles.filter(function (r) { return !r.inactiveRole; });
+  var todo = open.filter(function (r) {
+    var p = roleProgress(r);
+    return p.filled < p.required || !p.evidenceOk;
+  })[0];
+  return (todo || open[0] || roles[0]).key;
+}
+
+function renderRoleTabs() {
+  var roles = (S.dashboard && S.dashboard.roles) || [];
+  var go = $('emp-go-submit');
+  if (go) {
+    go.innerHTML = roleEl('data-role-submit', S.empRole)
+      ? '<button type="button" class="btn btn-secondary !py-1.5 !px-3 !text-label-sm" onclick="MGI.goToRoleSubmit()" title="Jump to the Submit button of this role">' +
+        '<span class="material-symbols-outlined text-[18px]">south</span> Go to submit</button>'
+      : '';
+  }
+  var host = $('emp-role-tabs');
+  if (!host) return;
+  if (roles.length < 2) {
+    host.innerHTML = '';
+    return;
+  }
+  var tones = { 'pill-success': 'text-status-success', 'pill-info': 'text-status-info', 'pill-neutral': 'text-text-muted' };
+  host.innerHTML =
+    '<div class="pt-2 mt-0.5 border-t border-slate-100">' +
+      '<div class="seg flex-wrap" role="tablist" aria-label="Your roles" onkeydown="MGI.onEmpRoleKey(event)">' +
+        roles.map(function (r) {
+          var on = r.key === S.empRole;
+          var p = roleProgress(r);
+          var stage = roleStage(r);
+          var dirty = !r.inactiveRole && roleDirty(r);
+          var chip = r.inactiveRole ? '<span class="pill pill-neutral !py-0 !px-1.5 !text-[10px]">Inactive</span>'
+            : r.isHome ? '<span class="pill pill-neutral !py-0 !px-1.5 !text-[10px]">Home</span>'
+            : '<span class="pill pill-maroon !py-0 !px-1.5 !text-[10px]">Additional</span>';
+          return '<button type="button" class="seg-btn' + (on ? ' is-active' : '') + '" role="tab" aria-selected="' + (on ? 'true' : 'false') + '"' +
+            ' tabindex="' + (on ? '0' : '-1') + '" data-role-tab="' + esc(r.key) + '" onclick="MGI.setEmpRole(\'' + esc(r.key) + '\')"' +
+            (stage ? ' title="' + stage[2] + '"' : '') + '>' +
+            (stage ? '<span class="material-symbols-outlined text-[18px] ' + tones[stage[0]] + '">' + stage[1] + '</span>' : '') +
+            '<span>' + esc(r.label) + '</span>' + chip +
+            (p.required ? '<span class="seg-count">' + p.filled + '/' + p.required + '</span>' : '') +
+            (dirty ? '<span class="emp-dirty-dot" title="Not submitted yet" aria-label="Not submitted yet"></span>' : '') +
+          '</button>';
+        }).join('') +
+      '</div>' +
+    '</div>';
+}
+
+function setEmpRole(key) {
+  var roles = (S.dashboard && S.dashboard.roles) || [];
+  if (!roles.some(function (r) { return r.key === key; })) return;
+  S.empRole = key;
+  roles.forEach(function (r) {
+    var sec = roleEl('data-role-section', r.key);
+    if (sec) sec.classList.toggle('hidden', roles.length > 1 && r.key !== key);
+  });
+  renderRoleTabs();
   var sec = roleEl('data-role-section', key);
-  if (!sec) return;
-  sec.classList.toggle('is-collapsed', !!S.empCollapsed[key]);
-  var chev = sec.querySelector('[data-chevron]');
-  if (chev) chev.textContent = S.empCollapsed[key] ? 'expand_more' : 'expand_less';
+  if (sec && sec.getBoundingClientRect && sec.getBoundingClientRect().top < 0 && sec.scrollIntoView) sec.scrollIntoView({ block: 'start' });
+}
+
+function onEmpRoleKey(ev) {
+  if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+  var roles = (S.dashboard && S.dashboard.roles) || [];
+  var at = roles.map(function (r) { return r.key; }).indexOf(S.empRole);
+  if (at < 0) return;
+  ev.preventDefault();
+  var next = roles[(at + (ev.key === 'ArrowRight' ? 1 : roles.length - 1)) % roles.length];
+  setEmpRole(next.key);
+  var tab = roleEl('data-role-tab', next.key);
+  if (tab && tab.focus) tab.focus();
+}
+
+function goToRoleSubmit() {
+  var btn = roleEl('data-role-submit', S.empRole);
+  if (!btn) return;
+  if (btn.scrollIntoView) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (btn.focus) setTimeout(function () { btn.focus({ preventScroll: true }); }, 400);
 }
 
 function toggleEmpHistory() {

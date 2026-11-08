@@ -441,6 +441,7 @@ function readinessMessage(ready) {
 }
 
 function renderRoleSubmit(roleKey) {
+  renderRoleTabs();
   var d = S.dashboard;
   var r = findRole(roleKey);
   if (!d || !r || r.inactiveRole) return;

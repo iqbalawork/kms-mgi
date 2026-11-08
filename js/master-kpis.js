@@ -250,6 +250,22 @@ function renderMasterTree() {
       '</label>';
     return masterNode('mk-year', 'y:' + Y.year, tree.length === 1 || Number(Y.year) === S.masterMeta.activeYear || searching, yHead, divisions);
   }).join('');
+  syncMasterSticky();
+}
+
+function syncMasterSticky() {
+  var tree = $('mk-tree');
+  if (!tree || !tree.style || !tree.style.setProperty || !tree.querySelector) return;
+  if (!S.masterStickyWired && window.addEventListener) {
+    S.masterStickyWired = true;
+    window.addEventListener('resize', syncMasterSticky);
+  }
+  var bar = $('mk-filter-bar');
+  var div = tree.querySelector('.mk-division:not(.is-collapsed) > .role-group-head');
+  var role = tree.querySelector('.mk-role:not(.is-collapsed) > .role-group-head');
+  tree.style.setProperty('--mk-top', (64 + (bar && bar.offsetHeight ? bar.offsetHeight : 0)) + 'px');
+  if (div && div.offsetHeight) tree.style.setProperty('--mk-div-h', div.offsetHeight + 'px');
+  if (role && role.offsetHeight) tree.style.setProperty('--mk-role-h', role.offsetHeight + 'px');
 }
 
 function masterYearStats(year) {

@@ -12,7 +12,7 @@ var S = {
 
   dashboard:   null,
   pendingFiles: {},
-  empCollapsed: {},
+  empRole: '',
   empHistoryOpen: false,
   empMonth:    null,
   monthStates: null,

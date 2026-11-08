@@ -17,7 +17,9 @@ var MGI = {
   onRealisasiInput: onRealisasiInput,
   clearFile: clearFile,
   submitRole: submitRole,
-  toggleEmpRole: toggleEmpRole,
+  setEmpRole: setEmpRole,
+  onEmpRoleKey: onEmpRoleKey,
+  goToRoleSubmit: goToRoleSubmit,
   toggleEmpHistory: toggleEmpHistory,
 
   onEmployeeSelect: onEmployeeSelect,
