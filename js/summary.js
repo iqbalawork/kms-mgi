@@ -64,7 +64,9 @@ function activeSumYear() {
 }
 
 function loadActiveSummary() {
-  if (S.sumView === 'annual') {
+  if (S.sumView === 'compare') {
+    loadCompare();
+  } else if (S.sumView === 'annual') {
     loadAnnualRecap();
   } else {
     loadSummary();
@@ -72,16 +74,23 @@ function loadActiveSummary() {
 }
 
 function renderActiveSummary() {
-  if (S.sumView === 'annual') renderAnnual();
+  if (S.sumView === 'compare') renderCompare();
+  else if (S.sumView === 'annual') renderAnnual();
   else applySummaryFilters();
 }
 
 function applySumView() {
   var annual = S.sumView === 'annual';
-  $('sum-monthly-panel').classList.toggle('hidden', annual);
+  var compare = S.sumView === 'compare';
+  $('sum-monthly-panel').classList.toggle('hidden', annual || compare);
   $('sum-annual-panel').classList.toggle('hidden', !annual);
-  $('sum-month-field').classList.toggle('hidden', annual);
+  $('sum-compare').classList.toggle('hidden', !compare);
+  $('sum-month-field').classList.toggle('hidden', annual || compare);
   $('sum-report-btn').classList.toggle('hidden', annual);
+  if ($('sum-filter-bar')) $('sum-filter-bar').classList.toggle('is-static', compare);
+  ['sum-division-field', 'sum-dept-field', 'sum-search-field', 'sum-actions'].forEach(function (id) {
+    if ($(id)) $(id).classList.toggle('hidden', compare);
+  });
   document.querySelectorAll('#sum-view-tabs [data-sum-view]').forEach(function (b) {
     var on = b.dataset.sumView === S.sumView;
     b.classList.toggle('is-active', on);
@@ -90,8 +99,13 @@ function applySumView() {
 }
 
 function setSumView(view) {
-  S.sumView = view === 'annual' ? 'annual' : 'monthly';
+  S.sumView = view === 'annual' || view === 'compare' ? view : 'monthly';
   applySumView();
+
+  if (S.sumView === 'compare') {
+    loadCompare();
+    return;
+  }
 
   if (S.sumView === 'annual') {
     if (S.annual && S.annual.year === activeSumYear()) {

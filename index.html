@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,notification_important,notifications_active,notifications_paused,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,start,sticky_note_2,support,support_agent,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,note,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,start,sticky_note_2,support,support_agent,swap_horiz,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
   <link rel="stylesheet" href="./css/app.css">
   <link rel="stylesheet" href="./css/tailwind.css">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
@@ -851,6 +851,9 @@
                 <button type="button" class="seg-btn" data-sum-view="annual" onclick="MGI.setSumView('annual')">
                   <span class="material-symbols-outlined text-[18px]">date_range</span> Annual Recap
                 </button>
+                <button type="button" class="seg-btn" data-sum-view="compare" onclick="MGI.setSumView('compare')">
+                  <span class="material-symbols-outlined text-[18px]">compare_arrows</span> Compare
+                </button>
               </div>
               <div id="sum-actions" class="flex flex-wrap items-center gap-2 ml-auto">
               <button id="sum-report-btn" type="button" class="btn btn-secondary" onclick="MGI.openReportDownload('monthly')" title="Download a PDF report of this month to share with directors and HR">
@@ -873,15 +876,15 @@
                 <label for="sum-month" class="form-label">Month</label>
                 <select id="sum-month" class="field"></select>
               </div>
-              <div>
+              <div id="sum-division-field">
                 <label for="sum-division" class="form-label">Division</label>
                 <select id="sum-division" class="field"><option value="">All Divisions</option></select>
               </div>
-              <div>
+              <div id="sum-dept-field">
                 <label for="sum-dept" class="form-label">Department</label>
                 <select id="sum-dept" class="field"><option value="">All Departments</option></select>
               </div>
-              <div>
+              <div id="sum-search-field">
                 <label for="sum-search" class="form-label">Search Employee</label>
                 <input id="sum-search" type="search" class="field" placeholder="NIK or name">
               </div>
@@ -947,6 +950,8 @@
               <div id="ann-pagination" class="px-4 py-3 bg-surface-page border-t border-border-light flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm empty:hidden"></div>
             </div>
           </div>
+
+          <div id="sum-compare" class="hidden"></div>
         </section>
 
         <section id="view-evaluation" class="hidden">
@@ -1231,6 +1236,8 @@
 <script src="./js/evaluation-edit.js"></script>
 <script src="./js/settings-performance.js"></script>
 <script src="./js/settings.js"></script>
+<script src="./js/compare.js"></script>
+<script src="./js/compare-ui.js"></script>
 <script src="./js/main.js"></script>
 </body>
 </html>

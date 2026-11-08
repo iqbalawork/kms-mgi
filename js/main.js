@@ -229,7 +229,22 @@ var MGI = {
   toggleCategory: toggleCategory,
   removeCategory: removeCategory,
   discardCategories: discardCategories,
-  saveCategories: saveCategories
+  saveCategories: saveCategories,
+
+  loadCompare: loadCompare,
+  openComparePick: openComparePick,
+  filterComparePick: filterComparePick,
+  onComparePickKey: onComparePickKey,
+  chooseCompare: chooseCompare,
+  clearCompare: clearCompare,
+  swapCompare: swapCompare,
+  setCompareRange: setCompareRange,
+  setCompareMonth: setCompareMonth,
+  setCompareTab: setCompareTab,
+  setCompareFilter: setCompareFilter,
+  toggleCompareKpi: toggleCompareKpi,
+  compareWith: compareWith,
+  compareFromReport: compareFromReport
 };
 
 document.addEventListener('DOMContentLoaded', MGI.boot);

@@ -183,7 +183,12 @@ function renderAnnualTable() {
     return '<tr>' +
       '<td class="!px-3 !py-2.5">' +
         '<div class="flex flex-col items-start min-w-0">' +
-          nameLink(r.Full_Name, r.NIK, r.roleKey, activeSumYear(), 'text-[12px] font-semibold leading-snug') +
+          '<span class="flex items-start gap-1 w-full">' +
+            nameLink(r.Full_Name, r.NIK, r.roleKey, activeSumYear(), 'text-[12px] font-semibold leading-snug') +
+            '<button type="button" class="btn-icon !w-6 !h-6 ml-auto shrink-0" title="Compare" aria-label="Compare ' + esc(r.Full_Name) + '"' +
+              ' onclick="MGI.compareWith(\'' + esc(r.NIK) + '\', \'' + esc(r.roleKey) + '\', ' + activeSumYear() + ')">' +
+              '<span class="material-symbols-outlined text-[16px]">compare_arrows</span></button>' +
+          '</span>' +
           '<span class="text-text-secondary leading-snug">' + esc(r.Position) + ' / ' + esc(r.Department) + '</span>' +
           '<span class="text-text-muted leading-snug">' + esc(r.NIK) + (r.Division ? ' • ' + esc(r.Division) : '') + '</span>' +
           (!r.isHome || r.roleInactive

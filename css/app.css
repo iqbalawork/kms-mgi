@@ -304,6 +304,25 @@
   .login-art { display: none; max-width: 100%; height: auto; }
   @media (min-width: 1280px) and (min-height: 860px) { .login-art { display: block; } }
 
+  .cmp-tag { display: inline-flex; align-items: center; justify-content: center; width: 1.375rem; height: 1.375rem; border-radius: 9999px; font-size: 11px; font-weight: 700; line-height: 1; color: #fff; flex-shrink: 0; }
+  .cmp-tag-a { background: #8B1E1E; }
+  .cmp-tag-b { background: #1D4ED8; }
+  .cmp-text-a { color: #8B1E1E; }
+  .cmp-text-b { color: #1D4ED8; }
+  .cmp-slot { border-left-width: 4px; }
+  .cmp-slot-a { border-left-color: #8B1E1E; }
+  .cmp-slot-b { border-left-color: #1D4ED8; }
+  .cmp-pop { left: 0; right: 0; width: auto; }
+  .cmp-chart-fill { position: relative; flex: 1 1 auto; min-height: 18rem; }
+  #sum-filter-bar.is-static { position: static; }
+  .seg-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .cmp-bar { display: flex; height: 1.5rem; border-radius: .5rem; overflow: hidden; background: #F1F5F9; }
+  .cmp-bar > span { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; min-width: 0; }
+  .cmp-meter { height: .5rem; border-radius: 9999px; background: #E2E8F0; overflow: hidden; }
+  .cmp-meter > span { display: block; height: 100%; border-radius: 9999px; }
+  .cmp-meter-a > span { background: #8B1E1E; }
+  .cmp-meter-b > span { background: #1D4ED8; }
+
   .skip-link {
     position: fixed; top: .75rem; left: .75rem; z-index: 120;
     padding: .5rem 1rem; border-radius: .5rem;

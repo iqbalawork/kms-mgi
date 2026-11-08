@@ -48,6 +48,7 @@ berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi
 | `org-report.js`, `org-report-ui.js`, `org-report-annual.js` | Report perusahaan (bulanan dan tahunan) |
 | `evaluation.js`, `evaluation-edit.js` | Performance Evaluation |
 | `settings-performance.js`, `settings.js` | System Settings |
+| `compare.js`, `compare-ui.js` | Tab Compare di Summary Report: perbandingan dua karyawan (analisis dan tampilan) |
 | `main.js` | Objek `MGI` dan start aplikasi |
 
 ## Performa
@@ -57,6 +58,28 @@ berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi
 - **Chart.js `defer`:** tidak lagi menahan tampilan pertama.
 - **Ilustrasi tanpa unduhan:** empty state, error muat, layar tanpa akses, dan panel login memakai SVG inline (sprite `<symbol id="art-...">` di awal `<body>`) dan pola CSS. Tidak ada gambar yang diunduh.
 - **Tailwind statis:** `css/tailwind.css` dimuat setelah `css/app.css` (urutan cascade sama seperti CDN dulu). `node tools/build-css.js --check` memastikan berkasnya mutakhir, dan `verify.js` menolak kelas tema yang belum ikut dikompilasi.
+
+## Compare (bandingkan dua karyawan)
+
+Tab ke-3 di Summary Report, hanya untuk Admin dan Report Viewer.
+
+**Cara memulai:**
+- pilih A dan B dari daftar Annual Recap (role yang sama tampil paling atas);
+- atau klik ikon compare pada baris Annual Recap;
+- atau klik **Compare with...** di laporan karyawan.
+
+**Periode:** Full year, Q1 sampai Q4, atau Custom. Bulan trial tidak dihitung.
+
+**Mode:**
+- **Same role:** semua analisis tersedia, termasuk KPI Deep Dive per KPI.
+- **Different roles:** hanya ringkasan dan perbandingan per jenis KPI, karena target tiap role berbeda.
+
+**Isi:**
+- **Overview:** skor rata-rata, bulan unggul, tren, bulan yang belum disubmit, grafik dan tabel bulanan, tier mix, dan poin yang hilang per KPI.
+- **KPI Deep Dive:** KPI disejajarkan per `KPI_ID` dan diurutkan dari selisih poin terbesar. Ada label "Same tier, different realization", yaitu dua orang di tier yang sama (di bawah 1.0) tetapi posisinya di dalam tier berbeda minimal setengah langkah `Multiplier`, beserta jarak ke tier berikutnya dalam unit KPI.
+- **Performance Evaluation:** skor, grade, dan selisih poin per komponen. Hanya muncul bila Evaluation sudah boleh dilihat oleh peran tersebut.
+
+**Data:** semuanya dari `getAnnualRecap` dan `getPerformanceReport` yang sudah ada. Tidak ada endpoint baru, jadi scope dan aturan release tetap dijaga server.
 
 ## Aksesibilitas dan alur
 

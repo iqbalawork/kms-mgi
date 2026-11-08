@@ -185,6 +185,10 @@ function reportHtml(data, role, surface) {
           '<label for="report-year-' + (modal ? 'modal' : 'inline') + '" class="text-xs font-semibold text-slate-600">Year</label>' +
           '<select id="report-year-' + (modal ? 'modal' : 'inline') + '" class="field !w-auto !py-1.5" onchange="MGI.onReportYearChange(this.value)">' + years + '</select>' +
           pdfButton +
+          (modal && role && $('view-summary')
+            ? '<button type="button" class="btn btn-secondary !py-1.5 whitespace-nowrap" onclick="MGI.compareFromReport()" title="Compare this scorecard with another employee">' +
+              '<span class="material-symbols-outlined text-[18px]">compare_arrows</span> Compare with...</button>'
+            : '') +
           (modal ? '<button class="btn-icon" onclick="MGI.closePerformanceReport()" title="Close" aria-label="Close"><span class="material-symbols-outlined">close</span></button>' : '') +
         '</div>' +
       '</div>' +
