@@ -17,7 +17,7 @@ Live: `https://iqbalawork.github.io/kms-mgi/`
 | `js/core.js` | `gasRpc()`: fetch POST ke backend, batas waktu, pemetaan error |
 | `js/logo.js` | Logo MGI (Base64) |
 | `js/state.js` ... `js/main.js` | Aplikasi klien, satu berkas per fitur (lihat di bawah) |
-| `assets/favicon.png`, `assets/apple-touch-icon.png` | Lambang MGI resmi dari design system MGI untuk ikon tab browser dan ikon layar utama ponsel (latar putih) |
+| `assets/favicon.png`, `assets/apple-touch-icon.png` | Favicon resmi dari grup aset Favicon di design system MGI: lambang berwarna di tile putih yang tidak transparan, agar tetap terbaca di tab browser gelap |
 | `.nojekyll` | Supaya GitHub Pages menyajikan berkas apa adanya |
 
 Tidak ada token, sandi, atau ID Sheet di folder ini. Sesi login disimpan di `localStorage`
@@ -58,6 +58,17 @@ berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi
 - **Chart.js `defer`:** tidak lagi menahan tampilan pertama.
 - **Ilustrasi tanpa unduhan:** empty state, error muat, layar tanpa akses, dan panel login memakai SVG inline (sprite `<symbol id="art-...">` di awal `<body>`) dan pola CSS. Tidak ada gambar yang diunduh.
 - **Tailwind statis:** `css/tailwind.css` dimuat setelah `css/app.css` (urutan cascade sama seperti CDN dulu). `node tools/build-css.js --check` memastikan berkasnya mutakhir, dan `verify.js` menolak kelas tema yang belum ikut dikompilasi.
+
+## KPI Health
+
+Tab di Master KPIs (admin). Empat flag tetap: **Unrealistic**, **Easy**, **Healthy**, dan **Not enough data**. Definisinya diatur per tahun di **System Settings > KPI Health**:
+
+- minimal submission dalam setahun sebelum KPI mendapat flag lain;
+- Unrealistic: persen submission di tier 0.2 (atau 0.4 ke bawah);
+- Easy: persen submission di tier 1.0 (atau 0.8 ke atas);
+- Healthy: sisanya. Unrealistic diperiksa sebelum Easy.
+
+Tombol **Edit definitions** di KPI Health membuka pengaturan untuk tahun yang sedang dilihat. Legend, keterangan kartu, dan judul kolom mengikuti definisi tahun itu.
 
 ## Compare (bandingkan dua karyawan)
 

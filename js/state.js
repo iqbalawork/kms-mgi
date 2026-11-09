@@ -169,7 +169,7 @@ var LABEL_META = {
 
 var HEALTH_FLAGS = {
   hard:    { label: 'Unrealistic',     pill: 'pill-danger',  text: 'text-status-danger',  icon: 'trending_down',   order: 0, caption: 'Most results land at tier 0.2' },
-  easy:    { label: 'Too easy',        pill: 'pill-warning', text: 'text-status-warning', icon: 'trending_up',     order: 1, caption: 'Most results land at tier 1.0' },
+  easy:    { label: 'Easy',            pill: 'pill-warning', text: 'text-status-warning', icon: 'trending_up',     order: 1, caption: 'Most results land at tier 1.0' },
   healthy: { label: 'Healthy',         pill: 'pill-success', text: 'text-status-success', icon: 'check_circle',    order: 2, caption: 'Results spread across the tiers' },
   thin:    { label: 'Not enough data', pill: 'pill-neutral', text: 'text-text-muted',     icon: 'hourglass_empty', order: 3, caption: 'Too few submissions to judge' }
 };

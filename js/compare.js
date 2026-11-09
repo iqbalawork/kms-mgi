@@ -338,26 +338,26 @@ function cmpNarrative(A, B, ov, kpis, ev) {
   var nb = B.name;
   var out = [];
   if (ov.diff === null) {
-    out.push('There are not enough scored months in this period to compare the average KPI score.');
+    out.push({ icon: 'info', text: 'There are not enough scored months in this period to compare the average KPI score.' });
   } else if (Math.abs(ov.diff) < 0.005) {
-    out.push(na + ' and ' + nb + ' share the same average KPI score of ' + num(ov.a.avg, 2) + '.');
+    out.push({ icon: 'balance', text: na + ' and ' + nb + ' share the same average KPI score of ' + num(ov.a.avg, 2) + '.' });
   } else {
     var lead = ov.diff > 0 ? na : nb;
     var ahead = ov.diff > 0 ? ov.wins.a : ov.wins.b;
-    out.push(lead + ' leads by ' + num(Math.abs(ov.diff), 2) + ' points on average KPI score (' + num(ov.a.avg, 2) + ' vs ' + num(ov.b.avg, 2) + ')' +
-      (ov.wins.both ? ' and is ahead in ' + ahead + ' of ' + ov.wins.both + ' months scored by both.' : '.'));
+    out.push({ icon: 'leaderboard', text: lead + ' leads by ' + num(Math.abs(ov.diff), 2) + ' points on average KPI score (' + num(ov.a.avg, 2) + ' vs ' + num(ov.b.avg, 2) + ')' +
+      (ov.wins.both ? ' and is ahead in ' + ahead + ' of ' + ov.wins.both + ' months scored by both.' : '.') });
   }
   [[na, ov.a], [nb, ov.b]].forEach(function (p) {
     if (p[1].trend !== null && Math.abs(p[1].trend) >= 1) {
-      out.push(p[0] + (p[1].trend > 0 ? ' is improving' : ' is slipping') + ' (' + (p[1].trend > 0 ? '+' : '') + num(p[1].trend, 2) +
-        ' from the first to the second half of the period).');
+      out.push({ icon: p[1].trend > 0 ? 'trending_up' : 'trending_down', text: p[0] + (p[1].trend > 0 ? ' is improving' : ' is slipping') + ' (' + (p[1].trend > 0 ? '+' : '') + num(p[1].trend, 2) +
+        ' from the first to the second half of the period).' });
     }
   });
   if (kpis) {
     var top = kpis.filter(function (x) { return x.pointGap !== null && Math.abs(x.pointGap) >= 0.005; })[0];
     if (top) {
-      out.push('The largest KPI gap is ' + top.k.KPI_Name + ' (' + top.id + '), worth ' + num(Math.abs(top.pointGap), 2) + ' points a month in favour of ' +
-        (top.pointGap > 0 ? na : nb) + '.');
+      out.push({ icon: 'flag', text: 'The largest KPI gap is ' + top.k.KPI_Name + ' (' + top.id + '), worth ' + num(Math.abs(top.pointGap), 2) + ' points a month in favour of ' +
+        (top.pointGap > 0 ? na : nb) + '.' });
     }
     var tie = kpis.filter(function (x) { return x.focus !== null && x.posA && x.posB; })[0];
     if (tie) {
@@ -367,13 +367,13 @@ function cmpNarrative(A, B, ov, kpis, ev) {
           ? who + ' is ' + num(pos.cushionUnits, 2) + unit + ' clear of dropping'
           : who + ' needs ' + num(pos.toNextUnits, 2) + unit + ' more to reach ' + Number(pos.nextScore).toFixed(1);
       };
-      out.push('On ' + tie.k.KPI_Name + ' both scored ' + Number(tie.posA.score).toFixed(1) + ' in ' + MONTHS[tie.focus] + ', but ' +
-        reach(na, tie.posA) + ' while ' + reach(nb, tie.posB) + '.');
+      out.push({ icon: 'stairs', text: 'On ' + tie.k.KPI_Name + ' both scored ' + Number(tie.posA.score).toFixed(1) + ' in ' + MONTHS[tie.focus] + ', but ' +
+        reach(na, tie.posA) + ' while ' + reach(nb, tie.posB) + '.' });
     }
   }
   if (ev && ev.state === 'ready' && ev.complete) {
-    out.push('Performance Score: ' + na + ' ' + scoreText(ev.a.score) + ' (grade ' + ev.a.grade + '), ' + nb + ' ' + scoreText(ev.b.score) +
-      ' (grade ' + ev.b.grade + ')' + (ev.driver ? '. ' + ev.driver.label + ' explains most of the difference.' : '.'));
+    out.push({ icon: 'workspace_premium', text: 'Performance Score: ' + na + ' ' + scoreText(ev.a.score) + ' (grade ' + ev.a.grade + '), ' + nb + ' ' + scoreText(ev.b.score) +
+      ' (grade ' + ev.b.grade + ')' + (ev.driver ? '. ' + ev.driver.label + ' explains most of the difference.' : '.') });
   }
   return out;
 }

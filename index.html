@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MGI KPIs Management System</title>
-  <link rel="icon" type="image/png" href="./assets/favicon.png">
-  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon.png?v=9eddc66f">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png?v=665e238c">
   <meta name="theme-color" content="#8B1E1E">
   <meta name="robots" content="noindex, nofollow">
   <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -14,9 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,note,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,start,sticky_note_2,support,support_agent,swap_horiz,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?v=806c1927">
-  <link rel="stylesheet" href="./css/tailwind.css?v=6f033429">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,note,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,stairs,start,sticky_note_2,support,support_agent,swap_horiz,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="./css/app.css?v=bdfa15be">
+  <link rel="stylesheet" href="./css/tailwind.css?v=c62e95c0">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
 
@@ -639,7 +639,7 @@
                   <select id="mkh-flag" class="field" onchange="MGI.renderKpiHealth()">
                     <option value="">All</option>
                     <option value="hard">Unrealistic</option>
-                    <option value="easy">Too easy</option>
+                    <option value="easy">Easy</option>
                     <option value="healthy">Healthy</option>
                     <option value="thin">Not enough data</option>
                   </select>
@@ -651,7 +651,12 @@
               </div>
             </div>
             <div id="mkh-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3"></div>
-            <p id="mkh-legend" class="text-body-sm text-text-muted mb-4"></p>
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-4">
+              <p id="mkh-legend" class="text-body-sm text-text-muted"></p>
+              <button id="mkh-edit" type="button" class="btn btn-secondary !py-1.5 !text-label-sm shrink-0" onclick="MGI.editKpiHealthDefinitions()" title="Change what each flag means for this year">
+                <span class="material-symbols-outlined text-[18px]">tune</span> Edit definitions
+              </button>
+            </div>
             <div class="pin-card bg-surface-card rounded-xl shadow-level-1 border border-border-light" id="mkh-card">
               <div class="pin-wrap">
                 <div id="mkh-pin" class="pin-head" aria-hidden="true"></div>
@@ -1133,6 +1138,10 @@
                 <span class="material-symbols-outlined">workspace_premium</span>
                 <span class="settings-nav-text"><span class="settings-nav-label">Performance Scoring</span><span class="settings-nav-hint">Weights and grades</span></span>
               </button>
+              <button type="button" class="settings-nav-btn" role="tab" data-settings-tab="health" onclick="MGI.setSettingsTab('health')">
+                <span class="material-symbols-outlined">monitor_heart</span>
+                <span class="settings-nav-text"><span class="settings-nav-label">KPI Health</span><span class="settings-nav-hint">What each flag means</span></span>
+              </button>
               <p class="settings-nav-group" aria-hidden="true">Organization &amp; access</p>
               <button type="button" class="settings-nav-btn" role="tab" data-settings-tab="categories" onclick="MGI.setSettingsTab('categories')">
                 <span class="material-symbols-outlined">category</span>
@@ -1167,6 +1176,10 @@
 
               <div id="settings-performance-panel" class="hidden">
                 <div id="perf-control" class="bg-surface-card rounded-xl p-space-lg shadow-level-1 border border-border-light"></div>
+              </div>
+
+              <div id="settings-health-panel" class="hidden">
+                <div id="health-control" class="bg-surface-card rounded-xl p-space-lg shadow-level-1 border border-border-light"></div>
               </div>
 
               <div id="settings-access-panel" class="hidden">
@@ -1213,7 +1226,7 @@
 <script src="./js/config.js?v=b6462838"></script>
 <script src="./js/core.js?v=1acd3b19"></script>
 <script src="./js/logo.js?v=1ad6d7cb"></script>
-<script src="./js/state.js?v=1d1b1df3"></script>
+<script src="./js/state.js?v=42f36aee"></script>
 <script src="./js/util.js?v=1c80b3d0"></script>
 <script src="./js/auth.js?v=b2425656"></script>
 <script src="./js/access-year.js?v=525ae05d"></script>
@@ -1224,7 +1237,7 @@
 <script src="./js/my-kpis-submit.js?v=70c34ec0"></script>
 <script src="./js/mapping.js?v=7fa7c221"></script>
 <script src="./js/mapping-workspace.js?v=37555f49"></script>
-<script src="./js/kpi-health.js?v=4b2dea5a"></script>
+<script src="./js/kpi-health.js?v=2d1833c0"></script>
 <script src="./js/master-kpis.js?v=990f0b07"></script>
 <script src="./js/master-kpis-edit.js?v=2713ea02"></script>
 <script src="./js/summary.js?v=3586521b"></script>
@@ -1239,9 +1252,10 @@
 <script src="./js/evaluation.js?v=42302653"></script>
 <script src="./js/evaluation-edit.js?v=d49f604f"></script>
 <script src="./js/settings-performance.js?v=a19c1fa9"></script>
-<script src="./js/settings.js?v=7e183c58"></script>
-<script src="./js/compare.js?v=94594003"></script>
-<script src="./js/compare-ui.js?v=7af76380"></script>
-<script src="./js/main.js?v=9eb2ae74"></script>
+<script src="./js/settings-kpi-health.js?v=7fc48f56"></script>
+<script src="./js/settings.js?v=04892e9f"></script>
+<script src="./js/compare.js?v=96d66b05"></script>
+<script src="./js/compare-ui.js?v=eac5e665"></script>
+<script src="./js/main.js?v=de5d4a44"></script>
 </body>
 </html>

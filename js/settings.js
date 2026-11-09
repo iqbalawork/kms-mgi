@@ -6,6 +6,7 @@ var SETTINGS_LOADERS = {
   categories:  loadCategories,
   bands:       loadRatingBands,
   performance: loadPerformanceSettings,
+  health:      loadKpiHealthSettings,
   access:      loadReportAccess,
   theme:       loadYearThemes,
   admins:      loadAdminAccess
@@ -196,7 +197,7 @@ function confirmAdminChange() {
 function setSettingsTab(tab) {
   var adminsPanel = $('settings-admins-panel');
   S.settingsTab = tab === 'categories' ? 'categories' : tab === 'bands' ? 'bands'
-                : tab === 'performance' ? 'performance' : tab === 'access' ? 'access' : tab === 'theme' ? 'theme'
+                : tab === 'performance' ? 'performance' : tab === 'health' ? 'health' : tab === 'access' ? 'access' : tab === 'theme' ? 'theme'
                 : tab === 'fiscal' ? 'fiscal'
                 : tab === 'admins' && adminsPanel ? 'admins' : 'periods';
   $('settings-periods-panel').classList.toggle('hidden', S.settingsTab !== 'periods');
@@ -206,6 +207,7 @@ function setSettingsTab(tab) {
   $('settings-categories-panel').classList.toggle('hidden', S.settingsTab !== 'categories');
   $('settings-bands-panel').classList.toggle('hidden', S.settingsTab !== 'bands');
   $('settings-performance-panel').classList.toggle('hidden', S.settingsTab !== 'performance');
+  $('settings-health-panel').classList.toggle('hidden', S.settingsTab !== 'health');
   if (adminsPanel) adminsPanel.classList.toggle('hidden', S.settingsTab !== 'admins');
   var nav = $('settings-tabs');
   document.querySelectorAll('#settings-tabs [data-settings-tab]').forEach(function (b) {

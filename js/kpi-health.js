@@ -122,6 +122,7 @@ function showKpiHealthRow(html) {
 }
 
 function kpiHealthHead(sort) {
+  var rules = kpiHealthRules(S.kpiHealth);
   return '<tr>' +
     '<th>KPI ID</th>' +
     sortHead('KPI Name', 'name', sort, 'sortKpiHealth', 'min-w-[220px]') +
@@ -129,8 +130,8 @@ function kpiHealthHead(sort) {
     '<th>Target</th>' +
     sortHead('Holders', 'holders', sort, 'sortKpiHealth', 'text-right') +
     sortHead('Submissions', 'entries', sort, 'sortKpiHealth', 'text-right') +
-    sortHead('At 1.0', 'top', sort, 'sortKpiHealth', 'text-right') +
-    sortHead('At 0.2', 'bottom', sort, 'sortKpiHealth', 'text-right') +
+    sortHead('At ' + (rules.easyTier >= 1 ? '1.0' : '≥' + Number(rules.easyTier).toFixed(1)), 'top', sort, 'sortKpiHealth', 'text-right') +
+    sortHead('At ' + (rules.hardTier <= 0.2 ? '0.2' : '≤' + Number(rules.hardTier).toFixed(1)), 'bottom', sort, 'sortKpiHealth', 'text-right') +
     sortHead('Avg Tier', 'tier', sort, 'sortKpiHealth', 'text-right') +
     sortHead('Flag', 'flag', sort, 'sortKpiHealth', 'text-center') +
   '</tr>';
@@ -181,6 +182,13 @@ function kpiHealthSorted(list) {
   });
 }
 
+function kpiHealthCaption(key) {
+  var rules = kpiHealthRules(S.kpiHealth);
+  if (key === 'easy') return 'Most results land at tier ' + healthTierText(rules.easyTier, true);
+  if (key === 'hard') return 'Most results land at tier ' + healthTierText(rules.hardTier, false);
+  return HEALTH_FLAGS[key].caption;
+}
+
 function kpiHealthCard(key, count, active) {
   var f = HEALTH_FLAGS[key];
   return '<button type="button" class="text-left bg-surface-card rounded-xl px-4 py-3 shadow-level-1 border transition-all duration-150 hover:shadow-level-2 ' +
@@ -191,16 +199,21 @@ function kpiHealthCard(key, count, active) {
       '<span class="material-symbols-outlined text-[18px] ' + f.text + '">' + f.icon + '</span>' + esc(f.label) +
     '</span>' +
     '<span class="block text-[24px] leading-8 font-bold tracking-tight mt-1 ' + (count ? f.text : 'text-text-muted') + '">' + count + '</span>' +
-    '<span class="block text-body-sm text-text-muted">' + esc(f.caption) + '</span>' +
+    '<span class="block text-body-sm text-text-muted">' + esc(kpiHealthCaption(key)) + '</span>' +
   '</button>';
 }
 
+function kpiHealthRules(d) {
+  var t = (d && d.thresholds) || {};
+  return {
+    minEntries: t.minEntries, easyPct: t.easyPct, hardPct: t.hardPct,
+    easyTier: isNum(t.easyTier) ? t.easyTier : 1, hardTier: isNum(t.hardTier) ? t.hardTier : 0.2
+  };
+}
+
 function kpiHealthLegend(d) {
-  var t = d.thresholds || {};
   var trial = (d.trialMonths || []).map(function (m) { return MONTHS[m - 1]; }).filter(Boolean);
-  return 'Too easy: ' + t.easyPct + '% or more of submissions at tier 1.0. ' +
-    'Unrealistic: ' + t.hardPct + '% or more at tier 0.2. ' +
-    'A flag needs at least ' + plural(t.minEntries, 'submission') + '. ' +
+  return healthRuleText(kpiHealthRules(d)) + ' ' +
     (trial.length
       ? trial.join(' and ') + (trial.length === 1 ? ' is a trial month and is' : ' are trial months and are') + ' left out. '
       : '') +

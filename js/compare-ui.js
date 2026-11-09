@@ -253,9 +253,11 @@ function cmpBodyHtml(ready) {
       : '') +
     '<div class="mb-space-lg bg-surface-card rounded-xl shadow-level-1 border border-border-light p-space-lg">' +
       '<p class="text-label-xs uppercase tracking-wider text-text-muted mb-2">Summary</p>' +
-      '<div class="flex flex-col gap-1.5 text-body-md text-text-primary leading-relaxed">' +
-        narrative.map(function (s) { return '<p>' + esc(s) + '</p>'; }).join('') +
-      '</div>' +
+      '<ul class="cmp-summary">' +
+        narrative.map(function (s) {
+          return '<li><span class="material-symbols-outlined cmp-summary-icon" aria-hidden="true">' + s.icon + '</span><span>' + esc(s.text) + '</span></li>';
+        }).join('') +
+      '</ul>' +
     '</div>' +
     cmpStickyHtml(A, B, ov, tabs) +
     panel +
