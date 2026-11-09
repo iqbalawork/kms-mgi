@@ -319,6 +319,8 @@
   .cmp-option-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: #64748B; white-space: nowrap; }
   .cmp-option-value { font-size: 13px; font-weight: 700; color: #0F172A; font-variant-numeric: tabular-nums; }
   .cmp-option-empty { opacity: .6; }
+  .cmp-row-out td { background: #F8FAFC; color: #94A3B8; }
+  .cmp-row-out td > span { opacity: .55; }
   .cmp-summary { display: flex; flex-direction: column; gap: .625rem; margin: 0; padding: 0; list-style: none; }
   .cmp-summary li { display: flex; align-items: flex-start; gap: .625rem; font-size: 14px; line-height: 1.55; color: #0F172A; }
   .cmp-summary-icon { flex-shrink: 0; width: 1.75rem; height: 1.75rem; display: inline-flex; align-items: center; justify-content: center; border-radius: .5rem; background: #F1F5F9; color: #475569; font-size: 18px; }

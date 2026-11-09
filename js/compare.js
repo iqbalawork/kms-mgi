@@ -6,6 +6,7 @@ var CMP_RANGES = {
 var CMP_TIERS = [1, 0.8, 0.6, 0.4, 0.2];
 var CMP_MIN_MONTHS = 3;
 var CMP_TIER_SPREAD = 0.5;
+var CMP_FLAT_SLOPE = 0.5;
 
 function cmpState() {
   if (!S.compare) {
@@ -97,20 +98,40 @@ function cmpSd(values) {
   return Math.sqrt(list.reduce(function (s, v) { return s + (v - mean) * (v - mean); }, 0) / list.length);
 }
 
-function cmpSideStats(side, months) {
-  var totals = months.map(function (i) { var v = side.role.totals ? side.role.totals[i] : null; return isNum(v) ? Number(v) : null; });
+function cmpSlope(points) {
+  var list = points.filter(function (p) { return isNum(p.x) && isNum(p.y); });
+  if (list.length < CMP_MIN_MONTHS) return null;
+  var mx = cmpMean(list.map(function (p) { return p.x; }));
+  var my = cmpMean(list.map(function (p) { return p.y; }));
+  var sxy = 0;
+  var sxx = 0;
+  list.forEach(function (p) {
+    sxy += (p.x - mx) * (p.y - my);
+    sxx += (p.x - mx) * (p.x - mx);
+  });
+  return sxx > 0 ? sxy / sxx : null;
+}
+
+function cmpTotal(side, i) {
+  var v = side.role.totals ? side.role.totals[i] : null;
+  return isNum(v) ? Number(v) : null;
+}
+
+function cmpShared(A, B, months) {
+  return months.filter(function (i) { return cmpTotal(A, i) !== null && cmpTotal(B, i) !== null; });
+}
+
+function cmpSideStats(side, months, shared) {
+  var totals = months.map(function (i) { return cmpTotal(side, i); });
   var scored = [];
   totals.forEach(function (v, n) { if (v !== null) scored.push({ i: months[n], v: v }); });
   var states = side.data.monthStates || [];
   var due = months.filter(function (i) { return states[i] !== 'upcoming'; });
-  var missing = due.filter(function (i) { return !isNum(side.role.totals ? side.role.totals[i] : null); });
-  var half = Math.floor(scored.length / 2);
-  var trend = null;
-  if (scored.length >= 2) {
-    var first = cmpMean(scored.slice(0, half || 1).map(function (x) { return x.v; }));
-    var second = cmpMean(scored.slice(half || 1).map(function (x) { return x.v; }));
-    trend = cmpRound(second - first);
-  }
+  var missing = due.filter(function (i) { return cmpTotal(side, i) === null; });
+  var basis = shared || months;
+  var h2h = basis.map(function (i) { return cmpTotal(side, i); }).filter(function (v) { return v !== null; });
+  var slope = cmpSlope(basis.map(function (i) { return { x: i, y: cmpTotal(side, i) }; }));
+  var trend = slope === null ? null : cmpRound(slope);
   var values = scored.map(function (x) { return x.v; });
   var lowest = scored.length ? scored.reduce(function (lo, x) { return x.v < lo.v ? x : lo; }) : null;
   return {
@@ -119,6 +140,8 @@ function cmpSideStats(side, months) {
     due: due.length,
     missing: missing,
     avg: scored.length ? cmpRound(cmpMean(values)) : null,
+    h2h: h2h.length ? cmpRound(cmpMean(h2h)) : null,
+    h2hMean: h2h.length ? cmpMean(h2h) : null,
     trend: trend,
     spread: scored.length ? cmpRound(Math.max.apply(null, values) - Math.min.apply(null, values)) : null,
     sd: cmpSd(values) === null ? null : cmpRound(cmpSd(values)),
@@ -128,8 +151,9 @@ function cmpSideStats(side, months) {
 
 function cmpOverview(A, B) {
   var months = cmpMonths(A.data);
-  var a = cmpSideStats(A, months);
-  var b = cmpSideStats(B, months);
+  var shared = cmpShared(A, B, months);
+  var a = cmpSideStats(A, months, shared);
+  var b = cmpSideStats(B, months, shared);
   var wins = { a: 0, b: 0, tie: 0, both: 0 };
   months.forEach(function (i, n) {
     var va = a.totals[n];
@@ -140,12 +164,19 @@ function cmpOverview(A, B) {
     else if (va > vb) wins.a++;
     else wins.b++;
   });
+  var leftOut = months.filter(function (i) { return shared.indexOf(i) === -1; }).map(function (i) {
+    var ha = cmpTotal(A, i) !== null;
+    var hb = cmpTotal(B, i) !== null;
+    return ha || hb ? { i: i, only: ha ? 'a' : 'b' } : null;
+  }).filter(Boolean);
   return {
     months: months,
+    shared: shared,
+    leftOut: leftOut,
     a: a,
     b: b,
     wins: wins,
-    diff: a.avg !== null && b.avg !== null ? cmpRound(a.avg - b.avg) : null
+    diff: a.h2hMean !== null && b.h2hMean !== null ? cmpRound(a.h2hMean - b.h2hMean) : null
   };
 }
 
@@ -217,6 +248,13 @@ function cmpTierPosition(k, r) {
   if (!b) return null;
   var toNext = score >= 1 ? null : Math.max(0, steps - b[0]);
   var cushion = score <= 0.2 ? null : Math.max(0, b[1] - steps);
+  var progress = null;
+  if (score <= 0.2) {
+    var line = k.Label === 'Decrease' ? t + b[0] * m : t - b[0] * m;
+    var ratio = line > 0 && value > 0 ? (k.Label === 'Decrease' ? line / value : value / line)
+              : steps > 0 ? b[0] / steps : 0;
+    progress = Math.max(0, Math.min(99, Math.round(ratio * 100)));
+  }
   return {
     score: score,
     steps: cmpRound(steps, 2),
@@ -224,6 +262,7 @@ function cmpTierPosition(k, r) {
     toNextUnits: toNext === null ? null : cmpRound(toNext * m, 4),
     cushion: cushion === null ? null : cmpRound(cushion, 2),
     cushionUnits: cushion === null ? null : cmpRound(cushion * m, 4),
+    progress: progress,
     nextScore: score >= 1 ? null : CMP_TIERS[CMP_TIERS.indexOf(score) - 1]
   };
 }
@@ -232,24 +271,38 @@ function cmpKpiMonths(data, k, months) {
   return deepDiveKpiMonths(data, k).filter(function (i) { return months.indexOf(i) !== -1; });
 }
 
-function cmpKpiSide(data, k, months) {
-  if (!k) return null;
-  var idx = cmpKpiMonths(data, k, months);
-  var cells = idx.map(function (i) { return { i: i, c: k.months ? k.months[i] : null }; })
+function cmpKpiCells(data, k, months) {
+  if (!k) return [];
+  return cmpKpiMonths(data, k, months).map(function (i) { return { i: i, c: k.months ? k.months[i] : null }; })
     .filter(function (x) { return x.c && !x.c.auto && isNum(x.c.score); });
-  var reals = cells.filter(function (x) { return isNum(x.c.realization); }).map(function (x) { return Number(x.c.realization); });
+}
+
+function cmpKpiTrend(k, points) {
+  if (k.Label === 'Binary') return null;
+  var slope = cmpSlope(points);
+  if (slope === null) return null;
+  var xs = points.map(function (p) { return p.x; });
+  var span = Math.max.apply(null, xs) - Math.min.apply(null, xs);
+  var m = Number(k.Multiplier) || 0;
+  var limit = m > 0 ? m / 2 : Math.abs(Number(k.Target) || 0) * 0.05;
+  var change = slope * span * (k.Label === 'Decrease' ? -1 : 1);
+  return Math.abs(change) < limit || Math.abs(change) < 1e-9 ? 'flat' : change > 0 ? 'up' : 'down';
+}
+
+function cmpKpiSide(data, k, months, only) {
+  if (!k) return null;
+  var all = cmpKpiCells(data, k, months);
+  var cells = only ? all.filter(function (x) { return only.indexOf(x.i) !== -1; }) : all;
+  var withReal = cells.filter(function (x) { return isNum(x.c.realization); });
+  var reals = withReal.map(function (x) { return Number(x.c.realization); });
   var better = k.Label === 'Decrease' ? -1 : 1;
   var avgReal = cmpMean(reals);
-  var sd = cmpSd(reals);
-  var trend = null;
-  if (reals.length >= 2 && k.Label !== 'Binary') {
-    var half = Math.floor(reals.length / 2);
-    var d = (cmpMean(reals.slice(half)) - cmpMean(reals.slice(0, half))) * better;
-    trend = Math.abs(d) < 1e-9 ? 'flat' : d > 0 ? 'up' : 'down';
-  }
+  var sd = k.Label === 'Binary' ? null : cmpSd(reals);
+  var trend = cmpKpiTrend(k, withReal.map(function (x) { return { x: x.i, y: Number(x.c.realization) }; }));
   return {
     k: k,
     n: cells.length,
+    used: cells.map(function (x) { return x.i; }),
     avgScore: cells.length ? cmpRound(cmpMean(cells.map(function (x) { return Number(x.c.score); }))) : null,
     meanScore: cells.length ? cmpMean(cells.map(function (x) { return Number(x.c.score); })) : null,
     avgReal: avgReal === null ? null : cmpRound(avgReal, 4),
@@ -257,7 +310,7 @@ function cmpKpiSide(data, k, months) {
     onTarget: cells.filter(function (x) { return isNum(x.c.realization) && meetsTarget(k, Number(x.c.realization)); }).length,
     cv: sd === null || !avgReal ? null : cmpRound(sd / Math.abs(avgReal) * 100, 1),
     trend: trend,
-    byMonth: cells.reduce(function (acc, x) { acc[x.i] = x.c; return acc; }, {})
+    byMonth: all.reduce(function (acc, x) { acc[x.i] = x.c; return acc; }, {})
   };
 }
 
@@ -272,8 +325,13 @@ function cmpAlignKpis(A, B) {
     var ka = byA[id] || null;
     var kb = byB[id] || null;
     var k = ka || kb;
-    var sa = cmpKpiSide(A.data, ka, months);
-    var sb = cmpKpiSide(B.data, kb, months);
+    var shared = null;
+    if (ka && kb) {
+      var inB = cmpKpiCells(B.data, kb, months).map(function (x) { return x.i; });
+      shared = cmpKpiCells(A.data, ka, months).map(function (x) { return x.i; }).filter(function (i) { return inB.indexOf(i) !== -1; });
+    }
+    var sa = cmpKpiSide(A.data, ka, months, shared);
+    var sb = cmpKpiSide(B.data, kb, months, shared);
     var weight = Number(k.WeightPercent || 0);
     var pointGap = sa && sb && sa.meanScore !== null && sb.meanScore !== null ? cmpRound(weight * (sa.meanScore - sb.meanScore)) : null;
     var common = sa && sb ? Object.keys(sa.byMonth).filter(function (i) { return sb.byMonth[i]; }).map(Number).sort(function (x, y) { return x - y; }) : [];
@@ -296,6 +354,7 @@ function cmpAlignKpis(A, B) {
       a: sa,
       b: sb,
       weight: weight,
+      shared: shared,
       pointGap: pointGap,
       differs: pointGap !== null ? Math.abs(pointGap) >= 0.005 || meaningful : !!(sa || sb) && !(sa && sb),
       sameTierMonths: sameTier.length,
@@ -337,20 +396,26 @@ function cmpNarrative(A, B, ov, kpis, ev) {
   var na = A.name;
   var nb = B.name;
   var out = [];
+  var n = ov.shared.length;
+  var over = ' over the ' + (n === 1 ? 'month' : n + ' months') + ' both submitted';
   if (ov.diff === null) {
-    out.push({ icon: 'info', text: 'There are not enough scored months in this period to compare the average KPI score.' });
+    out.push({ icon: 'info', text: 'No month in this period was submitted by both, so the average KPI score cannot be compared.' });
   } else if (Math.abs(ov.diff) < 0.005) {
-    out.push({ icon: 'balance', text: na + ' and ' + nb + ' share the same average KPI score of ' + num(ov.a.avg, 2) + '.' });
+    out.push({ icon: 'balance', text: na + ' and ' + nb + ' share the same average KPI score of ' + num(ov.a.h2h, 2) + over + '.' });
   } else {
     var lead = ov.diff > 0 ? na : nb;
     var ahead = ov.diff > 0 ? ov.wins.a : ov.wins.b;
-    out.push({ icon: 'leaderboard', text: lead + ' leads by ' + num(Math.abs(ov.diff), 2) + ' points on average KPI score (' + num(ov.a.avg, 2) + ' vs ' + num(ov.b.avg, 2) + ')' +
-      (ov.wins.both ? ' and is ahead in ' + ahead + ' of ' + ov.wins.both + ' months scored by both.' : '.') });
+    out.push({ icon: 'leaderboard', text: lead + ' leads by ' + num(Math.abs(ov.diff), 2) + ' points on average KPI score' + over + ' (' + num(ov.a.h2h, 2) + ' vs ' + num(ov.b.h2h, 2) + ')' +
+      ' and is ahead in ' + ahead + ' of ' + ov.wins.both + (ov.wins.both === 1 ? ' month.' : ' months.') });
+  }
+  if (ov.a.scored !== n || ov.b.scored !== n) {
+    var own = function (name, s) { return name + ' ' + (s.avg === null ? '-' : num(s.avg, 2)) + ' (' + s.scored + (s.scored === 1 ? ' month)' : ' months)'); };
+    out.push({ icon: 'info', text: 'Over their own submitted months: ' + own(na, ov.a) + ', ' + own(nb, ov.b) + '. Months only one of them submitted are left out of the comparison.' });
   }
   [[na, ov.a], [nb, ov.b]].forEach(function (p) {
-    if (p[1].trend !== null && Math.abs(p[1].trend) >= 1) {
+    if (p[1].trend !== null && Math.abs(p[1].trend) >= CMP_FLAT_SLOPE) {
       out.push({ icon: p[1].trend > 0 ? 'trending_up' : 'trending_down', text: p[0] + (p[1].trend > 0 ? ' is improving' : ' is slipping') + ' (' + (p[1].trend > 0 ? '+' : '') + num(p[1].trend, 2) +
-        ' from the first to the second half of the period).' });
+        ' points a month).' });
     }
   });
   if (kpis) {
@@ -386,6 +451,9 @@ function cmpWarnings(A, B, ov, mode) {
     }
     if (p[0].role.roleInactive) out.push(p[0].name + ' no longer holds ' + p[0].role.roleLabel + '.');
   });
+  if (ov.a.scored >= CMP_MIN_MONTHS && ov.b.scored >= CMP_MIN_MONTHS && ov.shared.length < CMP_MIN_MONTHS) {
+    out.push('Only ' + ov.shared.length + (ov.shared.length === 1 ? ' month was' : ' months were') + ' submitted by both, so read the gap with care.');
+  }
   if (mode === 'diff') out.push('Different roles: targets and KPIs differ, so compare patterns, not ranks.');
   return out;
 }

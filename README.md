@@ -85,9 +85,13 @@ Tab ke-3 di Summary Report, hanya untuk Admin dan Report Viewer.
 - **Same role:** semua analisis tersedia, termasuk KPI Deep Dive per KPI.
 - **Different roles:** hanya ringkasan dan perbandingan per jenis KPI, karena target tiap role berbeda.
 
+**Dasar perbandingan (head-to-head):** semua angka pembanding memakai bulan yang disubmit keduanya: selisih skor, Months Ahead, Trend, Tier mix, Points lost, dan Gap per KPI. Bulan yang hanya dimiliki salah satu orang disebut sebagai "Left out" dan tidak dihitung, agar satu bulan tambahan tidak memutarbalikkan hasil. Rata-rata dari bulan masing-masing tetap ditampilkan sebagai keterangan ("Own months"). Karena itu, jumlah Points lost sama dengan 100 dikurangi rata-rata head-to-head.
+
+**Trend:** kemiringan garis lurus (regresi linear) melalui minimal 3 bulan, dalam poin per bulan. Satu bulan ekstrem tidak lagi membalik arah tren. Untuk KPI, tren dianggap stabil bila perubahan sepanjang periode kurang dari setengah `Multiplier`.
+
 **Isi:**
 - **Overview:** skor rata-rata, bulan unggul, tren, bulan yang belum disubmit, grafik dan tabel bulanan, tier mix, dan poin yang hilang per KPI.
-- **KPI Deep Dive:** KPI disejajarkan per `KPI_ID` dan diurutkan dari selisih poin terbesar. Ada label "Same tier, different realization", yaitu dua orang di tier yang sama (di bawah 1.0) tetapi posisinya di dalam tier berbeda minimal setengah langkah `Multiplier`, beserta jarak ke tier berikutnya dalam unit KPI.
+- **KPI Deep Dive:** KPI disejajarkan per `KPI_ID` dan diurutkan dari selisih poin terbesar. Ada label "Same tier, different realization", yaitu dua orang di tier yang sama (di bawah 1.0) tetapi posisinya di dalam tier berbeda minimal setengah langkah `Multiplier`, beserta jarak ke tier berikutnya dalam unit KPI. Di tier 0.2 labelnya "Lowest tier" dan bar menunjukkan seberapa dekat realisasi ke batas tier 0.4.
 - **Performance Evaluation:** skor, grade, dan selisih poin per komponen. Hanya muncul bila Evaluation sudah boleh dilihat oleh peran tersebut.
 
 **Data:** semuanya dari `getAnnualRecap` dan `getPerformanceReport` yang sudah ada. Tidak ada endpoint baru, jadi scope dan aturan release tetap dijaga server.
