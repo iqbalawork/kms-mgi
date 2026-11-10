@@ -736,6 +736,7 @@ function setEmpRole(key) {
     if (sec) sec.classList.toggle('hidden', roles.length > 1 && r.key !== key);
   });
   renderRoleTabs();
+  renderPhoneBar();
   var sec = roleEl('data-role-section', key);
   if (sec && sec.getBoundingClientRect && sec.getBoundingClientRect().top < 0 && sec.scrollIntoView) sec.scrollIntoView({ block: 'start' });
 }

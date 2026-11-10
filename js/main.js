@@ -20,6 +20,7 @@ var MGI = {
   setEmpRole: setEmpRole,
   onEmpRoleKey: onEmpRoleKey,
   goToRoleSubmit: goToRoleSubmit,
+  goMyKpis: goMyKpis,
   toggleEmpHistory: toggleEmpHistory,
 
   onEmployeeSelect: onEmployeeSelect,

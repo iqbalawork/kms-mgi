@@ -41,7 +41,7 @@ function applyRole(user) {
       { id: 'mapping',  icon: 'tune',      label: 'Mapping KPI' },
       { id: 'settings', icon: 'settings',  label: 'System Settings' }
     ]));
-    go(viewFromHash() || 'dashboard');
+    go(viewFromHash() || (isPhone() ? 'my-kpis' : 'dashboard'));
   } else {
     var viewer = isReportViewer(user);
     var drop = ['view-mapping', 'view-settings', 'view-master-kpis', 'view-evaluation'];

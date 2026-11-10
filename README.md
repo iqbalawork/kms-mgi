@@ -96,6 +96,16 @@ Tab ke-3 di Summary Report, hanya untuk Admin dan Report Viewer.
 
 **Data:** semuanya dari `getAnnualRecap` dan `getPerformanceReport` yang sudah ada. Tidak ada endpoint baru, jadi scope dan aturan release tetap dijaga server.
 
+## Tampilan HP
+
+Di layar selebar 767px ke bawah (`PHONE_QUERY`), aplikasi hanya membuka **My KPIs** dan **Scoring Guide** (`PHONE_VIEWS`), beserta login, ganti password, menu akun, dan bantuan WhatsApp.
+
+- Menu samping hanya berisi dua halaman itu. Top bar menampilkan nama halaman, chip FY, dan avatar.
+- Link ke halaman lain (misalnya `#/summary`) menampilkan kartu "Open on a computer" dengan tombol **Go to My KPIs**. Data halaman itu tidak dimuat. Bila layar melebar (HP diputar atau jendela dibesarkan), halaman aslinya langsung terbuka.
+- Admin dan Report Viewer yang membuka aplikasi di HP mulai di My KPIs.
+- Saat periode open dan role belum disubmit, bar bawah menampilkan jumlah KPI yang sudah terisi dan tombol **Submit** yang membawa ke formulir submit.
+- Hak akses tetap dijaga server. Pembatasan ini hanya tampilan, dan backend tidak membedakan HP atau komputer.
+
 ## Aksesibilitas dan alur
 
 - Setiap halaman punya link sendiri (`#/my-kpis`, `#/summary`, dan seterusnya). Back/Forward berpindah halaman dan refresh membuka halaman yang sama. Link ke halaman yang tidak boleh dibuka peran tersebut kembali ke halaman awal.

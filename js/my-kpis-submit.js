@@ -473,6 +473,7 @@ function renderRoleSubmit(roleKey) {
   var steps = roleEl('data-role-steps', r.key);
   if (steps) steps.innerHTML = roleStepsHtml(ready, !!(declare && declare.checked), open);
   renderTableFooter(r.key);
+  renderPhoneBar();
   if (!hint) return;
 
   hint.innerHTML = !open
@@ -490,6 +491,39 @@ function renderRoleSubmit(roleKey) {
               : 'Ready to submit. This uses 1 of your ' + changes.left + ' changes left.')
           : '<span class="material-symbols-outlined text-[16px] text-status-success">task_alt</span> ' +
             'Ready to submit. ' + esc(periodStatusText(ps)) + '. After that you can still change it ' + changesWord(changes.left) + '.';
+}
+
+function phoneBarRole() {
+  var d = S.dashboard;
+  if (!d || !d.periodState || !d.periodState.isOpen) return null;
+  var roles = (d.roles || []).filter(function (r) { return !r.inactiveRole; });
+  var r = roles.filter(function (x) { return x.key === S.empRole; })[0] || (roles.length === 1 ? roles[0] : null);
+  if (!r || !roleEl('data-role-submit', r.key)) return null;
+  var form = roleEl('data-role-form', r.key);
+  return form && !form.classList.contains('hidden') ? r : null;
+}
+
+function renderPhoneBar() {
+  var bar = $('emp-phone-bar');
+  if (!bar) return;
+  var r = S.view === 'my-kpis' && isPhone() ? phoneBarRole() : null;
+  var show = !!r;
+  bar.classList.toggle('hidden', !show);
+  if (document.body) document.body.classList.toggle('has-phone-bar', show);
+  if (!show) {
+    bar.innerHTML = '';
+    return;
+  }
+  var ready = roleSubmitReadiness(r);
+  var filled = ready.required - ready.missing.length;
+  var next = ready.ok ? 'Ready to submit' : readinessMessage(ready);
+  bar.innerHTML =
+    '<div class="min-w-0">' +
+      '<p class="emp-phone-bar-count">' + filled + ' of ' + ready.required + ' filled</p>' +
+      '<p class="emp-phone-bar-sub">' + esc(next.charAt(0).toUpperCase() + next.slice(1)) + (S.dashboard.roles.length > 1 ? ' • ' + esc(r.label) : '') + '</p>' +
+    '</div>' +
+    '<button type="button" class="btn btn-primary !py-2 !px-4 shrink-0" onclick="MGI.goToRoleSubmit()">' +
+      '<span class="material-symbols-outlined text-[18px]">send</span> Submit</button>';
 }
 
 function collectDrafts(exceptKey) {

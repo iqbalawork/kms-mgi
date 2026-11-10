@@ -142,6 +142,7 @@ function navGroup(title, links) {
     a.onclick = function () { go(l.id); };
     list.appendChild(a);
   });
+  wrap.dataset.phone = links.every(function (l) { return PHONE_VIEWS[l.id]; }) ? 'yes' : 'no';
   wrap.appendChild(list);
   return wrap;
 }
@@ -205,13 +206,16 @@ function go(view) {
   }
 
   S.view = view;
+  var blocked = isPhone() && !PHONE_VIEWS[view];
   closeHelp(true);
   syncHelpFab();
   syncHash(view);
   ['dashboard', 'my-kpis', 'guide', 'master-kpis', 'mapping', 'summary', 'evaluation', 'settings'].forEach(function (v) {
     var el = $('view-' + v);
-    if (el) el.classList.toggle('hidden', v !== view);
+    if (el) el.classList.toggle('hidden', blocked || v !== view);
   });
+  renderDesktopOnly(blocked ? view : '');
+  renderPhoneBar();
   document.querySelectorAll('#sidebar-nav .nav-link').forEach(function (a) {
     a.classList.toggle('is-active', a.dataset.view === view);
     if (a.dataset.view === view) a.setAttribute('aria-current', 'page');
@@ -221,6 +225,7 @@ function go(view) {
   toggleSidebar(false);
   window.scrollTo(0, 0);
 
+  if (blocked) return;
   if (view === 'dashboard') initDashboard();
   if (view === 'my-kpis') initMyKpis();
   if (view === 'master-kpis') initMasterKpis();
@@ -229,6 +234,42 @@ function go(view) {
   if (view === 'evaluation') initEvaluation();
   if (view === 'settings') initSettings();
   if (view === 'guide') initGuide();
+}
+
+function isPhone() {
+  return !!(window.matchMedia && window.matchMedia(PHONE_QUERY).matches);
+}
+
+function syncPhoneMode() {
+  var phone = isPhone();
+  var changed = S.phone !== phone;
+  S.phone = phone;
+  if (document.body) document.body.classList.toggle('is-phone', phone);
+  if (changed && S.user && S.view && !PHONE_VIEWS[S.view]) go(S.view);
+  else renderPhoneBar();
+}
+
+function watchPhoneMode() {
+  var mq = window.matchMedia ? window.matchMedia(PHONE_QUERY) : null;
+  if (mq && mq.addEventListener) mq.addEventListener('change', syncPhoneMode);
+  else if (mq && mq.addListener) mq.addListener(syncPhoneMode);
+  syncPhoneMode();
+}
+
+function renderDesktopOnly(view) {
+  var host = $('view-desktop-only');
+  if (!host) return;
+  host.classList.toggle('hidden', !view);
+  var body = $('desktop-only-body');
+  if (!view || !body) return;
+  body.innerHTML = emptyState('chart',
+    '<strong>' + esc(VIEW_TITLES[view] || 'This page') + '</strong> is made for a larger screen. Open it on a computer or tablet. ' +
+    'On your phone you can fill in My KPIs and read the Scoring Guide.',
+    { fn: 'goMyKpis', icon: 'fact_check', label: 'Go to My KPIs' });
+}
+
+function goMyKpis() {
+  go('my-kpis');
 }
 
 function toggleSidebar(force) {
