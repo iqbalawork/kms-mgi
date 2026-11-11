@@ -170,7 +170,7 @@ function renderEmployeeList() {
 
   $('map-emp-list').innerHTML = rows.map(function (r) {
     var badge = !r.hasMapping
-      ? '<span class="pill pill-warning">No KPIs yet</span>'
+      ? ''
       : r.allValid
         ? '<span class="pill pill-success"><span class="material-symbols-outlined text-[14px]">check_circle</span> ' +
           plural(r.roleCount, 'role') + ', weights complete</span>'
@@ -205,7 +205,7 @@ function emailLine(email) {
     ? '<span class="flex items-center gap-1 min-w-0 text-label-xs text-text-secondary">' +
         '<span class="material-symbols-outlined text-[14px] text-text-muted" aria-hidden="true">mail</span>' +
         '<span class="truncate">' + esc(email) + '</span></span>'
-    : '<span class="flex items-center gap-1 text-label-xs text-status-warning">' +
+    : '<span class="flex items-center gap-1 text-label-xs text-text-muted">' +
         '<span class="material-symbols-outlined text-[14px]" aria-hidden="true">unsubscribe</span>No email on file</span>';
 }
 
