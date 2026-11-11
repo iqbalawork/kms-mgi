@@ -152,6 +152,10 @@ var LONG_REALIZATION = 13;
 
 var SLOW_SUBMIT_MS = 8000;
 
+var SUBMIT_CHANGES = 1;
+
+var CUTOFF_DAY = 3;
+
 var PERF_COMPONENTS = [
   { key: 'kpi',        label: 'Avg KPI',    field: '',                 hint: 'Automatic, from monthly KPI submissions' },
   { key: 'kbi',        label: 'KBI',        field: 'KBI_Score',        hint: 'Entered by Admin / HR' },

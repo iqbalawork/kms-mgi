@@ -139,7 +139,7 @@ function renderPeriodControl() {
 
 function regularCutoff(period) {
   var parts = String(period || '').split('_');
-  return new Date(Date.UTC(parseInt(parts[0], 10), parseInt(parts[1], 10), 5, 16, 59, 0));
+  return new Date(Date.UTC(parseInt(parts[0], 10), parseInt(parts[1], 10), CUTOFF_DAY, 16, 59, 0));
 }
 
 function periodStarted(period, now) {

@@ -514,7 +514,7 @@ function roleSection(r) {
     (changeLocked
       ? '<div class="mx-space-lg mt-space-md mb-4 flex flex-wrap items-center gap-x-2 gap-y-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">' +
           '<span class="material-symbols-outlined text-[20px] shrink-0">lock</span>' +
-          '<span class="min-w-0 flex-1">You have used ' + (changes.allowed === 2 ? 'both changes' : 'all ' + changes.allowed + ' changes') + ' for ' + esc(MONTHS[d.month - 1]) +
+          '<span class="min-w-0 flex-1">You have used ' + usedChangesPhrase(changes.allowed) + ' for ' + esc(MONTHS[d.month - 1]) +
             '. If something still needs to change, ask HR / Admin.</span>' +
           (support
             ? '<button type="button" data-help-open class="help-ask" onclick="MGI.openHelp(\'change\', \'' + key + '\')">' +

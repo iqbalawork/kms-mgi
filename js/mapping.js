@@ -415,7 +415,7 @@ function renderBulkPage() {
   divisions.sort();
 
   host.innerHTML =
-    '<div class="sticky top-16 z-20 bg-white/95 backdrop-blur-md shadow-level-1 border border-border-light rounded-xl px-4 py-3 mb-space-md">' +
+    '<div class="sticky top-16 z-20 bg-white shadow-level-1 border border-border-light rounded-xl px-4 py-3 mb-space-md">' +
       '<div class="flex flex-wrap items-center gap-3">' +
         '<button type="button" class="btn-icon shrink-0" onclick="MGI.closeBulkAssign()" title="Back to employee list" aria-label="Back to employee list">' +
           '<span class="material-symbols-outlined">arrow_back</span></button>' +

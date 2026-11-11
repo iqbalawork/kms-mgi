@@ -286,7 +286,7 @@ function openBatchModal() {
             '<span class="material-symbols-outlined">close</span></button>' +
         '</div>' +
 
-        '<div class="sticky top-0 z-20 bg-white/95 backdrop-blur-md px-6 pt-5 pb-4 border-b border-border-light">' +
+        '<div class="sticky top-0 z-20 bg-white px-6 pt-5 pb-4 border-b border-border-light">' +
           '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">' +
             '<div>' +
               '<label class="form-label">Year *</label>' +
@@ -313,7 +313,7 @@ function openBatchModal() {
           '<p id="bk-quota" class="text-body-sm text-text-muted mt-space-sm"></p>' +
         '</div>' +
 
-        '<div class="px-6 py-4 border-t border-border-light bg-slate-50/95 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-md sticky bottom-0">' +
+        '<div class="px-6 py-4 border-t border-border-light bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-space-md sticky bottom-0">' +
           '<div id="bk-total" class="flex items-center gap-space-sm"></div>' +
           '<div class="flex items-center gap-space-sm">' +
             '<button class="btn btn-secondary" onclick="MGI.closeBatchModal()">Cancel</button>' +

@@ -285,7 +285,7 @@ function openAllowChange(nik, roleKey) {
   S.allowChange = { nik: nik, roleKey: roleKey };
   var r = allowTarget();
   if (!r) return;
-  var c = r.changes || { allowed: 2 };
+  var c = r.changes || { allowed: SUBMIT_CHANGES };
   $('modal-host').innerHTML =
     '<div class="modal-backdrop" onclick="if(event.target===this)MGI.closeAllowChange()">' +
       '<div class="modal-panel !max-w-md">' +
@@ -295,7 +295,7 @@ function openAllowChange(nik, roleKey) {
           '<div class="min-w-0">' +
             '<h2 class="text-title-lg text-text-primary">Allow one more change?</h2>' +
             '<p class="text-body-sm text-text-secondary mt-1"><strong>' + esc(r.Full_Name) + '</strong> has used ' +
-              (c.allowed === 2 ? 'both changes' : 'all ' + c.allowed + ' changes') + ' for <strong>' + esc(r.Position + ' / ' + r.Department) + '</strong> in ' +
+              usedChangesPhrase(c.allowed) + ' for <strong>' + esc(r.Position + ' / ' + r.Department) + '</strong> in ' +
               esc(sumMonthName()) + '. Allowing one more lets them submit once more. Your name is recorded with it.</p>' +
           '</div>' +
         '</div>' +

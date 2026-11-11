@@ -12,10 +12,10 @@ function applyRole(user) {
   restrictOwnerViews(user);
   renderAccountMenu();
   $('topbar-title').textContent     = 'KPIs Management System';
-  $('topbar-fy').innerHTML          = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>FY' + esc(user.year);
+  $('topbar-fy').textContent        = 'FY' + user.year;
   $('topbar-fy').title              = 'Active fiscal year';
   $('sidebar-subtitle').textContent = 'Performance System ' + user.year;
-  $('app-footer-year').textContent  = new Date().getFullYear();
+  $('app-footer-year').textContent  = Math.max(new Date().getFullYear(), 2027);
   $('sidebar-name').textContent     = user.Full_Name;
   $('sidebar-role').textContent     = user.Position || '-';
   $('sidebar-avatar').textContent   = initials(user.Full_Name);

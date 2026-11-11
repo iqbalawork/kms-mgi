@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,note,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,stairs,start,sticky_note_2,support,support_agent,swap_horiz,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?v=7b9be0d4">
-  <link rel="stylesheet" href="./css/tailwind.css?v=c62e95c0">
+  <link rel="stylesheet" href="./css/app.css?v=897199df">
+  <link rel="stylesheet" href="./css/tailwind.css?v=e42576ad">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
 
@@ -59,8 +59,7 @@
 
 <div id="app-login" class="hidden fixed inset-0 z-[100] bg-surface-page overflow-y-auto">
   <div class="min-h-full grid lg:grid-cols-2">
-  <aside class="hidden lg:flex relative overflow-hidden flex-col justify-between gap-12 p-12 xl:p-16 text-white bg-gradient-to-br from-[#8B1E1E] via-[#6B1515] to-[#3B0A0A]">
-    <span class="login-pattern" aria-hidden="true"></span>
+  <aside class="hidden lg:flex relative overflow-hidden flex-col justify-between gap-12 p-12 xl:p-16 text-white bg-[#8B1E1E]">
     <div class="relative flex items-center gap-3">
       <span class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-lg">
         <img data-mgi-logo alt="MGI" width="96" height="96" class="h-8 w-auto">
@@ -71,9 +70,8 @@
       </div>
     </div>
     <div class="relative max-w-md">
-      <h2 class="text-4xl xl:text-5xl font-bold leading-tight tracking-tight">Your performance, clearly measured.</h2>
+      <h2 class="text-4xl xl:text-5xl font-bold leading-tight tracking-tight">Submit your monthly KPIs and track your score.</h2>
       <p class="mt-4 text-base text-white/90 leading-relaxed">Submit monthly results, keep your evidence in one place, and see exactly how every score is built.</p>
-      <svg class="login-art mt-8" width="340" height="132" viewBox="0 0 340 132" aria-hidden="true" focusable="false"><rect x="1" y="1" width="338" height="130" rx="16" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.28)" stroke-width="1.5"/><circle cx="62" cy="66" r="34" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="8"/><path d="M62 32a34 34 0 1 1-32.3 44.5" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/><rect x="50" y="58" width="24" height="5" rx="2.5" fill="#fff"/><rect x="54" y="69" width="16" height="4" rx="2" fill="rgba(255,255,255,.5)"/><rect x="124" y="28" width="92" height="7" rx="3.5" fill="rgba(255,255,255,.85)"/><rect x="124" y="50" width="188" height="8" rx="4" fill="rgba(255,255,255,.16)"/><rect x="124" y="50" width="150" height="8" rx="4" fill="#fff"/><rect x="124" y="72" width="188" height="8" rx="4" fill="rgba(255,255,255,.16)"/><rect x="124" y="72" width="112" height="8" rx="4" fill="rgba(255,255,255,.75)"/><rect x="124" y="94" width="188" height="8" rx="4" fill="rgba(255,255,255,.16)"/><rect x="124" y="94" width="170" height="8" rx="4" fill="rgba(255,255,255,.9)"/><rect x="262" y="22" width="50" height="20" rx="10" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.4)"/><rect x="274" y="30" width="26" height="4" rx="2" fill="#fff"/></svg>
       <ul class="mt-10 flex flex-col gap-5">
         <li class="flex items-start gap-4">
           <span class="w-10 h-10 rounded-xl bg-white/10 ring-1 ring-white/20 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[22px]">edit_calendar</span></span>
@@ -220,7 +218,7 @@
   <div id="app-body" class="lg:pl-64 min-h-screen flex flex-col">
     <button type="button" class="skip-link" onclick="MGI.skipToContent()">Skip to content</button>
 
-    <header id="topbar" class="sticky top-0 z-30 h-16 shrink-0 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-xs px-4 sm:px-8 flex items-center justify-between gap-4">
+    <header id="topbar" class="sticky top-0 z-30 h-16 shrink-0 bg-white border-b border-slate-200 shadow-xs px-4 sm:px-8 flex items-center justify-between gap-4">
       <div class="flex items-center gap-3 min-w-0">
         <button id="topbar-menu" type="button" class="btn-icon lg:hidden -ml-1.5" onclick="MGI.toggleSidebar()" aria-label="Open menu" title="Open menu">
           <span class="material-symbols-outlined">menu</span>
@@ -271,7 +269,7 @@
           <div id="dash-theme" class="mb-space-md empty:hidden"></div>
           <div id="dash-scope" class="mb-space-md empty:hidden"></div>
 
-          <div id="dash-filter-bar" class="sticky top-16 z-20 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-6 flex flex-col md:flex-row md:items-end gap-3">
+          <div id="dash-filter-bar" class="sticky top-16 z-20 bg-white border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-6 flex flex-col md:flex-row md:items-end gap-3">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
               <div>
                 <label for="dash-year" class="form-label">Year</label>
@@ -366,7 +364,7 @@
           </div>
 
           <div id="emp-monthly-panel">
-            <div id="emp-period-bar" class="sticky top-16 z-20 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xs rounded-xl px-4 py-2.5 mb-space-lg flex flex-wrap items-center justify-between gap-space-sm no-print">
+            <div id="emp-period-bar" class="sticky top-16 z-20 bg-white border border-slate-200 shadow-xs rounded-xl px-4 py-2.5 mb-space-lg flex flex-wrap items-center justify-between gap-space-sm no-print">
               <div id="emp-month-combo" class="combo flex flex-wrap items-center gap-space-sm">
                 <span class="material-symbols-outlined text-primary-container text-[20px]">calendar_month</span>
                 <span id="emp-month-label" class="text-xs font-semibold text-slate-600">Period</span>
@@ -563,7 +561,7 @@
                 </li>
                 <li class="flex items-start gap-space-sm">
                   <span class="w-7 h-7 rounded-full bg-primary-container text-white text-label-sm font-bold flex items-center justify-center shrink-0">4</span>
-                  <span class="text-body-sm text-text-secondary"><strong class="block text-text-primary">Submit before the cut-off</strong>Watch the countdown on My KPIs. After your first submission you can still change each role twice while the period is open. The newest values and file replace the earlier ones.</span>
+                  <span class="text-body-sm text-text-secondary"><strong class="block text-text-primary">Submit before the cut-off</strong>Watch the countdown on My KPIs. After your first submission you can still change each role once while the period is open. The newest values and file replace the earlier ones.</span>
                 </li>
               </ol>
             </section>
@@ -586,7 +584,7 @@
               </details>
               <details class="group py-3">
                 <summary class="flex items-center justify-between gap-space-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden text-body-md font-semibold text-text-primary">Can I change a submission?<span class="material-symbols-outlined text-text-muted transition-transform duration-150 group-open:rotate-180">expand_more</span></summary>
-                <p class="mt-2 text-body-sm text-text-secondary">Yes, twice per role each month while the period is open. Each new submission that changes a value or the evidence file uses one change. After that, ask HR / Admin to allow another change, or to reopen a closed period.</p>
+                <p class="mt-2 text-body-sm text-text-secondary">Yes, once per role each month while the period is open. A new submission that changes a value or the evidence file uses that change. After that, ask HR / Admin to allow another change, or to reopen a closed period.</p>
               </details>
               <details class="group py-3">
                 <summary class="flex items-center justify-between gap-space-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden text-body-md font-semibold text-text-primary">I forgot my password.<span class="material-symbols-outlined text-text-muted transition-transform duration-150 group-open:rotate-180">expand_more</span></summary>
@@ -626,7 +624,7 @@
           </header>
 
           <div id="mk-health" class="hidden">
-            <div id="mkh-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-4">
+            <div id="mkh-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-4">
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                 <div>
                   <label for="mkh-year" class="form-label">Year</label>
@@ -718,7 +716,7 @@
               <div id="mku-result" class="px-5 pb-4 empty:hidden"></div>
             </div>
 
-            <div id="mk-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white/95 backdrop-blur-md rounded-xl shadow-level-1 border border-border-light px-4 py-3 mb-6">
+            <div id="mk-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white rounded-xl shadow-level-1 border border-border-light px-4 py-3 mb-6">
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
                   <label for="mk-f-year" class="form-label">Year</label>
@@ -783,7 +781,7 @@
           </div>
 
           <div id="map-workspace" class="hidden">
-            <div id="map-weight-hero" class="sticky top-16 z-20 bg-white/95 backdrop-blur-md shadow-level-1 border border-border-light rounded-xl px-4 py-3 mb-space-lg">
+            <div id="map-weight-hero" class="sticky top-16 z-20 bg-white shadow-level-1 border border-border-light rounded-xl px-4 py-3 mb-space-lg">
               <div class="flex flex-wrap items-center gap-3">
                 <button type="button" class="btn-icon shrink-0" onclick="MGI.backToPicker()" title="Back to employee list" aria-label="Back to employee list">
                   <span class="material-symbols-outlined">arrow_back</span>
@@ -881,7 +879,7 @@
             </div>
           </header>
 
-          <div id="sum-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-space-lg">
+          <div id="sum-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-space-lg">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               <div>
                 <label for="sum-year" class="form-label">Year</label>
@@ -982,7 +980,7 @@
             <div id="eval-actions" class="flex flex-wrap items-center gap-2 shrink-0"></div>
           </header>
 
-          <div id="eval-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-space-lg flex flex-col md:flex-row md:items-end gap-3">
+          <div id="eval-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-space-lg flex flex-col md:flex-row md:items-end gap-3">
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 flex-1">
               <div>
                 <label for="eval-year" class="form-label">Year</label>
@@ -1221,8 +1219,8 @@
 
     <footer id="app-footer" class="no-print border-t border-slate-200/80">
       <div class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-slate-500">
-        <p>© <span id="app-footer-year">2026</span> PT Macme Global Indonesia. All rights reserved.</p>
-        <p>Supported by IT Department <span class="text-slate-300">•</span> v1.2 Enterprise</p>
+        <p>© <span id="app-footer-year">2027</span> PT Macme Global Indonesia. All rights reserved.</p>
+        <p>Supported by IT Department <span class="text-slate-300">•</span> v1.3 Enterprise</p>
       </div>
     </footer>
   </div>
@@ -1237,22 +1235,22 @@
 <script src="./js/config.js?v=b6462838"></script>
 <script src="./js/core.js?v=1acd3b19"></script>
 <script src="./js/logo.js?v=1ad6d7cb"></script>
-<script src="./js/state.js?v=ec0fcbae"></script>
+<script src="./js/state.js?v=4bfe4334"></script>
 <script src="./js/util.js?v=1c80b3d0"></script>
 <script src="./js/auth.js?v=b1e5c93d"></script>
 <script src="./js/access-year.js?v=5cb5b1e2"></script>
-<script src="./js/account-help.js?v=1d12a356"></script>
-<script src="./js/shell.js?v=95f1b7e6"></script>
+<script src="./js/account-help.js?v=6fecac7f"></script>
+<script src="./js/shell.js?v=a1befa3b"></script>
 <script src="./js/dashboard.js?v=def121e1"></script>
-<script src="./js/my-kpis.js?v=0452ff93"></script>
-<script src="./js/my-kpis-submit.js?v=696c4e7a"></script>
-<script src="./js/mapping.js?v=7fa7c221"></script>
+<script src="./js/my-kpis.js?v=a1b1ec39"></script>
+<script src="./js/my-kpis-submit.js?v=3f7ad9a3"></script>
+<script src="./js/mapping.js?v=09d7281a"></script>
 <script src="./js/mapping-workspace.js?v=37555f49"></script>
 <script src="./js/kpi-health.js?v=2d1833c0"></script>
 <script src="./js/master-kpis.js?v=990f0b07"></script>
-<script src="./js/master-kpis-edit.js?v=2713ea02"></script>
-<script src="./js/summary.js?v=3586521b"></script>
-<script src="./js/summary-periods.js?v=b52c89b7"></script>
+<script src="./js/master-kpis-edit.js?v=a30308a9"></script>
+<script src="./js/summary.js?v=e8d5ad26"></script>
+<script src="./js/summary-periods.js?v=9cd431f3"></script>
 <script src="./js/summary-table.js?v=695cfbbf"></script>
 <script src="./js/annual.js?v=7e1b48bc"></script>
 <script src="./js/perf-report.js?v=5ebab8ab"></script>

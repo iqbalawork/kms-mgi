@@ -128,7 +128,7 @@ function itemChanged(item) {
 }
 
 function roleChanges(role) {
-  return role && role.changes ? role.changes : { submitted: false, used: 0, allowed: 2, left: 2 };
+  return role && role.changes ? role.changes : { submitted: false, used: 0, allowed: SUBMIT_CHANGES, left: SUBMIT_CHANGES };
 }
 
 function roleChangeLocked(role) {
@@ -147,6 +147,11 @@ function myKpisDirty() {
 
 function changesWord(n) {
   return n === 1 ? 'once' : n === 2 ? 'twice' : n + ' times';
+}
+
+function usedChangesPhrase(allowed) {
+  if (allowed === 1) return 'your one change';
+  return allowed === 2 ? 'both changes' : 'all ' + allowed + ' changes';
 }
 
 function applyChangeLocks(d) {
