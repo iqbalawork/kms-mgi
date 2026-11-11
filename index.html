@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,note,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,stairs,start,sticky_note_2,support,support_agent,swap_horiz,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?v=897199df">
-  <link rel="stylesheet" href="./css/tailwind.css?v=e42576ad">
+  <link rel="stylesheet" href="./css/app.css?v=f40fdc55">
+  <link rel="stylesheet" href="./css/tailwind.css?v=647a8254">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
 
@@ -59,7 +59,8 @@
 
 <div id="app-login" class="hidden fixed inset-0 z-[100] bg-surface-page overflow-y-auto">
   <div class="min-h-full grid lg:grid-cols-2">
-  <aside class="hidden lg:flex relative overflow-hidden flex-col justify-between gap-12 p-12 xl:p-16 text-white bg-[#8B1E1E]">
+  <aside class="hidden lg:flex relative overflow-hidden flex-col justify-between gap-12 p-12 xl:p-16 text-white bg-gradient-to-br from-[#8B1E1E] via-[#6B1515] to-[#3B0A0A]">
+    <span class="login-pattern" aria-hidden="true"></span>
     <div class="relative flex items-center gap-3">
       <span class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-lg">
         <img data-mgi-logo alt="MGI" width="96" height="96" class="h-8 w-auto">
@@ -70,8 +71,24 @@
       </div>
     </div>
     <div class="relative max-w-md">
-      <h2 class="text-4xl xl:text-5xl font-bold leading-tight tracking-tight">Submit your monthly KPIs and track your score.</h2>
+      <h2 class="text-4xl xl:text-5xl font-bold leading-tight tracking-tight">Your performance, clearly measured.</h2>
       <p class="mt-4 text-base text-white/90 leading-relaxed">Submit monthly results, keep your evidence in one place, and see exactly how every score is built.</p>
+      <div class="login-cards" aria-hidden="true">
+        <div class="login-card login-card-glass login-card-index">
+          <p class="login-card-label">Submitted Index<span class="material-symbols-outlined">trending_up</span></p>
+          <p class="login-card-figure"><span class="login-card-value">92.4</span><span class="login-card-band"><span class="material-symbols-outlined">workspace_premium</span>Excellent</span></p>
+          <p class="login-card-note">October 2026</p>
+        </div>
+        <div class="login-card login-card-paper">
+          <p class="login-card-row"><span class="login-card-open"><span class="material-symbols-outlined">schedule</span>Open until 3 Nov</span><span class="login-card-time">23:59 WIB</span></p>
+          <p class="login-card-title">October 2026 KPIs</p>
+          <p class="login-card-meta">Admin / IT &bull; 4 of 4 filled</p>
+        </div>
+        <div class="login-card login-card-glass login-card-evidence">
+          <span class="material-symbols-outlined">task_alt</span>
+          <span><span class="login-card-label">Evidence</span><span class="login-card-ok">Submitted &amp; Verified</span></span>
+        </div>
+      </div>
       <ul class="mt-10 flex flex-col gap-5">
         <li class="flex items-start gap-4">
           <span class="w-10 h-10 rounded-xl bg-white/10 ring-1 ring-white/20 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[22px]">edit_calendar</span></span>
@@ -1240,7 +1257,7 @@
 <script src="./js/auth.js?v=b1e5c93d"></script>
 <script src="./js/access-year.js?v=5cb5b1e2"></script>
 <script src="./js/account-help.js?v=6fecac7f"></script>
-<script src="./js/shell.js?v=a1befa3b"></script>
+<script src="./js/shell.js?v=95f1b7e6"></script>
 <script src="./js/dashboard.js?v=def121e1"></script>
 <script src="./js/my-kpis.js?v=a1b1ec39"></script>
 <script src="./js/my-kpis-submit.js?v=3f7ad9a3"></script>
