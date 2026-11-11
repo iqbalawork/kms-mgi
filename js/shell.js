@@ -139,10 +139,11 @@ function navGroup(title, links) {
     a.title = l.label;
     a.innerHTML = '<span class="material-symbols-outlined text-[20px]">' + l.icon + '</span>' +
                   '<span class="nav-label">' + esc(l.label) + '</span>';
+    a.dataset.phone = PHONE_VIEWS[l.id] ? 'yes' : 'no';
     a.onclick = function () { go(l.id); };
     list.appendChild(a);
   });
-  wrap.dataset.phone = links.every(function (l) { return PHONE_VIEWS[l.id]; }) ? 'yes' : 'no';
+  wrap.dataset.phone = links.some(function (l) { return PHONE_VIEWS[l.id]; }) ? 'yes' : 'no';
   wrap.appendChild(list);
   return wrap;
 }
@@ -245,6 +246,8 @@ function syncPhoneMode() {
   var changed = S.phone !== phone;
   S.phone = phone;
   if (document.body) document.body.classList.toggle('is-phone', phone);
+  if (changed && !phone) toggleSettingsPicker(false);
+  if (changed && S.view === 'settings' && S.settingsTab === 'fiscal' && S.fiscal) renderFiscalPanel();
   if (changed && S.user && S.view && !PHONE_VIEWS[S.view]) go(S.view);
   else renderPhoneBar();
 }
@@ -264,7 +267,7 @@ function renderDesktopOnly(view) {
   if (!view || !body) return;
   body.innerHTML = emptyState('chart',
     '<strong>' + esc(VIEW_TITLES[view] || 'This page') + '</strong> is made for a larger screen. Open it on a computer or tablet. ' +
-    'On your phone you can fill in My KPIs and read the Scoring Guide.',
+    'On your phone you can fill in My KPIs, read the Scoring Guide' + (S.user && S.user.isAdmin ?', and manage System Settings.' : '.'),
     { fn: 'goMyKpis', icon: 'fact_check', label: 'Go to My KPIs' });
 }
 

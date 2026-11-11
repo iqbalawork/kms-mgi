@@ -98,9 +98,16 @@ Tab ke-3 di Summary Report, hanya untuk Admin dan Report Viewer.
 
 ## Tampilan HP
 
-Di layar selebar 767px ke bawah (`PHONE_QUERY`), aplikasi hanya membuka **My KPIs** dan **Scoring Guide** (`PHONE_VIEWS`), beserta login, ganti password, menu akun, dan bantuan WhatsApp.
+Di layar selebar 767px ke bawah (`PHONE_QUERY`), aplikasi hanya membuka **My KPIs**, **Scoring Guide**, dan **System Settings** (`PHONE_VIEWS`, Settings hanya untuk admin), beserta login, ganti password, menu akun, dan bantuan WhatsApp.
 
-- Menu samping hanya berisi dua halaman itu. Top bar menampilkan nama halaman, chip FY, dan avatar.
+- Menu samping hanya berisi halaman-halaman itu. Setiap link diberi `data-phone`, dan satu grup disembunyikan hanya bila tidak ada link-nya yang bisa dibuka di HP. Top bar menampilkan nama halaman, chip FY, dan avatar.
+- System Settings di HP:
+  - Baris tab diganti tombol pemilih bagian (`#settings-picker`). Tombol ini membuka `#settings-tabs` sebagai daftar berkelompok, dan menutupnya saat bagian dipilih, saat Esc ditekan, atau saat layar diketuk di luar daftar.
+  - Tombol pindah tahun fiskal tidak muncul, dan `openYearSwitch` menolak jalan di HP.
+  - Report Access dan riwayat Yearly Theme tampil sebagai kartu, dan bar Grant access menempel di bawah top bar.
+  - Semua modal menjadi bottom sheet.
+  - Semua `.field` 16px agar Safari iOS tidak men-zoom halaman.
+- Tablet (768 sampai 1023px) tetap memakai baris tab yang bisa digeser.
 - Link ke halaman lain (misalnya `#/summary`) menampilkan kartu "Open on a computer" dengan tombol **Go to My KPIs**. Data halaman itu tidak dimuat. Bila layar melebar (HP diputar atau jendela dibesarkan), halaman aslinya langsung terbuka.
 - Admin dan Report Viewer yang membuka aplikasi di HP mulai di My KPIs.
 - Saat periode open dan role belum disubmit, bar bawah menampilkan jumlah KPI yang sudah terisi dan tombol **Submit** yang membawa ke formulir submit.

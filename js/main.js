@@ -104,6 +104,7 @@ var MGI = {
   setEmpView: setEmpView,
   setSumView: setSumView,
   setSettingsTab: setSettingsTab,
+  toggleSettingsPicker: toggleSettingsPicker,
   onMapYearChange: onMapYearChange,
   onPeriodYearChange: onPeriodYearChange,
   loadFiscalYear: loadFiscalYear,

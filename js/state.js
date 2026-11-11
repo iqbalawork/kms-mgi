@@ -208,7 +208,7 @@ var WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.0
 
 var HELP_VIEWS = { 'my-kpis': true, 'guide': true };
 var PHONE_QUERY = '(max-width: 767px)';
-var PHONE_VIEWS = { 'my-kpis': true, 'guide': true };
+var PHONE_VIEWS = { 'my-kpis': true, 'guide': true, 'settings': true };
 
 var HELP_TOPICS = [
   { key: 'question', icon: 'help',      label: 'Ask a question',      field: 'Your question',    hint: 'e.g. How is the Achievement % calculated?',                need: 'Write your question first.' },

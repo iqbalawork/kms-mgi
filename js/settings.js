@@ -210,13 +210,56 @@ function setSettingsTab(tab) {
   $('settings-health-panel').classList.toggle('hidden', S.settingsTab !== 'health');
   if (adminsPanel) adminsPanel.classList.toggle('hidden', S.settingsTab !== 'admins');
   var nav = $('settings-tabs');
+  var picked = !!(nav && nav.classList && nav.classList.contains('is-open'));
   document.querySelectorAll('#settings-tabs [data-settings-tab]').forEach(function (b) {
     var on = b.dataset.settingsTab === S.settingsTab;
     b.classList.toggle('is-active', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
     if (on && nav && nav.scrollWidth > nav.clientWidth + 1) nav.scrollLeft = Math.max(0, b.offsetLeft - 16);
+    if (on && b.querySelector) syncSettingsPicker(b);
   });
+  if (picked) {
+    toggleSettingsPicker(false);
+    window.scrollTo(0, 0);
+  }
   loadSettingsTab(S.settingsTab);
+}
+
+function syncSettingsPicker(active) {
+  var part = function (sel) { var el = active.querySelector(sel); return el ? el.textContent : ''; };
+  if ($('settings-picker-icon')) $('settings-picker-icon').textContent = part('.material-symbols-outlined');
+  if ($('settings-picker-label')) $('settings-picker-label').textContent = part('.settings-nav-label');
+  if ($('settings-picker-hint')) $('settings-picker-hint').textContent = part('.settings-nav-hint');
+}
+
+function toggleSettingsPicker(force) {
+  var nav = $('settings-tabs');
+  var btn = $('settings-picker');
+  if (!nav || !btn || !nav.classList) return;
+  var open = force === undefined ? !nav.classList.contains('is-open') : !!force;
+  nav.classList.toggle('is-open', open);
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  document.removeEventListener('keydown', onSettingsPickerKey);
+  document.removeEventListener('click', onSettingsPickerOutside, true);
+  if (!open) return;
+  document.addEventListener('keydown', onSettingsPickerKey);
+  document.addEventListener('click', onSettingsPickerOutside, true);
+  var current = nav.querySelector ? nav.querySelector('.settings-nav-btn.is-active') : null;
+  if (current && current.focus) current.focus();
+}
+
+function onSettingsPickerKey(ev) {
+  if (ev.key !== 'Escape') return;
+  toggleSettingsPicker(false);
+  var btn = $('settings-picker');
+  if (btn && btn.focus) btn.focus();
+}
+
+function onSettingsPickerOutside(ev) {
+  var nav = $('settings-tabs');
+  var btn = $('settings-picker');
+  if (!nav || !btn || nav.contains(ev.target) || btn.contains(ev.target)) return;
+  toggleSettingsPicker(false);
 }
 
 function bandDefaults() {
@@ -263,12 +306,13 @@ function bandSegments(d) {
 
 function bandScaleHtml(d) {
   var segs = bandSegments(d);
+  var perChar = isPhone() ? 2.6 : 1.4;
   var bar = segs.map(function (seg) {
     var m = BAND_META[seg.key];
     var width = Math.max(0, Math.round((seg.max - seg.min) * 100) / 100);
     return '<div class="h-full flex items-center justify-center overflow-hidden whitespace-nowrap font-bold text-white text-[12px]" style="width:' + width + '%;background:' + m.hex + '"' +
       ' title="' + m.label + ': ' + seg.label + '">' +
-      (width >= Math.max(8, m.label.length * 1.4) ? m.label : width >= 4 ? '<span class="material-symbols-outlined text-[16px]">' + m.icon + '</span>' : '') + '</div>';
+      (width >= Math.max(8, m.label.length * perChar) ? m.label : width >= 4 ? '<span class="material-symbols-outlined text-[16px]">' + m.icon + '</span>' : '') + '</div>';
   }).join('');
   return '<div class="grade-scale w-full" aria-hidden="true">' +
     '<div class="flex h-9 w-full rounded-lg overflow-hidden ring-1 ring-black/5">' + bar + '</div>' +

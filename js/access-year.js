@@ -161,7 +161,7 @@ function renderAccessViewers() {
     return;
   }
   host.innerHTML =
-    '<table class="data-table text-body-sm min-w-[640px]">' +
+    '<table class="data-table access-viewer-table text-body-sm min-w-[640px]">' +
       '<thead><tr><th class="min-w-[240px]">Employee</th><th class="w-52">Access scope</th><th>Granted</th><th class="text-right">Action</th></tr></thead>' +
       '<tbody>' + (list.length ? list.map(function (u) {
         return '<tr>' +
@@ -169,7 +169,7 @@ function renderAccessViewers() {
             '<div class="flex flex-col min-w-0"><span class="font-semibold text-text-primary truncate">' + esc(u.Full_Name) + '</span>' +
             '<span class="text-label-xs text-text-secondary">' + esc([u.Position, u.Department].filter(Boolean).join(' / ') || '-') + '</span>' +
             '<span class="text-[11px] text-text-muted">' + esc(u.NIK) + (u.Division ? ' • ' + esc(u.Division) : '') + (u.Is_Active ? '' : ' • Inactive') + '</span></div></div></td>' +
-          '<td><select class="field !py-1 !text-label-sm" aria-label="Report scope for ' + esc(u.Full_Name) + '"' +
+          '<td data-label="Access scope"><select class="field !py-1 !text-label-sm" aria-label="Report scope for ' + esc(u.Full_Name) + '"' +
             ' onchange="MGI.setViewerScope(\'' + esc(u.NIK) + '\', this.value)">' + scopeOptions(u.scope) + '</select></td>' +
           '<td class="text-label-xs text-text-muted"><span class="whitespace-nowrap">' + esc(fmtDate(u.grantedAt)) + '</span>' + (u.grantedBy ? '<span class="block">by ' + esc(u.grantedBy) + '</span>' : '') + '</td>' +
           '<td class="text-right"><button type="button" class="btn btn-secondary !py-1 !px-2.5 !text-label-sm" onclick="MGI.removeViewer(\'' + esc(u.NIK) + '\')">' +
@@ -210,7 +210,7 @@ function renderAccessCandidates() {
     ? '<p class="px-space-md py-space-lg text-center text-body-sm text-text-muted">Every active employee already has report access.</p>'
     : !list.length
       ? '<p class="px-space-md py-space-lg text-center text-body-sm text-text-muted">No employees match these filters.</p>'
-      : '<table class="data-table text-body-sm min-w-[760px]">' +
+      : '<table class="data-table access-pick-table text-body-sm min-w-[760px]">' +
           '<thead><tr>' +
             '<th class="w-10"><input type="checkbox" class="rounded border-border-medium" aria-label="Select every employee shown"' + (allPicked ? ' checked' : '') +
               ' onchange="MGI.toggleAccessAll()"></th>' +
@@ -223,7 +223,8 @@ function renderAccessCandidates() {
                 ' onclick="event.stopPropagation()" onchange="MGI.toggleAccessPick(\'' + esc(u.NIK) + '\')"></td>' +
               '<td><div class="flex items-center gap-space-sm min-w-0"><span class="emp-avatar">' + esc(u.Initials || initials(u.Full_Name)) + '</span>' +
                 '<div class="flex flex-col min-w-0"><span class="font-semibold text-text-primary truncate">' + esc(u.Full_Name) + '</span>' +
-                '<span class="text-label-xs text-text-muted">' + esc(u.NIK) + '</span></div></div></td>' +
+                '<span class="text-label-xs text-text-muted">' + esc(u.NIK) + '</span>' +
+                '<span class="access-pick-meta text-label-xs text-text-secondary">' + esc([u.Position, u.Department, u.Division].filter(Boolean).join(' • ') || '-') + '</span></div></div></td>' +
               '<td class="text-text-secondary">' + esc(u.Position || '-') + '</td>' +
               '<td class="text-text-secondary">' + esc(u.Department || '-') + '</td>' +
               '<td class="text-text-secondary">' + esc(u.Division || '-') + '</td>' +
@@ -450,6 +451,7 @@ function renderFiscalPanel() {
   var n = d.next;
   var checks = fiscalChecks(d);
   var blocked = !n.kpis;
+  var phone = isPhone();
   var todo = checks.some(function (ch) { return ch.state === 'todo'; });
   var warn = checks.some(function (ch) { return ch.state === 'warn'; });
   var since = d.changedAt
@@ -514,16 +516,21 @@ function renderFiscalPanel() {
               (todo ? 'Not ready' : warn ? 'Almost ready' : 'Ready') + '</span>' +
           '</div>' +
           '<div class="px-space-md divide-y divide-slate-100">' + checks.map(checkRow).join('') + '</div>' +
-          '<div class="px-space-md py-space-md border-t border-border-light bg-surface-page flex flex-col items-start gap-2">' +
+          (phone
+            ? '<div class="px-space-md py-space-md border-t border-border-light bg-surface-page flex items-start gap-2 text-body-sm text-text-secondary">' +
+                '<span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">computer</span>' +
+                '<span>Switch the active year on a computer. This checklist stays up to date here.</span>' +
+              '</div>'
+            : '<div class="px-space-md py-space-md border-t border-border-light bg-surface-page flex flex-col items-start gap-2">' +
             '<button id="fiscal-switch" type="button" class="btn btn-primary" onclick="MGI.openYearSwitch(' + n.year + ')"' + (blocked ? ' disabled' : '') + '>' +
               '<span class="material-symbols-outlined text-[18px]">event_repeat</span> Switch to FY' + n.year + '</button>' +
             '<p class="text-label-xs text-text-muted">' + (blocked
               ? 'Add active Master KPIs for FY' + n.year + ' first.'
               : 'Best time: right after the last FY' + c.year + ' month closes. FY' + c.year + ' data stays as it is, and its months can still be reopened.') + '</p>' +
-          '</div>' +
+          '</div>') +
         '</section>' +
       '</div>' +
-      (d.canMoveBack
+      (d.canMoveBack && !phone
         ? '<p class="text-body-sm text-text-muted flex flex-wrap items-center gap-x-2 gap-y-1">Switched too early?' +
             '<button type="button" class="text-primary-container font-semibold rounded-md px-1.5 py-0.5 transition-all duration-150 hover:bg-brand-50" onclick="MGI.openYearSwitch(' +
               (d.activeYear - 1) + ')">Move back to FY' + (d.activeYear - 1) + '</button></p>'
@@ -534,7 +541,7 @@ function renderFiscalPanel() {
 function openYearSwitch(year) {
   var d = S.fiscal;
   year = parseInt(year, 10);
-  if (!d || !year) return;
+  if (!d || !year || isPhone()) return;
   var forward = year > d.activeYear;
   var warnings = forward ? fiscalChecks(d).filter(function (ch) { return ch.state === 'warn' || ch.state === 'todo'; }) : [];
   var verb = forward ? 'Switch to FY' : 'Move back to FY';
@@ -685,7 +692,7 @@ function renderThemePanel() {
   var current = themeFor(S.themeYear);
 
   var history = d.themes.length
-    ? '<table class="data-table text-body-sm"><thead><tr><th class="w-24">Year</th><th>Theme</th><th class="w-56">Last updated</th></tr></thead><tbody>' +
+    ? '<table class="data-table theme-history-table text-body-sm"><thead><tr><th class="w-24">Year</th><th>Theme</th><th class="w-56">Last updated</th></tr></thead><tbody>' +
         d.themes.map(function (t) {
           return '<tr><td class="font-semibold">FY' + t.year + (t.year === d.activeYear ? ' <span class="pill pill-brand !py-0 !text-[11px]">Active</span>' : '') + '</td>' +
             '<td class="text-text-primary">' + esc(t.theme) + '</td>' +
