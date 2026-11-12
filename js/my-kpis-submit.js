@@ -433,7 +433,7 @@ function roleSubmitReadiness(role) {
   });
   var hasEvidence = !!S.pendingFiles[role.key] || !!role.evidence;
   var optional = evidenceOptional();
-  return { ok: !missing.length && (hasEvidence || optional), missing: missing, hasEvidence: hasEvidence, evidenceOptional: optional, required: required };
+  return { ok: !missing.length && (hasEvidence || optional || !required), missing: missing, hasEvidence: hasEvidence, evidenceOptional: optional || !required, required: required };
 }
 
 function readinessMessage(ready) {

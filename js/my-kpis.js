@@ -179,7 +179,7 @@ function initMyKpis() {
 
   if (!trigger.dataset.wired) {
     trigger.dataset.wired = '1';
-    trigger.value = S.user.year + '-' + (S.user.defaultMonth || new Date().getMonth() + 1);
+    trigger.value = (S.user.defaultYear || S.user.year) + '-' + (S.user.defaultMonth || new Date().getMonth() + 1);
   }
   renderPeriodPicker();
 

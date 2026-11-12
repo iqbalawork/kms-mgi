@@ -1,11 +1,11 @@
 'use strict';
 
 function initSummary() {
-  if (!S.sumYear) S.sumYear = S.user.year;
+  if (!S.sumYear) S.sumYear = S.user.defaultYear || S.user.year;
 
   if (!$('sum-month').dataset.wired) {
     $('sum-month').dataset.wired = '1';
-    fillYearOptions([S.user.year]);
+    fillYearOptions([S.user.year, S.sumYear]);
     fillMonthOptions();
     $('sum-month').value = String(S.user.defaultMonth || new Date().getMonth() + 1);
 

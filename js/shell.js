@@ -5,12 +5,19 @@ function guideJump(id) {
   if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+function guideOptionalNote(years, active) {
+  var list = (years || []).filter(function (y) { return y === active || y === active - 1; });
+  if (!list.length) return '';
+  if (list.indexOf(active) !== -1) return '. Optional in FY' + active;
+  return '. Optional for FY' + list[0] + ' months';
+}
+
 function initGuide() {
   if ($('guide-maxkpi')) $('guide-maxkpi').textContent = S.user.maxKpi || 10;
   if ($('guide-evidence')) {
     $('guide-evidence').textContent = (S.user.allowedExt || []).map(function (e) { return e.toUpperCase(); }).join(', ') +
       ', up to ' + (S.user.maxFileMb || 5) + ' MB' +
-      ((S.user.evidenceOptionalYears || []).indexOf(S.user.year) !== -1 ? '. Optional in FY' + S.user.year : '');
+      guideOptionalNote(S.user.evidenceOptionalYears, S.user.year);
   }
   renderGuideBands();
   renderGuideCalc();
