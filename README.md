@@ -49,6 +49,8 @@ berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi
 | `evaluation.js`, `evaluation-edit.js` | Performance Evaluation |
 | `settings-performance.js`, `settings.js` | System Settings |
 | `compare.js`, `compare-ui.js` | Tab Compare di Summary Report: perbandingan dua karyawan (analisis dan tampilan) |
+| `compare-context.js`, `compare-context-ui.js` | Compare: Standing among peers, Track Record, dan panel Before you decide |
+| `guide-reviewer.js` | Tab Reviewer Guide di Scoring Guide (Admin dan Report Viewer) |
 | `main.js` | Objek `MGI` dan start aplikasi |
 
 ## Performa
@@ -94,7 +96,14 @@ Tab ke-3 di Summary Report, hanya untuk Admin dan Report Viewer.
 - **KPI Deep Dive:** KPI disejajarkan per `KPI_ID` dan diurutkan dari selisih poin terbesar. Ada label "Same tier, different realization", yaitu dua orang di tier yang sama (di bawah 1.0) tetapi posisinya di dalam tier berbeda minimal setengah langkah `Multiplier`, beserta jarak ke tier berikutnya dalam unit KPI. Di tier 0.2 labelnya "Lowest tier" dan bar menunjukkan seberapa dekat realisasi ke batas tier 0.4.
 - **Performance Evaluation:** skor, grade, dan selisih poin per komponen. Hanya muncul bila Evaluation sudah boleh dilihat oleh peran tersebut.
 
-**Data:** semuanya dari `getAnnualRecap` dan `getPerformanceReport` yang sudah ada. Tidak ada endpoint baru, jadi scope dan aturan release tetap dijaga server.
+**Untuk keputusan (promosi dan efisiensi):**
+- **Before you decide** (di bawah Summary, terlihat di semua tab): verdict *Not ready for a decision* / *Ready, read the notes* / *No red flags*, lalu daftar flag High, Watch, dan Info. Setiap flag punya alasan dan tombol **Show me** ke buktinya. Flag: data terlalu sedikit, bulan tidak disubmit, sedikit bulan bersama, Performance Evaluation belum lengkap, SP, tren turun, bottom 20% di antara rekan, poin hilang dari KPI Unrealistic, skor terangkat KPI Easy, coverage evidence, role tidak lagi dipegang, dan role berbeda. Ambangnya ada di konstanta awal `compare-context.js`.
+- **Standing among peers** (Overview): rank di role yang sama dari rata-rata bulan yang disubmit sendiri di periode terpilih, minimal 3 bulan berskor. Skor sama berbagi rank; label Top atau Bottom 20% butuh minimal 5 orang. Strip 0 sampai 100 dengan zona Rating Band, titik rekan tanpa nama, dan median.
+- **Track Record** (tab ke-4): FY terpilih dan 2 FY sebelumnya: home role, Avg KPI, standing setahun penuh, grade, dan SP, dengan penanda role berganti.
+- **Performance Evaluation:** Avg KPI menyebut jumlah bulannya dan dijelaskan sebagai angka resmi (berbeda dari head-to-head).
+- Ikon bantuan membuka **Scoring Guide > Reviewer Guide** di bagian yang tepat.
+
+**Data:** `getAnnualRecap`, `getPerformanceReport`, dan `getCompareContext`. Endpoint terakhir hanya membaca, satu panggilan per pasangan: track record, flag KPI Health untuk KPI kedua role, dan bulan yang punya evidence. Semuanya memakai `requireReports_`, scope Division, dan aturan release yang sama, jadi Report Viewer tidak menerima angka di luar Division-nya dan grade yang belum di-release.
 
 ## Tampilan HP
 

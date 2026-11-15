@@ -139,6 +139,8 @@ var MGI = {
   toggleAccountMenu: toggleAccountMenu,
   accountAction: accountAction,
   guideJump: guideJump,
+  setGuideTab: setGuideTab,
+  openReviewerGuide: openReviewerGuide,
   renderGuideCalc: renderGuideCalc,
   onDeclareChange: onDeclareChange,
   togglePasswordField: togglePasswordField,
@@ -254,7 +256,10 @@ var MGI = {
   setCompareFilter: setCompareFilter,
   toggleCompareKpi: toggleCompareKpi,
   compareWith: compareWith,
-  compareFromReport: compareFromReport
+  compareFromReport: compareFromReport,
+  showCompareFlag: showCompareFlag,
+  toggleCompareFlags: toggleCompareFlags,
+  retryCompareContext: retryCompareContext
 };
 
 document.addEventListener('DOMContentLoaded', MGI.boot);

@@ -392,7 +392,7 @@ function cmpEvalGap(A, B) {
   return { state: 'ready', a: ea, b: eb, parts: parts, complete: complete, gap: gap, driver: driver };
 }
 
-function cmpNarrative(A, B, ov, kpis, ev) {
+function cmpNarrative(A, B, ov, kpis, ev, peers) {
   var na = A.name;
   var nb = B.name;
   var out = [];
@@ -407,6 +407,10 @@ function cmpNarrative(A, B, ov, kpis, ev) {
     var ahead = ov.diff > 0 ? ov.wins.a : ov.wins.b;
     out.push({ icon: 'leaderboard', text: lead + ' leads by ' + num(Math.abs(ov.diff), 2) + ' points on average KPI score' + over + ' (' + num(ov.a.h2h, 2) + ' vs ' + num(ov.b.h2h, 2) + ')' +
       ' and is ahead in ' + ahead + ' of ' + ov.wins.both + (ov.wins.both === 1 ? ' month.' : ' months.') });
+  }
+  if (peers) {
+    var same = peers[0].roleKey === peers[1].roleKey;
+    out.push({ icon: 'groups', text: cmpPeerText(na, peers[0], true) + ' ' + cmpPeerText(nb, peers[1], !same) });
   }
   if (ov.a.scored !== n || ov.b.scored !== n) {
     var own = function (name, s) { return name + ' ' + (s.avg === null ? '-' : num(s.avg, 2)) + ' (' + s.scored + (s.scored === 1 ? ' month)' : ' months)'); };
@@ -440,21 +444,6 @@ function cmpNarrative(A, B, ov, kpis, ev) {
     out.push({ icon: 'workspace_premium', text: 'Performance Score: ' + na + ' ' + scoreText(ev.a.score) + ' (grade ' + ev.a.grade + '), ' + nb + ' ' + scoreText(ev.b.score) +
       ' (grade ' + ev.b.grade + ')' + (ev.driver ? '. ' + ev.driver.label + ' explains most of the difference.' : '.') });
   }
-  return out;
-}
-
-function cmpWarnings(A, B, ov, mode) {
-  var out = [];
-  [[A, ov.a], [B, ov.b]].forEach(function (p) {
-    if (p[1].scored < CMP_MIN_MONTHS) {
-      out.push(p[0].name + ' has only ' + p[1].scored + ' scored ' + (p[1].scored === 1 ? 'month' : 'months') + ' in this period, so read the gap with care.');
-    }
-    if (p[0].role.roleInactive) out.push(p[0].name + ' no longer holds ' + p[0].role.roleLabel + '.');
-  });
-  if (ov.a.scored >= CMP_MIN_MONTHS && ov.b.scored >= CMP_MIN_MONTHS && ov.shared.length < CMP_MIN_MONTHS) {
-    out.push('Only ' + ov.shared.length + (ov.shared.length === 1 ? ' month was' : ' months were') + ' submitted by both, so read the gap with care.');
-  }
-  if (mode === 'diff') out.push('Different roles: targets and KPIs differ, so compare patterns, not ranks.');
   return out;
 }
 
@@ -597,7 +586,7 @@ function setCompareMonth(which, value) {
 
 function setCompareTab(tab) {
   var c = cmpState();
-  c.tab = tab === 'kpis' || tab === 'evaluation' ? tab : 'overview';
+  c.tab = tab === 'kpis' || tab === 'evaluation' || tab === 'history' ? tab : 'overview';
   renderCompare();
 }
 

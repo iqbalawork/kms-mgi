@@ -22,6 +22,7 @@ function initGuide() {
   renderGuideBands();
   renderGuideCalc();
   renderGuidePerformance();
+  syncGuideTabs();
 }
 
 function renderGuideBands() {

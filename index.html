@@ -14,9 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,note,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,stairs,start,sticky_note_2,support,support_agent,swap_horiz,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?v=8f15b41b">
-  <link rel="stylesheet" href="./css/tailwind.css?v=eea1a861">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,notes,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,stairs,start,sticky_note_2,stop,support,support_agent,swap_horiz,swap_vert,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="./css/app.css?v=97f86110">
+  <link rel="stylesheet" href="./css/tailwind.css?v=56bd2e29">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
 
@@ -417,6 +417,12 @@
             <p class="text-sm text-slate-500 mt-1 max-w-3xl">How every KPI score is calculated, rated, and submitted. Numbers on this page follow the live system settings.</p>
           </header>
 
+          <div id="guide-tabs" class="seg mb-space-lg hidden" role="tablist" aria-label="Guide">
+            <button type="button" class="seg-btn is-active" role="tab" aria-selected="true" data-guide-tab="everyone" onclick="MGI.setGuideTab('everyone')"><span class="material-symbols-outlined text-[18px]">menu_book</span> Scoring</button>
+            <button type="button" class="seg-btn" role="tab" aria-selected="false" data-guide-tab="reviewer" onclick="MGI.setGuideTab('reviewer')"><span class="material-symbols-outlined text-[18px]">fact_check</span> Reviewer Guide</button>
+          </div>
+
+          <div id="guide-everyone">
           <nav id="guide-nav" class="guide-nav no-print" aria-label="On this page">
             <span class="guide-nav-title">On this page</span>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-tiers')">Tiers</button>
@@ -609,6 +615,9 @@
               </details>
             </div>
           </section>
+          </div>
+
+          <div id="guide-reviewer" class="hidden"></div>
         </section>
 
         <section id="view-master-kpis" class="hidden">
@@ -1253,7 +1262,7 @@
 <script src="./js/auth.js?v=b1e5c93d"></script>
 <script src="./js/access-year.js?v=5cb5b1e2"></script>
 <script src="./js/account-help.js?v=6fecac7f"></script>
-<script src="./js/shell.js?v=137fb2f0"></script>
+<script src="./js/shell.js?v=3931790b"></script>
 <script src="./js/dashboard.js?v=def121e1"></script>
 <script src="./js/my-kpis.js?v=445a9b8e"></script>
 <script src="./js/my-kpis-submit.js?v=61b09dfe"></script>
@@ -1276,8 +1285,11 @@
 <script src="./js/settings-performance.js?v=a19c1fa9"></script>
 <script src="./js/settings-kpi-health.js?v=7fc48f56"></script>
 <script src="./js/settings.js?v=90c0c08c"></script>
-<script src="./js/compare.js?v=c9a20ce0"></script>
-<script src="./js/compare-ui.js?v=6f6587f5"></script>
-<script src="./js/main.js?v=6ef397ae"></script>
+<script src="./js/compare.js?v=a942eb70"></script>
+<script src="./js/compare-ui.js?v=699b4292"></script>
+<script src="./js/compare-context.js?v=95a3b720"></script>
+<script src="./js/compare-context-ui.js?v=7f590d2d"></script>
+<script src="./js/guide-reviewer.js?v=f1f6d498"></script>
+<script src="./js/main.js?v=6af032ff"></script>
 </body>
 </html>

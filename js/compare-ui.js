@@ -231,7 +231,8 @@ function cmpBodyHtml(ready) {
   var tabs = [
     ['overview', 'insights', 'Overview', ''],
     ['kpis', 'query_stats', 'KPI Deep Dive', mode === 'same' ? '' : 'Needs two scorecards of the same role'],
-    ['evaluation', 'workspace_premium', 'Performance Evaluation', '']
+    ['evaluation', 'workspace_premium', 'Performance Evaluation', ''],
+    ['history', 'history', 'Track Record', '']
   ].map(function (t) {
     var on = c.tab === t[0];
     return '<button type="button" class="seg-btn' + (on ? ' is-active' : '') + '" role="tab" aria-selected="' + (on ? 'true' : 'false') + '"' +
@@ -239,11 +240,16 @@ function cmpBodyHtml(ready) {
       '<span class="material-symbols-outlined text-[18px]">' + t[1] + '</span> ' + t[2] + '</button>';
   }).join('');
 
-  var warnings = cmpWarnings(A, B, ov, mode);
-  var narrative = cmpNarrative(A, B, ov, kpis, ev);
+  var peers = [cmpPeerStanding(A, ov.months), cmpPeerStanding(B, ov.months)];
+  cmpLoadContext(A, B);
+  var ctx = cmpContext(A, B);
+  var ctxState = cmpContextState(A, B);
+  var flags = cmpFlags(A, B, ov, kpis, ev, peers, ctx, ctxState, mode);
+  var narrative = cmpNarrative(A, B, ov, kpis, ev, peers);
   var panel = c.tab === 'kpis' && kpis ? cmpKpiPanelHtml(A, B, kpis)
             : c.tab === 'evaluation' ? cmpEvalPanelHtml(A, B, ev)
-            : cmpOverviewPanelHtml(A, B, ov, mode);
+            : c.tab === 'history' ? cmpHistoryPanelHtml(A, B, ctx, ctxState)
+            : cmpOverviewPanelHtml(A, B, ov, mode, peers);
 
   return '<div class="flex flex-wrap items-center gap-space-sm mb-space-md">' +
       (mode === 'same'
@@ -252,12 +258,6 @@ function cmpBodyHtml(ready) {
       '<span class="text-label-xs text-text-muted">' + esc(cmpPeriodLabel(ov.months)) + '</span>' +
       '<span class="text-label-xs text-text-secondary">' + esc(cmpSharedLabel(ov)) + '</span>' +
     '</div>' +
-    (warnings.length
-      ? '<div class="mb-space-md rounded-xl border border-amber-200 bg-amber-50/70 px-4 py-3 flex items-start gap-space-sm" role="note">' +
-          '<span class="material-symbols-outlined text-status-warning text-[20px]">info</span>' +
-          '<ul class="text-body-sm text-text-secondary flex flex-col gap-1">' + warnings.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' +
-        '</div>'
-      : '') +
     '<div class="mb-space-lg bg-surface-card rounded-xl shadow-level-1 border border-border-light p-space-lg">' +
       '<p class="text-label-xs uppercase tracking-wider text-text-muted mb-2">Summary</p>' +
       '<ul class="cmp-summary">' +
@@ -266,6 +266,7 @@ function cmpBodyHtml(ready) {
         }).join('') +
       '</ul>' +
     '</div>' +
+    cmpFlagsHtml(flags, ctxState) +
     cmpStickyHtml(A, B, ov, tabs) +
     panel +
     '<p class="mt-space-lg text-label-xs text-text-muted">Use this for coaching and calibration, together with context the numbers do not show.</p>';
@@ -286,8 +287,8 @@ function cmpPeriodLabel(months) {
     ' • ' + months.length + (months.length === 1 ? ' counted month' : ' counted months');
 }
 
-function cmpDuoCard(title, icon, a, b, foot) {
-  return '<div class="bg-surface-card rounded-xl p-5 shadow-level-1 border border-border-light flex flex-col gap-3">' +
+function cmpDuoCard(title, icon, a, b, foot, id) {
+  return '<div' + (id ? ' id="' + id + '"' : '') + ' class="scroll-mt-40 bg-surface-card rounded-xl p-5 shadow-level-1 border border-border-light flex flex-col gap-3">' +
     '<div class="flex items-center justify-between gap-3">' +
       '<span class="text-sm font-medium text-slate-500">' + esc(title) + '</span>' +
       '<span class="w-9 h-9 rounded-lg bg-slate-50 ring-1 ring-slate-200/70 flex items-center justify-center text-slate-600"><span class="material-symbols-outlined text-[20px]">' + icon + '</span></span>' +
@@ -309,7 +310,7 @@ function cmpTrendHtml(v) {
     (v > 0 ? '+' : '') + num(v, 2) + '<span class="text-body-sm font-semibold"> /mo</span></span>';
 }
 
-function cmpOverviewPanelHtml(A, B, ov, mode) {
+function cmpOverviewPanelHtml(A, B, ov, mode, peers) {
   var months = ov.months;
   var monthNames = function (list) { return list.map(function (i) { return MONTHS[i].substring(0, 3); }).join(', '); };
   var cards = '<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md mb-space-lg">' +
@@ -319,7 +320,7 @@ function cmpOverviewPanelHtml(A, B, ov, mode) {
         : '')) +
     cmpDuoCard('Months Ahead', 'emoji_events', String(ov.wins.a), String(ov.wins.b),
       ov.wins.both ? ov.wins.tie + ' even of ' + ov.wins.both + ' months scored by both' : 'No month scored by both yet') +
-    cmpDuoCard('Trend', 'insights', cmpTrendHtml(ov.a.trend), cmpTrendHtml(ov.b.trend), 'Points a month, from a straight line through the months both submitted') +
+    cmpDuoCard('Trend', 'insights', cmpTrendHtml(ov.a.trend), cmpTrendHtml(ov.b.trend), 'Points a month, from a straight line through the months both submitted', 'cmp-card-trend') +
     cmpDuoCard('Submitted Months', 'fact_check', ov.a.scored + ' / ' + ov.a.due, ov.b.scored + ' / ' + ov.b.due,
       (ov.a.missing.length || ov.b.missing.length)
         ? 'Missing: ' + (ov.a.missing.length ? 'A ' + esc(monthNames(ov.a.missing)) : '') + (ov.a.missing.length && ov.b.missing.length ? '; ' : '') +
@@ -348,7 +349,7 @@ function cmpOverviewPanelHtml(A, B, ov, mode) {
         cmpLegendHtml(A.name, B.name, false) +
         '<div id="cmp-trend-box" class="cmp-chart-fill"><canvas id="cmp-trend-chart" role="img" aria-label="Monthly KPI score of A and B"></canvas></div>' +
       '</div>' +
-      '<div class="xl:col-span-2 bg-surface-card rounded-xl shadow-level-1 border border-border-light overflow-hidden">' +
+      '<div id="cmp-month-table" class="scroll-mt-40 xl:col-span-2 bg-surface-card rounded-xl shadow-level-1 border border-border-light overflow-hidden">' +
         '<div class="table-scroll"><table class="data-table text-body-sm">' +
           '<thead><tr><th scope="col">Month</th><th scope="col" class="text-right">' + cmpTag('a') + '</th><th scope="col" class="text-right">' + cmpTag('b') + '</th><th scope="col" class="text-right">Difference</th></tr></thead>' +
           '<tbody>' + rows + '</tbody>' +
@@ -407,7 +408,7 @@ function cmpOverviewPanelHtml(A, B, ov, mode) {
       '</div>' +
     '</div>';
 
-  return cards + trend + quality + (mode === 'diff' ? cmpLabelMixHtml(A, B, shared) : '');
+  return cards + (peers ? cmpPeerHtml(A, B, peers, mode, months) : '') + trend + quality + (mode === 'diff' ? cmpLabelMixHtml(A, B, shared) : '');
 }
 
 function cmpLabelMixHtml(A, B, months) {
@@ -458,7 +459,7 @@ function cmpKpiPanelHtml(A, B, kpis) {
     var tierCell = function (s) {
       return s ? (s.avgScore === null ? '<span class="text-text-muted">-</span>' : cmpAvgTierChip(s.avgScore)) : '<span class="pill pill-neutral !text-[11px]">Not mapped</span>';
     };
-    var main = '<tr class="' + (open ? 'bg-surface-page cmp-kpi-open' : '') + '">' +
+    var main = '<tr class="scroll-mt-40 ' + (open ? 'bg-surface-page cmp-kpi-open' : '') + '" data-kpi-row="' + esc(x.id) + '">' +
       '<td><button type="button" class="flex items-start gap-2 text-left w-full" onclick="MGI.toggleCompareKpi(' + n + ')" aria-expanded="' + (open ? 'true' : 'false') + '">' +
         '<span class="material-symbols-outlined text-[20px] text-text-muted">' + (open ? 'expand_less' : 'expand_more') + '</span>' +
         '<span class="min-w-0"><span class="block font-semibold text-text-primary">' + esc(k.KPI_Name) + '</span>' +
@@ -605,12 +606,14 @@ function cmpEvalPanelHtml(A, B, ev) {
   };
 
   var rows = ev.parts.filter(function (p) { return p.required; }).map(function (p) {
-    var v = function (x) { return isNum(x.value) ? num(x.value, 2) : '-'; };
+    var kpi = p.key === 'kpi';
+    var months = function (e) { return kpi && isNum(e.kpiMonths) ? '<span class="block text-label-xs font-normal text-text-muted">' + e.kpiMonths + (Number(e.kpiMonths) === 1 ? ' month' : ' months') + '</span>' : ''; };
+    var v = function (x, e) { return (isNum(x.value) ? num(x.value, 2) : '-') + months(e); };
     var pts = function (x) { return isNum(x.points) ? num(x.points, 2) : '-'; };
-    return '<tr><td class="font-semibold text-text-primary">' + esc(p.label) + '</td>' +
+    return '<tr><td class="font-semibold text-text-primary"' + (kpi ? ' title="' + esc(cmpOfficialKpiText()) + '"' : '') + '>' + esc(p.label) + '</td>' +
       '<td class="text-right tabular-nums">' + num(p.weight, 0) + '%</td>' +
-      '<td class="text-right tabular-nums">' + v(p.a) + '</td><td class="text-right tabular-nums">' + pts(p.a) + '</td>' +
-      '<td class="text-right tabular-nums">' + v(p.b) + '</td><td class="text-right tabular-nums">' + pts(p.b) + '</td>' +
+      '<td class="text-right tabular-nums">' + v(p.a, ev.a) + '</td><td class="text-right tabular-nums">' + pts(p.a) + '</td>' +
+      '<td class="text-right tabular-nums">' + v(p.b, ev.b) + '</td><td class="text-right tabular-nums">' + pts(p.b) + '</td>' +
       '<td class="text-right">' + cmpDiffHtml(p.diff, 'pts') + '</td></tr>';
   }).join('');
 
@@ -649,8 +652,24 @@ function cmpEvalPanelHtml(A, B, ev) {
         '<th scope="col" class="text-right">Difference</th></tr></thead>' +
         '<tbody>' + rows + total + '</tbody>' +
       '</table></div>' +
+      '<div class="mt-space-md rounded-lg bg-surface-page border border-border-light px-4 py-3 flex items-start gap-2 text-body-sm text-text-secondary" id="cmp-official-kpi">' +
+        '<span class="material-symbols-outlined text-[18px] text-text-muted" aria-hidden="true">info</span>' +
+        '<div><p>Avg KPI here is the official figure behind the grade: the average over each person\'s own submitted months in FY' + esc(activeSumYear()) +
+          ' (A: ' + cmpMonthCount(ev.a) + ', B: ' + cmpMonthCount(ev.b) + '). The Overview compares only the months both submitted, so its numbers differ on purpose.</p>' +
+          (cmpState().range !== 'all' ? '<p class="mt-1">Performance Evaluation always covers the whole fiscal year. The period you picked applies to the Overview and KPI Deep Dive only.</p>' : '') +
+        '</div>' +
+      '</div>' +
       shares + sp +
     '</div>';
+}
+
+function cmpOfficialKpiText() {
+  return 'Official Avg KPI: the average monthly KPI score over the person\'s own submitted months in the fiscal year, trial months left out. It is the figure the grade uses.';
+}
+
+function cmpMonthCount(e) {
+  var n = e && isNum(e.kpiMonths) ? Number(e.kpiMonths) : 0;
+  return n + (n === 1 ? ' month' : ' months');
 }
 
 function cmpLineConfig(labels, a, b, nameA, nameB, target) {
@@ -688,6 +707,10 @@ function renderCompareCharts() {
     var used = all.filter(function (i) { return total(A, i) !== null || total(B, i) !== null; });
     dashChart('cmp-trend', cmpLineConfig(label(used),
       used.map(function (i) { return total(A, i); }), used.map(function (i) { return total(B, i); }), A.name, B.name, null));
+  }
+  if (c.tab === 'history' && $('cmp-history-box')) {
+    var ctx = cmpContext(A, B);
+    if (ctx) dashChart('cmp-history', cmpHistoryChartConfig(A, B, ctx));
   }
   if (c.tab === 'kpis') {
     (c.rows || []).forEach(function (x, n) {
