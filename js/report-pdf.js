@@ -288,6 +288,9 @@ function pdfRender(libs, sheets, ctx, fileName) {
         onclone: function (clone) {
           var st = clone.getElementById('pdf-stage');
           if (st) st.style.left = '0px';
+          var fix = clone.createElement('style');
+          fix.textContent = '#pdf-stage, #pdf-stage * { font-variant-numeric: normal !important; font-feature-settings: normal !important; }';
+          clone.head.appendChild(fix);
         }
       });
     }).then(function (canvas) {

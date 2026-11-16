@@ -292,13 +292,19 @@ function rptLegend(items) {
   }).join('') + '</div>';
 }
 
-function rptBandLegend() {
+function rptFilled(r) {
+  return (r.items || []).filter(function (it) {
+    return it.InCycle && !it.AutoScore && it.Score !== null && it.Score !== undefined;
+  }).length;
+}
+
+function rptBandLegend(withTrial) {
   return '<div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-label-xs text-text-secondary">' +
     ['success', 'info', 'danger'].map(function (key) {
       return '<span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-status-' + key + '-subtle border border-status-' + key + '"></span>' +
         esc(bandRange(key)) + '</span>';
     }).join('') +
-    '<span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-surface-page border border-border-light"></span>Trial month, not counted</span>' +
+    (withTrial ? '<span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-surface-page border border-border-light"></span>Trial month, not counted</span>' : '') +
   '</div>';
 }
 
@@ -397,7 +403,7 @@ function rptTrendBlock(md, cid, title, sub) {
       }).join('') + '</tr>',
     rows: rows,
     groups: rows.map(function () { return false; }),
-    after: rptBandLegend(),
+    legend: rptBandLegend(true),
     charts: [{ id: line, cfg: rptTrendChart(tr) }, { id: bars, cfg: rptRateChart(tr) }]
   };
 }
@@ -544,6 +550,7 @@ function rptMonthDivisionBlock(md) {
       '<th class="text-right">Needs Attention</th><th class="text-right">Not Scored</th></tr>',
     rows: rows,
     groups: groups,
+    legend: rptBandLegend(false),
     after: rptNote('Averages are Role Index values of scored scorecards, colored by rating band. Year to date averages each scorecard over the counted months up to ' +
       esc(MONTHS[md.month - 1]) + ' and leaves out the trial month.')
   };
@@ -625,7 +632,8 @@ function rptKpiBlock(md) {
     title: 'KPIs Most Often Below Target',
     sub: esc(md.monthName + ' • ' + md.scopeLabel),
     intro: '<p class="text-body-sm text-text-secondary mb-4 max-w-4xl">These KPIs landed at tier 0.4 (Below) or 0.2 (Critical) for the largest share of scorecards. ' +
-      'Only KPIs scored on at least 3 scorecards are listed. A high share can point to a target that needs review, or to a problem the whole team shares.</p>',
+      'Only KPIs scored on at least 3 scorecards are listed. A high share can point to a target that needs review, or to a problem the whole team shares. ' +
+      'Multiplier is the size of one tier step in the KPI unit.</p>',
     cols: rptCols([50, null, 230, 140, 100, 90, 80, 80, 200]),
     head: '<tr><th class="text-center">#</th><th>KPI and Metrics</th><th>Role</th><th>Label</th><th class="text-right">Multiplier</th><th class="text-right">Scored</th>' +
       '<th class="text-right">At 0.4</th><th class="text-right">At 0.2</th><th>Below or Critical</th></tr>',
@@ -645,7 +653,7 @@ function rptMissingBlock(md) {
     var remindedAt = admin ? md.reminders[r.NIK] : '';
     return '<tr><td>' + rptPerson(r) + '</td><td>' + esc(r.Position) + '</td><td>' + esc(r.Department) + '</td>' +
       '<td>' + rptStatusPill(r, md.open) + '</td>' +
-      '<td class="text-right tabular-nums">' + (r.inCycle ? r.submitted + ' of ' + r.inCycle : '-') + '</td>' +
+      '<td class="text-right tabular-nums">' + (r.inCycle ? rptFilled(r) + ' of ' + r.inCycle : '-') + '</td>' +
       (admin ? '<td>' + (remindedAt ? esc(fmtDate(remindedAt)) : '<span class="text-text-muted">Not reminded</span>') + '</td>' : '') +
     '</tr>';
   }, function (rows) { return plural(rows.length, 'scorecard'); });
@@ -671,7 +679,7 @@ function rptMissingBlock(md) {
 function rptAppendixBlock(md) {
   var built = rptGrouped(rptSorted(md.rows), 8, function (r) {
     return '<tr><td>' + rptPerson(r) + '</td><td>' + esc(r.Position) + '</td><td>' + esc(r.Department) + '</td>' +
-      '<td class="text-right tabular-nums">' + (r.inCycle ? r.submitted + ' of ' + r.inCycle : '-') + '</td>' +
+      '<td class="text-right tabular-nums">' + (r.inCycle ? rptFilled(r) + ' of ' + r.inCycle : '-') + '</td>' +
       (r.submitted ? rptBandCell(r.index) : '<td class="text-right"><span class="text-text-muted">-</span></td>') +
       '<td>' + rptBandPill(r) + '</td>' +
       '<td>' + rptStatusPill(r, md.open) + '</td>' +

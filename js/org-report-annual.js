@@ -146,6 +146,7 @@ function rptTopBlock(md) {
       '<th class="text-right">KPI Months</th><th>SP</th>' + RPT_SCORE_HEAD + '</tr>',
     rows: rows,
     groups: rows.map(function () { return false; }),
+    legend: rptGradeLine(md),
     empty: 'No one has a final Performance Score yet.',
     after: md.top.more ? rptNote('And ' + plural(md.top.more, 'more person', 'more people') + ' with the same scores as the last row.') : ''
   };
@@ -227,6 +228,7 @@ function rptWatchBlock(md) {
     head: '<tr><th>Employee</th><th>Position</th><th>Department</th>' + RPT_SCORE_HEAD + '<th>Lowest Component</th></tr>',
     rows: rows,
     groups: rows.map(function () { return false; }),
+    legend: rptGradeLine(md),
     empty: 'No one has Grade D or E in FY' + md.year + '.',
     emptyGood: true
   };
@@ -264,6 +266,7 @@ function rptResultsBlock(md) {
     head: '<tr><th class="text-center">Rank</th><th>Employee</th><th>Position</th><th>Department</th><th class="text-right">KPI Months</th><th>SP and Remarks</th>' + RPT_SCORE_HEAD + '</tr>',
     rows: built.rows,
     groups: built.groups,
+    legend: rptGradeLine(md),
     after: rptNote('Rank is the company rank from the Top 10 rules. Additional Roles, inactive roles, and scorecards without a final score show a dash.')
   };
 }
@@ -291,7 +294,7 @@ function rptMonthsBlock(md) {
     }).join('') + '<th class="text-right">Months</th><th class="!px-1 text-center">Avg KPI</th></tr>',
     rows: built.rows,
     groups: built.groups,
-    after: rptBandLegend()
+    legend: rptBandLegend(true)
   };
 }
 
@@ -347,7 +350,12 @@ function rptChunks(layout, groups) {
 
 function rptTableBlockHtml(b, part, cont, last) {
   return '<div data-pdf-table>' + (cont === null ? '' : rptHead(b.contTitle || b.title, '', cont)) +
-    rptTableHtml(b, part) + (last ? b.after || '' : '') + '</div>';
+    rptTableHtml(b, part) + (b.legend || '') + (last ? b.after || '' : '') + '</div>';
+}
+
+function rptGradeLine(md) {
+  var rules = md.rules || { grades: {} };
+  return '<div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-label-xs text-text-secondary">' + gradeLegendHtml(rules.grades) + '</div>';
 }
 
 function rptLayout(stage, ctx, blocks) {

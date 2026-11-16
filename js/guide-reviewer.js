@@ -50,7 +50,8 @@ function rgList(items) {
 function reviewerGuideHtml() {
   var b = bandValues();
   var lv = CMP_FLAG_LEVELS;
-  var pill = function (key) { return '<span class="pill ' + lv[key].pill + ' !text-[11px]">' + lv[key].label + '</span>'; };
+  var pill = function (key) { return '<span class="pill ' + lv[key].pill + ' !text-[11px] whitespace-nowrap">' + lv[key].label + '</span>'; };
+  var pills = function () { return '<span class="rg-pills">' + Array.prototype.slice.call(arguments).map(pill).join('') + '</span>'; };
   var nav = [['rg-compare', 'How Compare works'], ['rg-reading', 'Reading the numbers'], ['rg-peers', 'Standing among peers'],
     ['rg-history', 'Track record'], ['rg-flags', 'Before you decide'], ['rg-use', 'Promotion and efficiency']];
   return '<nav class="guide-nav no-print" aria-label="Reviewer guide sections"><span class="guide-nav-title">On this page</span>' +
@@ -101,15 +102,15 @@ function reviewerGuideHtml() {
       rgTable(['Severity', 'Meaning'], [[pill('high'), esc(lv.high.text)], [pill('watch'), esc(lv.watch.text)], [pill('info'), esc(lv.info.text)]]) +
       '<div class="mt-space-md">' + rgTable(['Flag', 'Severity', 'Rule'], [
         ['Too little data', pill('high'), 'Fewer than ' + CMP_MIN_MONTHS + ' scored months in the period.'],
-        ['Missed submissions', pill('high') + ' ' + pill('watch'), 'High from ' + CMP_MISS_N + ' missed months or ' + CMP_MISS_PCT + '% of due months, Watch for fewer. A due month has passed and is not a trial month; the current month never counts as missed. When both missed the same months, it shows once.'],
+        ['Missed submissions', pills('high', 'watch'), 'High from ' + CMP_MISS_N + ' missed months or ' + CMP_MISS_PCT + '% of due months, Watch for fewer. A due month has passed and is not a trial month; the current month never counts as missed. When both missed the same months, it shows once.'],
         ['Few shared months', pill('watch'), 'Fewer than ' + CMP_MIN_MONTHS + ' months submitted by both.'],
         ['Evaluation not complete', pill('high'), 'A Performance Evaluation scorecard is missing KBI, 360, or Discipline, or there is no scorecard.'],
-        ['SP on record', pill('high') + ' ' + pill('watch'), 'High for the selected year, Watch for an earlier year.'],
+        ['SP on record', pills('high', 'watch'), 'High for the selected year, Watch for an earlier year.'],
         ['Slipping trend', pill('watch'), 'Trend of ' + CMP_SLIP + ' point a month or lower.'],
         ['Bottom 20% of peers', pill('watch'), 'See Standing among peers.'],
         ['Gap from Unrealistic KPIs', pill('watch'), 'Points lost on KPIs flagged Unrealistic in KPI Health make up ' + CMP_KPI_SHARE + '% or more of all points the person loses. When the same KPIs do this for both people in one role, it shows once as a note about the role\'s targets.'],
         ['Score lifted by Easy KPIs', pill('watch'), 'Points earned on KPIs flagged Easy in KPI Health make up ' + CMP_KPI_SHARE + '% or more of the person\'s score. When the same KPIs do this for both people in one role, it shows once as a note about the role\'s targets.'],
-        ['Evidence coverage', pill('watch') + ' ' + pill('info'), 'Watch when evidence is required and fewer than ' + CMP_EVIDENCE_PCT + '% of scored months have a file. Info in years where evidence is optional.'],
+        ['Evidence coverage', pills('watch', 'info'), 'Watch when evidence is required and fewer than ' + CMP_EVIDENCE_PCT + '% of scored months have a file. Info in years where evidence is optional.'],
         ['No longer holds the role', pill('info'), 'The scorecard belongs to a role the person has left.'],
         ['Different roles', pill('info'), 'A and B hold different roles.']
       ]) + '</div>' +
