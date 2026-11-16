@@ -557,8 +557,9 @@ function cmpKpiDetailHtml(A, B, x, n) {
       'Trend ' + trend + '.</span></li>';
   };
 
-  var ladder = tierLadder(k).map(function (t) {
-    return '<li class="flex items-center gap-2">' + tierChip(t.score) + '<span class="tabular-nums">' + esc(t.rule) + (k.Unit ? ' ' + esc(k.Unit) : '') + '</span></li>';
+  var steps = tierLadder(k);
+  var ladder = steps.map(function (t) {
+    return '<li class="cmp-ladder-cell">' + tierChip(t.score) + '<span class="tabular-nums">' + esc(t.rule) + (k.Unit ? ' ' + esc(k.Unit) : '') + '</span></li>';
   }).join('');
 
   var tie = x.focus !== null
@@ -578,16 +579,16 @@ function cmpKpiDetailHtml(A, B, x, n) {
       '</div>' +
       '<div class="xl:col-span-2 bg-white rounded-xl border border-border-light overflow-hidden"><div class="table-scroll cmp-kpi-months">' + table + '</div>' + outNote + '</div>' +
     '</div>' +
-    '<div class="grid grid-cols-1 lg:grid-cols-2 ' + (tie ? 'xl:grid-cols-3' : '') + ' gap-space-md items-start">' +
-      tie +
+    '<div class="bg-white rounded-xl border border-border-light px-space-md py-3 flex flex-col md:flex-row md:items-center gap-3">' +
+      '<p class="text-body-sm font-semibold text-text-primary shrink-0 md:w-28">Tier ladder</p>' +
+      '<ul class="cmp-ladder cmp-ladder-' + steps.length + ' flex-1 text-body-sm text-text-secondary">' + ladder + '</ul>' +
+    '</div>' +
+    '<div class="grid grid-cols-1 ' + (tie ? 'xl:grid-cols-2 ' : '') + 'gap-space-md items-stretch">' +
       '<div class="bg-white rounded-xl border border-border-light p-space-md">' +
         '<p class="text-body-sm font-semibold text-text-primary mb-2">What the numbers say</p>' +
-        '<ul class="flex flex-col gap-2 text-body-sm text-text-secondary">' + facts('a', x.a) + facts('b', x.b) + '</ul>' +
+        '<ul class="' + (tie ? 'flex flex-col gap-2' : 'grid grid-cols-1 lg:grid-cols-2 gap-x-space-lg gap-y-2') + ' text-body-sm text-text-secondary">' + facts('a', x.a) + facts('b', x.b) + '</ul>' +
       '</div>' +
-      '<div class="bg-white rounded-xl border border-border-light p-space-md">' +
-        '<p class="text-body-sm font-semibold text-text-primary mb-2">Tier ladder</p>' +
-        '<ul class="flex flex-col gap-1.5 text-body-sm text-text-secondary">' + ladder + '</ul>' +
-      '</div>' +
+      tie +
     '</div>' +
   '</div>';
 }
