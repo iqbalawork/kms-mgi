@@ -101,7 +101,8 @@ function renderHealthPanel() {
         '<div class="min-w-0">' +
           '<h2 class="text-title-lg text-text-primary">KPI Health</h2>' +
           '<p class="text-body-sm text-text-muted max-w-2xl">Decide what each KPI Health flag means in a fiscal year. ' +
-            'The four flags stay the same, and every year keeps its own definitions, so a change to one year never touches another.</p>' +
+            'The four flags stay the same, and every year keeps its own definitions, so a change to one year never touches another. ' +
+            'Compare uses the same definitions for its Easy and Unrealistic notes.</p>' +
         '</div>' +
         '<div class="flex flex-wrap items-center gap-2 shrink-0">' +
           '<label for="health-year" class="text-xs font-semibold text-slate-600">Year</label>' +

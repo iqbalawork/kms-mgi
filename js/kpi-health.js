@@ -217,7 +217,7 @@ function kpiHealthLegend(d) {
     (trial.length
       ? trial.join(' and ') + (trial.length === 1 ? ' is a trial month and is' : ' are trial months and are') + ' left out. '
       : '') +
-    'Automatic tier 1.0 for off-cycle quarterly KPIs is not a submission and is not counted.';
+    'Automatic tier 1.0 for off-cycle quarterly KPIs is not a submission and is not counted. Compare uses the same definitions for its Easy and Unrealistic notes.';
 }
 
 function kpiHealthRowHtml(k) {

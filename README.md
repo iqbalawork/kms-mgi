@@ -36,7 +36,7 @@ berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi
 | `auth.js` | Boot, login, ganti password, sign out |
 | `access-year.js` | Peran, Report Access, tahun fiskal, Yearly Theme |
 | `account-help.js` | Menu akun dan chat WhatsApp |
-| `shell.js` | Scoring Guide, navigasi, sidebar |
+| `shell.js` | Guide, navigasi, sidebar |
 | `dashboard.js` | Dashboard |
 | `my-kpis.js`, `my-kpis-submit.js` | My KPIs dan submit |
 | `mapping.js`, `mapping-workspace.js` | Mapping KPI |
@@ -50,7 +50,7 @@ berisi `MGI` (fungsi yang dipanggil tombol di `index.html`) dan memulai aplikasi
 | `settings-performance.js`, `settings.js` | System Settings |
 | `compare.js`, `compare-ui.js` | Tab Compare di Summary Report: perbandingan dua karyawan (analisis dan tampilan) |
 | `compare-context.js`, `compare-context-ui.js` | Compare: Standing among peers, Track Record, dan panel Before you decide |
-| `guide-reviewer.js` | Tab Reviewer Guide di Scoring Guide (Admin dan Report Viewer) |
+| `guide-reviewer.js` | Tab Reviewer Guide di Guide (Admin dan Report Viewer) |
 | `main.js` | Objek `MGI` dan start aplikasi |
 
 ## Performa
@@ -103,13 +103,13 @@ Tab ke-3 di Summary Report, hanya untuk Admin dan Report Viewer.
 - **Standing among peers** (Overview): rank di role yang sama dari rata-rata bulan yang disubmit sendiri di periode terpilih, minimal 3 bulan berskor. Skor sama berbagi rank; label Top atau Bottom 20% butuh minimal 5 orang. Strip 0 sampai 100 dengan zona Rating Band, titik rekan tanpa nama, dan median.
 - **Track Record** (tab ke-4): FY terpilih dan 2 FY sebelumnya: home role, Avg KPI, standing setahun penuh, grade, dan SP, dengan penanda role berganti.
 - **Performance Evaluation:** Avg KPI menyebut jumlah bulannya dan dijelaskan sebagai angka resmi (berbeda dari head-to-head).
-- Ikon bantuan membuka **Scoring Guide > Reviewer Guide** di bagian yang tepat.
+- Ikon bantuan membuka **Guide > Reviewer Guide** di bagian yang tepat.
 
 **Data:** `getAnnualRecap`, `getPerformanceReport`, dan `getCompareContext`. Endpoint terakhir hanya membaca, satu panggilan per pasangan: track record, flag KPI Health untuk KPI kedua role, dan bulan yang punya evidence. Semuanya memakai `requireReports_`, scope Division, dan aturan release yang sama, jadi Report Viewer tidak menerima angka di luar Division-nya dan grade yang belum di-release.
 
 ## Tampilan HP
 
-Di layar selebar 767px ke bawah (`PHONE_QUERY`), aplikasi hanya membuka **My KPIs**, **Scoring Guide**, dan **System Settings** (`PHONE_VIEWS`, Settings hanya untuk admin), beserta login, ganti password, menu akun, dan bantuan WhatsApp.
+Di layar selebar 767px ke bawah (`PHONE_QUERY`), aplikasi hanya membuka **My KPIs**, **Guide**, dan **System Settings** (`PHONE_VIEWS`, Settings hanya untuk admin), beserta login, ganti password, menu akun, dan bantuan WhatsApp.
 
 - Menu samping hanya berisi halaman-halaman itu. Setiap link diberi `data-phone`, dan satu grup disembunyikan hanya bila tidak ada link-nya yang bisa dibuka di HP. Top bar menampilkan nama halaman, chip FY, dan avatar.
 - System Settings di HP:

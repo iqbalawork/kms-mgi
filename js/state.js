@@ -131,12 +131,12 @@ var VIEW_TITLES = {
   'summary':     'Summary Report',
   'evaluation':  'Performance Evaluation',
   'settings':    'System Settings',
-  'guide':       'Scoring Guide'
+  'guide':       'Guide'
 };
 
 var WORKSPACE_NAV = [
   { id: 'my-kpis', icon: 'fact_check', label: 'My KPIs' },
-  { id: 'guide',   icon: 'menu_book',  label: 'Scoring Guide' }
+  { id: 'guide',   icon: 'menu_book',  label: 'Guide' }
 ];
 
 var CATEGORY_META = [

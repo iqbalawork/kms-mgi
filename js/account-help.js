@@ -95,7 +95,7 @@ function renderAccountMenu() {
       '</div>' +
     '</div>' +
     '<div class="p-1.5 flex flex-col">' +
-      accountItem('menu_book', 'Scoring Guide', "MGI.accountAction('guide')") +
+      accountItem('menu_book', 'Guide', "MGI.accountAction('guide')") +
       (passwordAuth
         ? accountItem('key', 'Change password', "MGI.accountAction('password')") +
           accountItem('logout', 'Sign out', "MGI.accountAction('signout')", true)

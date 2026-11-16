@@ -275,7 +275,7 @@ function renderDesktopOnly(view) {
   if (!view || !body) return;
   body.innerHTML = emptyState('chart',
     '<strong>' + esc(VIEW_TITLES[view] || 'This page') + '</strong> is made for a larger screen. Open it on a computer or tablet. ' +
-    'On your phone you can fill in My KPIs, read the Scoring Guide' + (S.user && S.user.isAdmin ?', and manage System Settings.' : '.'),
+    'On your phone you can fill in My KPIs, read the Guide' + (S.user && S.user.isAdmin ?', and manage System Settings.' : '.'),
     { fn: 'goMyKpis', icon: 'fact_check', label: 'Go to My KPIs' });
 }
 
