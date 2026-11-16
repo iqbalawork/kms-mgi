@@ -59,6 +59,16 @@ function cmpPeerLegendHtml(peers, nameA, nameB) {
 }
 
 function cmpPeerHtml(A, B, peers, mode, months) {
+  if (peers.every(function (p) { return p.ranked < CMP_MIN_PEERS; })) {
+    var groups = mode === 'same' ? [peers[0]] : peers;
+    return '<div id="cmp-peers" class="bg-surface-card rounded-xl shadow-level-1 border border-border-light px-space-lg py-space-md mb-space-lg scroll-mt-40 flex flex-wrap items-center gap-x-space-md gap-y-1">' +
+      '<span class="text-body-md font-semibold text-text-primary">Standing among peers</span>' +
+      '<span class="text-body-sm text-text-secondary flex-1 min-w-0">' + groups.map(function (p) {
+        return 'Only ' + p.ranked + (p.ranked === 1 ? ' person' : ' people') + ' in ' + esc(p.roleLabel) + (p.ranked === 1 ? ' has' : ' have') + ' enough months';
+      }).join('; ') + ', so no rank is shown. It needs at least ' + CMP_MIN_PEERS + ' ranked people.</span>' +
+      cmpGuideLink('rg-peers', 'How this is ranked') +
+    '</div>';
+  }
   var row = function (slot, side, p) {
     return '<div class="flex flex-wrap items-center gap-x-space-md gap-y-1 py-2">' +
       '<span class="flex items-center gap-2 min-w-[12rem] font-semibold text-text-primary">' + cmpTag(slot) + '<span class="truncate">' + esc(side.name) + '</span></span>' +
@@ -110,7 +120,7 @@ function cmpFlagsHtml(flags, ctxState) {
     var lv = CMP_FLAG_LEVELS[l];
     return '<span class="pill ' + lv.pill + ' !text-[11px]" title="' + esc(lv.text) + '">' + lv.label + '</span>';
   }).join('');
-  var items = flags.map(function (f) {
+  var flagItem = function (f) {
     var lv = CMP_FLAG_LEVELS[f.level];
     return '<li class="cmp-flag">' +
       '<span class="pill ' + lv.pill + ' !text-[11px] shrink-0 mt-0.5" title="' + esc(lv.text) + '">' +
@@ -121,7 +131,13 @@ function cmpFlagsHtml(flags, ctxState) {
       '</div>' +
       (f.target ? '<button type="button" class="btn btn-secondary !py-1 !px-2.5 !text-label-sm shrink-0" onclick="MGI.showCompareFlag(\'' + esc(f.target) + '\')">Show me</button>' : '') +
     '</li>';
-  }).join('');
+  };
+  var notes = flags.filter(function (f) { return f.level === 'info'; });
+  var items = flags.filter(function (f) { return f.level !== 'info'; }).map(flagItem).join('') +
+    (notes.length
+      ? '<li><details class="cmp-notes"><summary>' + notes.length + (notes.length === 1 ? ' note' : ' notes') + ' for context</summary>' +
+          '<ul class="mt-2 flex flex-col gap-2">' + notes.map(flagItem).join('') + '</ul></details></li>'
+      : '');
   var pending = ctxState === 'loading'
     ? '<li class="cmp-flag"><span class="skeleton h-5 w-16"></span><span class="text-body-sm text-text-muted">Checking KPI Health, evidence, and earlier years...</span></li>'
     : ctxState === 'error'

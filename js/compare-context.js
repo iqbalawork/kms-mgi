@@ -152,6 +152,11 @@ function cmpPointsByFlag(side, months, flags, flag) {
   return { lost: cmpRound(lost), gained: cmpRound(gained), kpis: hit };
 }
 
+function cmpNameList(kpis) {
+  var names = kpis.map(function (x) { return x.k.KPI_Name; });
+  return names.length > 3 ? names.slice(0, 3).join(', ') + ' and ' + (names.length - 3) + ' more' : names.join(', ');
+}
+
 function cmpEvidenceMonths(ctx, side) {
   var byNik = ctx && ctx.evidence ? ctx.evidence[side.sel.nik] : null;
   return byNik && byNik[side.role.roleKey] ? byNik[side.role.roleKey] : [];
@@ -163,20 +168,26 @@ function cmpFlags(A, B, ov, kpis, ev, peers, ctx, ctxState, mode) {
   var sides = [['a', A, ov.a], ['b', B, ov.b]];
   var states = (A.data && A.data.monthStates) || [];
 
-  sides.forEach(function (p) {
+  var due = ov.months.filter(function (i) { return states[i] === 'due'; }).length;
+  var misses = sides.map(function (p) {
     var slot = p[0], side = p[1], st = p[2];
     if (st.scored < CMP_MIN_MONTHS) {
       add('high', [slot], side.name + ' has only ' + st.scored + ' scored ' + (st.scored === 1 ? 'month' : 'months') + ' in this period.',
         'An average of so few months does not show how the person usually performs.', 'overview');
     }
     var missed = st.missing.filter(function (i) { return states[i] === 'due'; });
-    var due = ov.months.filter(function (i) { return states[i] === 'due'; }).length;
-    if (missed.length) {
-      var heavy = missed.length >= CMP_MISS_N || (due && missed.length * 100 >= CMP_MISS_PCT * due);
-      add(heavy ? 'high' : 'watch', [slot], side.name + ' missed ' + missed.length + ' of ' + due + ' due months (' + cmpMonthList(missed) + ').',
-        'Missed months are a discipline issue, and the average rests on fewer months.', 'months');
-    }
-  });
+    var heavy = missed.length >= CMP_MISS_N || (due && missed.length * 100 >= CMP_MISS_PCT * due);
+    return { slot: slot, name: side.name, missed: missed, level: heavy ? 'high' : 'watch' };
+  }).filter(function (m) { return m.missed.length; });
+  var missWhy = 'Missed months are a discipline issue, and the average rests on fewer months.';
+  if (misses.length === 2 && misses[0].missed.join(',') === misses[1].missed.join(',')) {
+    add(misses[0].level === 'high' || misses[1].level === 'high' ? 'high' : 'watch', ['a', 'b'],
+      'Both missed ' + misses[0].missed.length + ' of ' + due + ' due months (' + cmpMonthList(misses[0].missed) + ').', missWhy, 'months');
+  } else {
+    misses.forEach(function (m) {
+      add(m.level, [m.slot], m.name + ' missed ' + m.missed.length + ' of ' + due + ' due months (' + cmpMonthList(m.missed) + ').', missWhy, 'months');
+    });
+  }
 
   if (ov.a.scored >= CMP_MIN_MONTHS && ov.b.scored >= CMP_MIN_MONTHS && ov.shared.length < CMP_MIN_MONTHS) {
     add('watch', ['a', 'b'], 'Only ' + ov.shared.length + (ov.shared.length === 1 ? ' month was' : ' months were') + ' submitted by both.',
@@ -236,22 +247,40 @@ function cmpFlags(A, B, ov, kpis, ev, peers, ctx, ctxState, mode) {
   });
 
   if (ctx && ctx.kpiFlags) {
+    var hits = { hard: [], easy: [] };
     sides.forEach(function (p) {
       var side = p[1];
       var lostAll = cmpPointsLost(side, ov.shared).reduce(function (s, x) { return s + x.lost; }, 0);
       var hard = cmpPointsByFlag(side, ov.shared, ctx.kpiFlags, 'hard');
       if (hard.lost > 0 && lostAll > 0 && hard.lost * 100 >= CMP_KPI_SHARE * lostAll) {
-        add('watch', [p[0]], num(hard.lost, 2) + ' of the ' + num(cmpRound(lostAll), 2) + ' points a month that ' + side.name +
-          ' loses come from KPIs flagged Unrealistic (' + hard.kpis.map(function (x) { return x.k.KPI_Name; }).join(', ') + ').',
-          'Part of the low score may come from the target, not the person.', mode === 'same' ? 'kpi:' + hard.kpis[0].k.KPI_ID : 'overview');
+        hits.hard.push({ p: p, part: hard.lost, whole: cmpRound(lostAll), kpis: hard.kpis });
       }
       var easy = cmpPointsByFlag(side, ov.shared, ctx.kpiFlags, 'easy');
       var total = p[2].h2hMean;
       if (easy.gained > 0 && total > 0 && easy.gained * 100 >= CMP_KPI_SHARE * total) {
-        add('watch', [p[0]], num(easy.gained, 2) + ' of the ' + num(cmpRound(total), 2) + ' points ' + side.name +
-          ' scores come from KPIs flagged Easy (' + easy.kpis.map(function (x) { return x.k.KPI_Name; }).join(', ') + ').',
-          'Part of the high score may come from targets that are too easy.', mode === 'same' ? 'kpi:' + easy.kpis[0].k.KPI_ID : 'overview');
+        hits.easy.push({ p: p, part: easy.gained, whole: cmpRound(total), kpis: easy.kpis });
       }
+    });
+    var ids = function (h) { return h.kpis.map(function (x) { return x.k.KPI_ID; }).sort().join(','); };
+    var texts = {
+      hard: { label: 'Unrealistic', role: 'part of both low scores may come from the targets, not the people',
+              one: function (h) { return num(h.part, 2) + ' of the ' + num(h.whole, 2) + ' points a month that ' + h.p[1].name + ' loses come from KPIs flagged Unrealistic (' + cmpNameList(h.kpis) + ').'; },
+              why: 'Part of the low score may come from the target, not the person.' },
+      easy: { label: 'Easy', role: 'scores near the top say little about who is stronger',
+              one: function (h) { return num(h.part, 2) + ' of the ' + num(h.whole, 2) + ' points ' + h.p[1].name + ' scores come from KPIs flagged Easy (' + cmpNameList(h.kpis) + ').'; },
+              why: 'Part of the high score may come from targets that are too easy.' }
+    };
+    ['hard', 'easy'].forEach(function (key) {
+      var list = hits[key];
+      var t = texts[key];
+      var target = function (h) { return mode === 'same' ? 'kpi:' + h.kpis[0].k.KPI_ID : 'overview'; };
+      if (mode === 'same' && list.length === 2 && ids(list[0]) === ids(list[1])) {
+        var total = (A.role.kpis || []).length;
+        add('watch', ['a', 'b'], list[0].kpis.length + ' of ' + total + ' KPIs in ' + A.role.roleLabel + ' are flagged ' + t.label + ' in KPI Health (' +
+          cmpNameList(list[0].kpis) + '), so ' + t.role + '.', 'This is about the targets of the role. Review them in Master KPIs.', target(list[0]));
+        return;
+      }
+      list.forEach(function (h) { add('watch', [h.p[0]], t.one(h), t.why, target(h)); });
     });
   }
 
@@ -306,6 +335,8 @@ function showCompareFlag(target) {
     c.open = {};
     c.open[id] = true;
     anchor = '[data-kpi-row="' + attr(id) + '"]';
+  } else if (t === 'flags') {
+    anchor = '#cmp-flags';
   } else if (t === 'evaluation' || t === 'history') {
     c.tab = t;
     anchor = '#cmp-sticky';

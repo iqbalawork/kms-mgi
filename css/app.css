@@ -338,9 +338,9 @@
   .cmp-option-empty { opacity: .6; }
   .cmp-row-out td { background: #F8FAFC; color: #94A3B8; }
   .cmp-row-out td > span { opacity: .55; }
-  .cmp-summary { display: flex; flex-direction: column; gap: .625rem; margin: 0; padding: 0; list-style: none; }
-  .cmp-summary li { display: flex; align-items: flex-start; gap: .625rem; font-size: 14px; line-height: 1.55; color: #0F172A; }
-  .cmp-summary-icon { flex-shrink: 0; width: 1.75rem; height: 1.75rem; display: inline-flex; align-items: center; justify-content: center; border-radius: .5rem; background: #F1F5F9; color: #475569; font-size: 18px; }
+  .cmp-summary { display: flex; flex-direction: column; gap: .5rem; margin: 0; padding-left: 1.125rem; list-style: disc; }
+  .cmp-summary li { font-size: 14px; line-height: 1.55; color: #334155; padding-left: .125rem; }
+  .cmp-summary li::marker { color: #94A3B8; }
   .cmp-legend { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-bottom: .75rem; }
   .cmp-legend-item { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; max-width: 100%; font-size: 12px; font-weight: 600; color: #334155; }
   .cmp-swatch { display: inline-block; width: 1.75rem; height: 0; flex-shrink: 0; }
@@ -377,6 +377,17 @@
   .cmp-defs dt { font-weight: 700; color: #334155; }
   .cmp-defs dd { margin: .125rem 0 0; color: #64748B; line-height: 1.5; }
   .cmp-history-table tr.cmp-fy-start td { border-top: 2px solid #E2E8F0; }
+  .cmp-notes > summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: .375rem; padding: .375rem .75rem; border-radius: .5rem; font-size: 12px; font-weight: 600; color: #475569; background: rgba(255, 255, 255, .85); border: 1px solid #E2E8F0; }
+  .cmp-notes > summary::-webkit-details-marker { display: none; }
+  .cmp-notes > summary::before { content: '+'; font-weight: 700; }
+  .cmp-notes[open] > summary::before { content: '\2212'; }
+  .cmp-summary-label { font-weight: 700; color: #0F172A; }
+  .cmp-verdict-chip { display: inline-flex; align-items: center; padding: .25rem .625rem; border-radius: 9999px; font-size: 12px; font-weight: 600; border: 1px solid #E2E8F0; }
+  .cmp-verdict-stop { color: #991B1B; background: #FEF2F2; border-color: #FCA5A5; }
+  .cmp-verdict-notes { color: #92400E; background: #FFFBEB; border-color: #FCD34D; }
+  .cmp-verdict-clear { color: #166534; background: #F0FDF4; border-color: #86EFAC; }
+  .cmp-kpi-chart { position: relative; flex: 1 1 auto; min-height: 18rem; }
+  .cmp-kpi-months .data-table td, .cmp-kpi-months .data-table th { padding-top: .5rem; padding-bottom: .5rem; }
   .rg-list { display: flex; flex-direction: column; gap: .5rem; padding-left: 1.125rem; list-style: disc; font-size: 14px; line-height: 1.55; color: #334155; }
   .cmp-sticky { position: sticky; top: 4rem; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; margin: 0 0 1rem; padding: .5rem .75rem; background: #fff; border: 1px solid #E2E8F0; border-radius: .75rem; box-shadow: 0 1px 2px rgba(15, 23, 42, .06); }
   .cmp-sticky-people { display: flex; align-items: center; gap: .625rem; min-width: 0; flex: 1 1 22rem; }

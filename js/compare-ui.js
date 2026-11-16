@@ -259,10 +259,13 @@ function cmpBodyHtml(ready) {
       '<span class="text-label-xs text-text-secondary">' + esc(cmpSharedLabel(ov)) + '</span>' +
     '</div>' +
     '<div class="mb-space-lg bg-surface-card rounded-xl shadow-level-1 border border-border-light p-space-lg">' +
-      '<p class="text-label-xs uppercase tracking-wider text-text-muted mb-2">Summary</p>' +
+      '<div class="flex flex-wrap items-center justify-between gap-2 mb-2">' +
+        '<p class="text-label-xs uppercase tracking-wider text-text-muted">Summary</p>' +
+        '<button type="button" class="cmp-verdict-chip cmp-verdict-' + cmpVerdict(flags).key + '" onclick="MGI.showCompareFlag(\'flags\')">' + esc(cmpVerdict(flags).label) + '</button>' +
+      '</div>' +
       '<ul class="cmp-summary">' +
         narrative.map(function (s) {
-          return '<li><span class="material-symbols-outlined cmp-summary-icon" aria-hidden="true">' + s.icon + '</span><span>' + esc(s.text) + '</span></li>';
+          return '<li><span class="cmp-summary-label">' + esc(s.label) + '</span> ' + esc(s.text) + '</li>';
         }).join('') +
       '</ul>' +
     '</div>' +
@@ -549,7 +552,8 @@ function cmpKpiDetailHtml(A, B, x, n) {
     return '<li class="flex items-start gap-2">' + cmpTag(slot) + '<span>' +
       (s.gap === null ? '' : Math.abs(s.gap) < 1e-9 ? 'On target on average. '
         : 'Average ' + esc((s.gap > 0 ? num(s.gap, 2) : num(-s.gap, 2)) + unitText) + (s.gap > 0 ? ' better than' : ' short of') + ' target. ') +
-      (s.cv === null ? '' : s.cv < 0.05 ? 'Same result every month. ' : 'Swings ' + num(s.cv, 1) + '% around its average. ') +
+      (s.onTarget === s.n && s.n > 0 ? 'On target in all ' + s.n + (s.n === 1 ? ' month. ' : ' months. ') : '') +
+      (s.sd === null ? '' : s.sd < 1e-9 ? 'Same result every month. ' : 'Usually within ±' + esc(num(s.sd, 2) + unitText) + ' month to month. ') +
       'Trend ' + trend + '.</span></li>';
   };
 
@@ -566,15 +570,15 @@ function cmpKpiDetailHtml(A, B, x, n) {
       '</div>'
     : '';
 
-  return '<div class="px-4 py-space-md bg-surface-page border-t border-border-light grid grid-cols-1 xl:grid-cols-5 gap-space-md">' +
-    '<div class="xl:col-span-3 flex flex-col gap-space-md">' +
-      '<div class="bg-white rounded-xl border border-border-light p-space-md">' +
+  return '<div class="cmp-kpi-detail px-4 py-space-md bg-surface-page border-t border-border-light flex flex-col gap-space-md">' +
+    '<div class="grid grid-cols-1 xl:grid-cols-5 gap-space-md">' +
+      '<div class="xl:col-span-3 bg-white rounded-xl border border-border-light p-space-md flex flex-col">' +
         cmpLegendHtml(A.name, B.name, k.Label !== 'Binary' && isNum(Number(k.Target))) +
-        '<div id="cmp-kpi-' + n + '-box" class="h-64"><canvas id="cmp-kpi-' + n + '-chart" role="img" aria-label="Realization of A and B for ' + esc(k.KPI_Name) + '"></canvas></div>' +
+        '<div id="cmp-kpi-' + n + '-box" class="cmp-kpi-chart"><canvas id="cmp-kpi-' + n + '-chart" role="img" aria-label="Realization of A and B for ' + esc(k.KPI_Name) + '"></canvas></div>' +
       '</div>' +
-      '<div class="bg-white rounded-xl border border-border-light overflow-hidden"><div class="table-scroll">' + table + '</div>' + outNote + '</div>' +
+      '<div class="xl:col-span-2 bg-white rounded-xl border border-border-light overflow-hidden"><div class="table-scroll cmp-kpi-months">' + table + '</div>' + outNote + '</div>' +
     '</div>' +
-    '<div class="xl:col-span-2 flex flex-col gap-space-md">' +
+    '<div class="grid grid-cols-1 lg:grid-cols-2 ' + (tie ? 'xl:grid-cols-3' : '') + ' gap-space-md items-start">' +
       tie +
       '<div class="bg-white rounded-xl border border-border-light p-space-md">' +
         '<p class="text-body-sm font-semibold text-text-primary mb-2">What the numbers say</p>' +

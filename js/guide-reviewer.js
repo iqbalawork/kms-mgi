@@ -70,6 +70,7 @@ function reviewerGuideHtml() {
       ['Tier mix', 'How often KPIs land on each tier.', 'One block per KPI per month. Counts are not weighted. Off-cycle quarterly KPIs are left out.'],
       ['Where points are lost', 'Which KPIs cost the most points.', 'Weight × (1 − tier), averaged per month. Together they add up to 100 minus the average KPI score.'],
       ['Same tier, different realization', 'Two people on the same tier, one closer to the next tier.', 'Distance to the next tier in steps of the KPI multiplier and in KPI units. "Lowest tier" means tier 0.2; its bar shows how far the result is toward the 0.4 line.'],
+      ['What the numbers say', 'One KPI in a few words for each person.', 'Average gap to the target, how much the result usually moves (the standard deviation of the monthly results, in KPI units), and the trend.'],
       ['Rating Bands', 'How an average reads.', 'Excellent from ' + bandNum(b.excellent) + ', Good from ' + bandNum(b.good) + ', Needs Attention below ' + bandNum(b.good) + '.']
     ])) +
 
@@ -96,18 +97,18 @@ function reviewerGuideHtml() {
     ])) +
 
     rgSection('rg-flags', 'Before you decide',
-      '<p class="text-body-sm text-text-secondary mb-space-sm">The panel under the Summary lists what could change or weaken a decision. Its verdict reads <strong>Not ready for a decision</strong> when any High flag exists, <strong>Ready, read the notes</strong> when only Watch or Info flags exist, and <strong>No red flags</strong> otherwise.</p>' +
+      '<p class="text-body-sm text-text-secondary mb-space-sm">The panel under the Summary lists what could change or weaken a decision. Its verdict reads <strong>Not ready for a decision</strong> when any High flag exists, <strong>Ready, read the notes</strong> when only Watch or Info flags exist, and <strong>No red flags</strong> otherwise. When the same flag fits both people, it shows once with both tags. Info notes stay folded under the list.</p>' +
       rgTable(['Severity', 'Meaning'], [[pill('high'), esc(lv.high.text)], [pill('watch'), esc(lv.watch.text)], [pill('info'), esc(lv.info.text)]]) +
       '<div class="mt-space-md">' + rgTable(['Flag', 'Severity', 'Rule'], [
         ['Too little data', pill('high'), 'Fewer than ' + CMP_MIN_MONTHS + ' scored months in the period.'],
-        ['Missed submissions', pill('high') + ' ' + pill('watch'), 'High from ' + CMP_MISS_N + ' missed months or ' + CMP_MISS_PCT + '% of due months, Watch for fewer. A due month has passed and is not a trial month; the current month never counts as missed.'],
+        ['Missed submissions', pill('high') + ' ' + pill('watch'), 'High from ' + CMP_MISS_N + ' missed months or ' + CMP_MISS_PCT + '% of due months, Watch for fewer. A due month has passed and is not a trial month; the current month never counts as missed. When both missed the same months, it shows once.'],
         ['Few shared months', pill('watch'), 'Fewer than ' + CMP_MIN_MONTHS + ' months submitted by both.'],
         ['Evaluation not complete', pill('high'), 'A Performance Evaluation scorecard is missing KBI, 360, or Discipline, or there is no scorecard.'],
         ['SP on record', pill('high') + ' ' + pill('watch'), 'High for the selected year, Watch for an earlier year.'],
         ['Slipping trend', pill('watch'), 'Trend of ' + CMP_SLIP + ' point a month or lower.'],
         ['Bottom 20% of peers', pill('watch'), 'See Standing among peers.'],
-        ['Gap from Unrealistic KPIs', pill('watch'), 'Points lost on KPIs flagged Unrealistic in KPI Health make up ' + CMP_KPI_SHARE + '% or more of all points the person loses.'],
-        ['Score lifted by Easy KPIs', pill('watch'), 'Points earned on KPIs flagged Easy in KPI Health make up ' + CMP_KPI_SHARE + '% or more of the person\'s score.'],
+        ['Gap from Unrealistic KPIs', pill('watch'), 'Points lost on KPIs flagged Unrealistic in KPI Health make up ' + CMP_KPI_SHARE + '% or more of all points the person loses. When the same KPIs do this for both people in one role, it shows once as a note about the role\'s targets.'],
+        ['Score lifted by Easy KPIs', pill('watch'), 'Points earned on KPIs flagged Easy in KPI Health make up ' + CMP_KPI_SHARE + '% or more of the person\'s score. When the same KPIs do this for both people in one role, it shows once as a note about the role\'s targets.'],
         ['Evidence coverage', pill('watch') + ' ' + pill('info'), 'Watch when evidence is required and fewer than ' + CMP_EVIDENCE_PCT + '% of scored months have a file. Info in years where evidence is optional.'],
         ['No longer holds the role', pill('info'), 'The scorecard belongs to a role the person has left.'],
         ['Different roles', pill('info'), 'A and B hold different roles.']

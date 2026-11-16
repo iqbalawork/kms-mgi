@@ -308,7 +308,7 @@ function cmpKpiSide(data, k, months, only) {
     avgReal: avgReal === null ? null : cmpRound(avgReal, 4),
     gap: avgReal === null || k.Label === 'Binary' ? null : cmpRound((avgReal - Number(k.Target)) * better, 4),
     onTarget: cells.filter(function (x) { return isNum(x.c.realization) && meetsTarget(k, Number(x.c.realization)); }).length,
-    cv: sd === null || !avgReal ? null : cmpRound(sd / Math.abs(avgReal) * 100, 1),
+    sd: sd === null ? null : cmpRound(sd, 4),
     trend: trend,
     byMonth: all.reduce(function (acc, x) { acc[x.i] = x.c; return acc; }, {})
   };
@@ -399,50 +399,35 @@ function cmpNarrative(A, B, ov, kpis, ev, peers) {
   var n = ov.shared.length;
   var over = ' over the ' + (n === 1 ? 'month' : n + ' months') + ' both submitted';
   if (ov.diff === null) {
-    out.push({ icon: 'info', text: 'No month in this period was submitted by both, so the average KPI score cannot be compared.' });
+    out.push({ label: 'Score', text: 'No month in this period was submitted by both, so the average KPI score cannot be compared.' });
   } else if (Math.abs(ov.diff) < 0.005) {
-    out.push({ icon: 'balance', text: na + ' and ' + nb + ' share the same average KPI score of ' + num(ov.a.h2h, 2) + over + '.' });
+    out.push({ label: 'Score', text: 'Even at ' + num(ov.a.h2h, 2) + over + '.' });
   } else {
     var lead = ov.diff > 0 ? na : nb;
     var ahead = ov.diff > 0 ? ov.wins.a : ov.wins.b;
-    out.push({ icon: 'leaderboard', text: lead + ' leads by ' + num(Math.abs(ov.diff), 2) + ' points on average KPI score' + over + ' (' + num(ov.a.h2h, 2) + ' vs ' + num(ov.b.h2h, 2) + ')' +
+    out.push({ label: 'Score', text: lead + ' leads by ' + num(Math.abs(ov.diff), 2) + ' points on average KPI score' + over + ' (' + num(ov.a.h2h, 2) + ' vs ' + num(ov.b.h2h, 2) + ')' +
       ' and is ahead in ' + ahead + ' of ' + ov.wins.both + (ov.wins.both === 1 ? ' month.' : ' months.') });
   }
-  if (peers) {
+  var labelled = function (p) { return p && p.rank !== null && p.edge !== 'few'; };
+  if (peers && labelled(peers[0]) && labelled(peers[1])) {
     var same = peers[0].roleKey === peers[1].roleKey;
-    out.push({ icon: 'groups', text: cmpPeerText(na, peers[0], true) + ' ' + cmpPeerText(nb, peers[1], !same) });
+    out.push({ label: 'Standing', text: cmpPeerText(na, peers[0], true) + ' ' + cmpPeerText(nb, peers[1], !same) });
   }
-  if (ov.a.scored !== n || ov.b.scored !== n) {
-    var own = function (name, s) { return name + ' ' + (s.avg === null ? '-' : num(s.avg, 2)) + ' (' + s.scored + (s.scored === 1 ? ' month)' : ' months)'); };
-    out.push({ icon: 'info', text: 'Over their own submitted months: ' + own(na, ov.a) + ', ' + own(nb, ov.b) + '. Months only one of them submitted are left out of the comparison.' });
-  }
-  [[na, ov.a], [nb, ov.b]].forEach(function (p) {
-    if (p[1].trend !== null && Math.abs(p[1].trend) >= CMP_FLAT_SLOPE) {
-      out.push({ icon: p[1].trend > 0 ? 'trending_up' : 'trending_down', text: p[0] + (p[1].trend > 0 ? ' is improving' : ' is slipping') + ' (' + (p[1].trend > 0 ? '+' : '') + num(p[1].trend, 2) +
-        ' points a month).' });
-    }
-  });
-  if (kpis) {
-    var top = kpis.filter(function (x) { return x.pointGap !== null && Math.abs(x.pointGap) >= 0.005; })[0];
-    if (top) {
-      out.push({ icon: 'flag', text: 'The largest KPI gap is ' + top.k.KPI_Name + ' (' + top.id + '), worth ' + num(Math.abs(top.pointGap), 2) + ' points a month in favour of ' +
-        (top.pointGap > 0 ? na : nb) + '.' });
-    }
-    var tie = kpis.filter(function (x) { return x.focus !== null && x.posA && x.posB; })[0];
-    if (tie) {
-      var unit = tie.k.Unit ? ' ' + tie.k.Unit : '';
-      var reach = function (who, pos) {
-        return pos.nextScore === null
-          ? who + ' is ' + num(pos.cushionUnits, 2) + unit + ' clear of dropping'
-          : who + ' needs ' + num(pos.toNextUnits, 2) + unit + ' more to reach ' + Number(pos.nextScore).toFixed(1);
-      };
-      out.push({ icon: 'stairs', text: 'On ' + tie.k.KPI_Name + ' both scored ' + Number(tie.posA.score).toFixed(1) + ' in ' + MONTHS[tie.focus] + ', but ' +
-        reach(na, tie.posA) + ' while ' + reach(nb, tie.posB) + '.' });
-    }
+  var moving = [[na, ov.a], [nb, ov.b]].filter(function (p) { return p[1].trend !== null && Math.abs(p[1].trend) >= CMP_FLAT_SLOPE; });
+  if (moving.length) {
+    out.push({ label: 'Trend', text: moving.map(function (p) {
+      return p[0] + (p[1].trend > 0 ? ' is improving' : ' is slipping') + ' (' + (p[1].trend > 0 ? '+' : '') + num(p[1].trend, 2) + ' points a month)';
+    }).join('; ') + '.' });
   }
   if (ev && ev.state === 'ready' && ev.complete) {
-    out.push({ icon: 'workspace_premium', text: 'Performance Score: ' + na + ' ' + scoreText(ev.a.score) + ' (grade ' + ev.a.grade + '), ' + nb + ' ' + scoreText(ev.b.score) +
+    out.push({ label: 'Evaluation', text: 'Performance Score ' + na + ' ' + scoreText(ev.a.score) + ' (grade ' + ev.a.grade + '), ' + nb + ' ' + scoreText(ev.b.score) +
       ' (grade ' + ev.b.grade + ')' + (ev.driver ? '. ' + ev.driver.label + ' explains most of the difference.' : '.') });
+  } else if (kpis) {
+    var top = kpis.filter(function (x) { return x.pointGap !== null && Math.abs(x.pointGap) >= 0.005; })[0];
+    if (top) {
+      out.push({ label: 'Biggest gap', text: top.k.KPI_Name + ' (' + top.id + '), worth ' + num(Math.abs(top.pointGap), 2) + ' points a month in favour of ' +
+        (top.pointGap > 0 ? na : nb) + '.' });
+    }
   }
   return out;
 }
