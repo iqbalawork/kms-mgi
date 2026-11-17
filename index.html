@@ -1011,10 +1011,14 @@
           </header>
 
           <div id="eval-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-space-lg flex flex-col md:flex-row md:items-end gap-3">
-            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 flex-1">
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 flex-1">
               <div>
                 <label for="eval-year" class="form-label">Year</label>
                 <select id="eval-year" class="field" onchange="MGI.onEvalYearChange()"></select>
+              </div>
+              <div>
+                <label for="eval-origin" class="form-label">Origin</label>
+                <select id="eval-origin" class="field" onchange="MGI.onEvalOriginChange()"><option value="">All Origins</option></select>
               </div>
               <div>
                 <label for="eval-division" class="form-label">Division</label>
@@ -1285,11 +1289,11 @@
 <script src="./js/annual.js?v=0772953c"></script>
 <script src="./js/perf-report.js?v=5ebab8ab"></script>
 <script src="./js/report-pdf.js?v=2838bdda"></script>
-<script src="./js/org-report.js?v=f05362a6"></script>
+<script src="./js/org-report.js?v=20602f6a"></script>
 <script src="./js/org-report-ui.js?v=07a10ab4"></script>
 <script src="./js/org-report-annual.js?v=2450f613"></script>
-<script src="./js/evaluation.js?v=42302653"></script>
-<script src="./js/evaluation-edit.js?v=d49f604f"></script>
+<script src="./js/evaluation.js?v=e80d9d69"></script>
+<script src="./js/evaluation-edit.js?v=5ac5c918"></script>
 <script src="./js/settings-performance.js?v=a19c1fa9"></script>
 <script src="./js/settings-kpi-health.js?v=3d42f176"></script>
 <script src="./js/settings.js?v=90c0c08c"></script>
@@ -1298,6 +1302,6 @@
 <script src="./js/compare-context.js?v=2118e075"></script>
 <script src="./js/compare-context-ui.js?v=3c3a93ef"></script>
 <script src="./js/guide-reviewer.js?v=193c5944"></script>
-<script src="./js/main.js?v=6af032ff"></script>
+<script src="./js/main.js?v=92aa2ed5"></script>
 </body>
 </html>

@@ -198,6 +198,7 @@ var MGI = {
   loadEvaluation: loadEvaluation,
   onEvalYearChange: onEvalYearChange,
   onEvalDivisionChange: onEvalDivisionChange,
+  onEvalOriginChange: onEvalOriginChange,
   onEvalFilter: onEvalFilter,
   onEvalSearch: onEvalSearch,
   resetEvalFilters: resetEvalFilters,

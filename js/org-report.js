@@ -42,11 +42,13 @@ function openReportDownload(kind) {
   RPT_SECTIONS[annual ? 'annual' : 'monthly'].forEach(function (s) { sections[s.key] = true; });
   var scope = annual ? '' : src.scope || '';
   var evalDivision = $('eval-division');
+  var origin = annual ? evalOrigin() : sumOrigin();
   S.rptDialog = {
     kind: annual ? 'annual' : 'monthly',
     year: src.year,
     month: annual ? 0 : src.month,
     division: scope ? '' : annual ? (evalDivision ? evalDivision.value : '') : sumDivision(),
+    origin: origin,
     scope: scope,
     released: !!(annual && src.rules && src.rules.released),
     sections: sections
@@ -60,8 +62,19 @@ function closeReportDownload() {
 }
 
 function rptDialogDivisions(d) {
-  if (d.kind === 'annual') return (S.evaluation && S.evaluation.divisions) || [];
-  return distinct((S.summary && S.summary.rows) || [], 'Division');
+  var rows = ((d.kind === 'annual' ? S.evaluation : S.summary) || {}).rows || [];
+  return distinct(rows.filter(function (r) { return !d.origin || r.Origin === d.origin; }), 'Division');
+}
+
+function rptInScope(opts) {
+  return function (r) {
+    return (!opts.origin || r.Origin === opts.origin) && (!opts.division || eqiJs(r.Division, opts.division));
+  };
+}
+
+function rptScopeLabel(opts) {
+  var where = opts.division || opts.scope || 'All divisions';
+  return opts.origin ? opts.origin + ' • ' + where : where;
 }
 
 function rptStatic(label, value) {
@@ -93,6 +106,15 @@ function renderReportDialog() {
             return '<option value="' + esc(v) + '"' + (v === d.division ? ' selected' : '') + '>' + esc(v) + '</option>';
           }).join('') +
         '</select></div>';
+
+  var origins = (S.user && S.user.origins) || [];
+  var origin = '<div><label for="rpt-origin" class="form-label">Origin</label>' +
+    '<select id="rpt-origin" class="field" onchange="MGI.onReportDialog()">' +
+      '<option value="">All Origins</option>' +
+      origins.map(function (o) {
+        return '<option value="' + esc(o) + '"' + (o === d.origin ? ' selected' : '') + '>' + esc(o) + '</option>';
+      }).join('') +
+    '</select></div>';
 
   var list = RPT_SECTIONS[d.kind].map(function (s) {
     var on = s.fixed || d.sections[s.key];
@@ -128,7 +150,7 @@ function renderReportDialog() {
           '</div>' +
         '</div>' +
         '<div class="px-6 pb-5 flex flex-col gap-4">' +
-          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' + period + division + '</div>' +
+          '<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">' + period + origin + division + '</div>' +
           draft +
           '<div><p class="form-label">Sections</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">' + list + '</div></div>' +
           '<p class="flex items-start gap-2 text-label-sm text-text-muted">' +
@@ -152,6 +174,15 @@ function onReportDialog() {
   if (!d) return;
   var month = $('rpt-month');
   var division = $('rpt-division');
+  var origin = $('rpt-origin');
+  if (origin && (origin.value || '') !== (d.origin || '')) {
+    d.origin = origin.value || '';
+    if (!d.scope && division) division.value = '';
+    d.division = '';
+    if (month && parseInt(month.value, 10)) d.month = parseInt(month.value, 10);
+    renderReportDialog();
+    return;
+  }
   if (!annualDialog(d) && month && parseInt(month.value, 10)) d.month = parseInt(month.value, 10);
   if (!d.scope && division) d.division = division.value || '';
   Array.prototype.forEach.call(document.querySelectorAll('[data-rpt-section]'), function (box) {
@@ -170,7 +201,7 @@ function rptEstimate(d) {
   var annual = annualDialog(d);
   var pages = function (n) { return Math.max(1, Math.ceil(n / RPT_ROWS[d.kind])); };
   var rows = ((annual ? S.evaluation : S.summary) || {}).rows || [];
-  rows = rows.filter(function (r) { return !d.division || eqiJs(r.Division, d.division); });
+  rows = rows.filter(rptInScope(d));
   var divs = distinct(rows, 'Division').length;
   var groups = divs + distinct(rows.map(function (r) { return { k: r.Division + '|' + r.Department }; }), 'k').length + 1;
   if (annual) {
@@ -200,6 +231,7 @@ function downloadOrgReport() {
     year: d.year,
     month: d.month,
     division: d.division,
+    origin: d.origin || '',
     scope: d.scope,
     sections: Object.assign({}, d.sections),
     admin: !!(S.user && S.user.isAdmin),
@@ -228,7 +260,7 @@ function downloadOrgReport() {
       syncBands(annual ? res[1].bands : res[0].bands);
       var model = annual ? rptAnnualModel(rptNoAudit(res[0]), res[1], opts) : rptMonthlyModel(res[0], res[1], res[2], opts);
       if (!model.rows.length) {
-        throw new Error('There are no scorecards for this ' + (annual ? 'division' : 'month and division') + '. Pick another one and try again.');
+        throw new Error('There are no scorecards for this ' + (annual ? 'origin and division' : 'month, origin and division') + '. Pick another one and try again.');
       }
       var ctx = rptContext(model, opts);
       var blocks = annual ? rptAnnualBlocks(model, opts) : rptMonthlyBlocks(model, opts);
@@ -462,7 +494,7 @@ function rptMonthGroup(name, rows, prevRows, recapRows, upto, trial) {
 function rptMonthlyModel(cur, prev, recap, opts) {
   var m = opts.month;
   var trial = (recap && recap.trialMonths) || [];
-  var inDiv = function (r) { return !opts.division || eqiJs(r.Division, opts.division); };
+  var inDiv = rptInScope(opts);
   var rows = (cur.rows || []).filter(inDiv);
   var comparable = !!prev && m > 1 && trial.indexOf(m) === -1 && trial.indexOf(m - 1) === -1;
   var prevRows = comparable ? (prev.rows || []).filter(inDiv) : null;
@@ -547,7 +579,7 @@ function rptMonthlyModel(cur, prev, recap, opts) {
     periodState: cur.periodState || null,
     evidenceOptional: rows.some(function (r) { return r.evidenceOptional; }),
     theme: rptTheme(opts.year),
-    scopeLabel: opts.division || opts.scope || 'All divisions',
+    scopeLabel: rptScopeLabel(opts),
     rows: rows,
     total: rptMonthGroup('Overall', rows, prevRows, recapRows, m, trial),
     groups: groups,
@@ -666,7 +698,7 @@ function rptKpiFirstKeys() {
 
 function rptAnnualModel(ev, recap, opts) {
   var trial = ev.trialMonths || [];
-  var rows = (ev.rows || []).filter(function (r) { return !opts.division || r.Division === opts.division; });
+  var rows = (ev.rows || []).filter(rptInScope(opts));
   var monthsOf = {};
   ((recap && recap.rows) || []).forEach(function (r) { monthsOf[r.NIK + '|' + r.roleKey] = r.months; });
   var upto = 0;
@@ -696,7 +728,7 @@ function rptAnnualModel(ev, recap, opts) {
     released: !!(ev.rules && ev.rules.released),
     trialMonths: trial,
     theme: rptTheme(opts.year),
-    scopeLabel: opts.division || 'All divisions',
+    scopeLabel: rptScopeLabel(opts),
     rows: rows,
     people: people,
     ranked: ranked,

@@ -365,11 +365,11 @@ function exportEvalCsv() {
     return;
   }
   var fixed = function (v) { return isNum(v) ? Number(v).toFixed(2) : ''; };
-  var lines = [csvLine(['Year', 'NIK', 'Full Name', 'Division', 'Department', 'Position', 'KPI Months', 'Avg KPI',
+  var lines = [csvLine(['Year', 'NIK', 'Full Name', 'Origin', 'Division', 'Department', 'Position', 'KPI Months', 'Avg KPI',
     'KBI Score', '360 Score', 'Discipline Score', 'Performance Score', 'Performance Grade', 'Status', 'SP Level', 'Remarks SP'])];
   rows.forEach(function (r) {
     lines.push(csvLine([
-      d.year, r.NIK, r.Full_Name, r.Division, r.Department, r.Position, r.kpiMonths, fixed(r.avgKpi),
+      d.year, r.NIK, r.Full_Name, r.Origin || '', r.Division, r.Department, r.Position, r.kpiMonths, fixed(r.avgKpi),
       fixed(r.kbi), fixed(r.s360), fixed(r.discipline), fixed(r.score), r.grade || '',
       r.complete ? 'Complete' : 'Pending: ' + r.missing.join(', '), r.spLevel || '', r.remarks || ''
     ]));

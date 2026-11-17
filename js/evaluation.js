@@ -210,20 +210,46 @@ function fillEvalFilters() {
   }).join('');
   $('eval-year').value = String(d.year);
 
+  var originSel = $('eval-origin');
+  var keepOrigin = originSel.value;
+  var origins = (S.user && S.user.origins) || [];
+  originSel.innerHTML = '<option value="">All Origins</option>' + origins.map(function (o) {
+    return '<option value="' + esc(o) + '">' + esc(o) + '</option>';
+  }).join('');
+  originSel.value = origins.indexOf(keepOrigin) > -1 ? keepOrigin : '';
+  fillEvalDivisions();
+}
+
+function evalOrigin() {
+  var sel = $('eval-origin');
+  return sel ? sel.value : '';
+}
+
+function fillEvalDivisions() {
+  var d = S.evaluation;
+  if (!d) return;
+  var origin = evalOrigin();
+  var list = origin ? distinct(d.rows.filter(function (r) { return r.Origin === origin; }), 'Division') : d.divisions;
   var div = $('eval-division');
   var keep = div.value;
-  div.innerHTML = '<option value="">All Divisions</option>' + d.divisions.map(function (v) {
+  div.innerHTML = '<option value="">All Divisions</option>' + list.map(function (v) {
     return '<option value="' + esc(v) + '">' + esc(v) + '</option>';
   }).join('');
-  div.value = d.divisions.indexOf(keep) > -1 ? keep : '';
+  div.value = list.indexOf(keep) > -1 ? keep : '';
   fillEvalDepartments();
+}
+
+function onEvalOriginChange() {
+  fillEvalDivisions();
+  onEvalFilter();
 }
 
 function fillEvalDepartments() {
   var d = S.evaluation;
   if (!d) return;
   var division = $('eval-division').value;
-  var list = distinct(d.rows.filter(function (r) { return !division || r.Division === division; }), 'Department');
+  var origin = evalOrigin();
+  var list = distinct(d.rows.filter(function (r) { return (!division || r.Division === division) && (!origin || r.Origin === origin); }), 'Department');
   var sel = $('eval-department');
   var keep = sel.value;
   sel.innerHTML = '<option value="">All Departments</option>' + list.map(function (v) {
@@ -259,10 +285,10 @@ function onEvalSearch() {
 }
 
 function resetEvalFilters() {
-  ['eval-division', 'eval-department', 'eval-status', 'eval-search'].forEach(function (id) { $(id).value = ''; });
+  ['eval-origin', 'eval-division', 'eval-department', 'eval-status', 'eval-search'].forEach(function (id) { $(id).value = ''; });
   S.evalSort = null;
   renderEvalHead();
-  fillEvalDepartments();
+  fillEvalDivisions();
   onEvalFilter();
 }
 
@@ -273,7 +299,9 @@ function evalRows() {
   var status = $('eval-status').value;
   var q = ($('eval-search').value || '').trim().toLowerCase();
 
+  var origin = evalOrigin();
   var rows = S.evaluation.rows.filter(function (r) {
+    if (origin && r.Origin !== origin) return false;
     if (division && r.Division !== division) return false;
     if (dept && r.Department !== dept) return false;
     if (status === 'complete' && !r.complete) return false;
@@ -507,7 +535,7 @@ function evalRowHtml(r, released, year) {
         '<div class="flex flex-col min-w-0">' +
           nameLink(r.Full_Name, r.NIK, r.roleKey, year, 'text-body-md font-semibold truncate') +
           '<span class="text-label-xs text-text-secondary">' + esc(r.Position) + ' / ' + esc(r.Department) + '</span>' +
-          '<span class="text-[11px] text-text-muted whitespace-nowrap">NIK ' + esc(r.NIK) + (r.Division ? ' • ' + esc(r.Division) : '') + '</span>' +
+          '<span class="text-[11px] text-text-muted whitespace-nowrap">NIK ' + esc(r.NIK) + (r.Division ? ' • ' + esc(r.Division) : '') + (r.Origin ? ' • ' + esc(r.Origin) : '') + '</span>' +
           (tags ? '<span class="flex items-center gap-1 flex-wrap mt-0.5">' + tags + '</span>' : '') +
         '</div>' +
       '</div>' +
