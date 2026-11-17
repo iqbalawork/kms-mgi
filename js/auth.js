@@ -8,8 +8,8 @@ function boot() {
   window.addEventListener('beforeunload', onBeforeUnload);
   window.addEventListener('hashchange', onHashChange);
   watchPhoneMode();
-  document.querySelectorAll('[data-mgi-logo]').forEach(function (img) {
-    img.src = MGI_LOGO_B64;
+  document.querySelectorAll('[data-org-logo-of]').forEach(function (img) {
+    img.src = originLogo(img.getAttribute('data-org-logo-of'));
   });
 
   S.token = loadToken();
@@ -103,7 +103,7 @@ function enterApp(user) {
   var first = !S.user;
   S.user = user;
   S.bands = user.bands || null;
-  document.title = 'MGI KPIs Management System' + (user.year ? ' ' + user.year : '');
+  document.title = PRODUCT_NAME + (user.year ? ' ' + user.year : '');
   renderBandLegends();
   if (first) applyRole(user);
   showScreen('app-shell');

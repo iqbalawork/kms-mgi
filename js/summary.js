@@ -620,6 +620,6 @@ function renderSummaryStats() {
 
     statCard('Evidence on File', 'folder_open', 'text-text-primary',
       st.evidence, done ? 'of ' + plural(done, 'submitted role') : 'Roles',
-      'Stored in the MGI Google Drive',
+      'Stored in the company Google Drive',
       'bg-status-info', done ? Math.min(100, st.evidence / done * 100) : 0);
 }

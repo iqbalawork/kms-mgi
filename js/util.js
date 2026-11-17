@@ -603,6 +603,33 @@ function hasUnsavedWork() {
   return (S.view === 'my-kpis' && myKpisDirty()) || evalDirty() || isBasketDirty() || isCategoryDirty();
 }
 
+var PRODUCT_NAME = 'Performance Management System';
+
+function originLogo(origin) {
+  return origin === 'MGI' ? MGI_LOGO_B64 : origin === 'TCMW' ? TCMW_LOGO_B64 : '';
+}
+
+function originBrand(origin) {
+  var meta = (S.user && S.user.originMeta) || {};
+  var key = meta[origin] ? origin : '';
+  var all = ((S.user && S.user.origins) || ['MGI', 'TCMW']).join(' & ');
+  return {
+    origin: key,
+    short:  key || all,
+    name:   key ? meta[key].name : all,
+    logo:   key ? originLogo(key) : ''
+  };
+}
+
+function setOrgLogo(img, origin) {
+  var src = originLogo(origin);
+  if (src) {
+    img.src = src;
+    img.alt = (originBrand(origin).name || origin);
+  }
+  img.classList.toggle('hidden', !src);
+}
+
 function onBeforeUnload(ev) {
   if (!hasUnsavedWork()) return;
   ev.preventDefault();

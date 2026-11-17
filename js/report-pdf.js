@@ -44,11 +44,19 @@ function pdfHead(ctx) {
   var emp = ctx.data.employee || {};
   return {
     title: 'Annual Performance Report',
-    line: 'FY' + esc(ctx.data.year) + (ctx.data.theme ? ' • ' + esc(ctx.data.theme) : '') + ' • PT Macme Global Indonesia',
+    line: 'FY' + esc(ctx.data.year) + (ctx.data.theme ? ' • ' + esc(ctx.data.theme) : '') + (emp.Origin ? ' • ' + esc(originBrand(emp.Origin).name) : ''),
     right: emp.Full_Name || '-',
     rightLine: 'NIK ' + (emp.NIK || '-') + ' • ' + ctx.role.roleLabel,
     badge: ''
   };
+}
+
+function pdfLogosHtml(ctx) {
+  var origins = ctx.origins || [((ctx.data && ctx.data.employee) || {}).Origin];
+  return origins.map(function (o) {
+    var src = originLogo(o);
+    return src ? '<img src="' + src + '" alt="' + esc(originBrand(o).name) + '" class="h-10 w-auto">' : '';
+  }).join('');
 }
 
 function pdfSheetHtml(ctx, body) {
@@ -57,7 +65,7 @@ function pdfSheetHtml(ctx, body) {
   return '<div class="pdf-sheet">' +
     '<div class="pdf-head">' +
       '<div class="flex items-center gap-3 min-w-0">' +
-        '<img src="' + MGI_LOGO_B64 + '" alt="MGI" class="h-10 w-auto">' +
+        pdfLogosHtml(ctx) +
         '<div class="min-w-0">' +
           (h.badge ? '<div class="flex items-center gap-2">' + title + h.badge + '</div>' : title) +
           '<p class="text-[11px] text-text-muted">' + h.line + '</p>' +
@@ -71,7 +79,7 @@ function pdfSheetHtml(ctx, body) {
     '<div class="pdf-body"><div class="pdf-fit">' + body + '</div></div>' +
     '<div class="pdf-foot">' +
       '<span class="flex-1 min-w-0">Generated on ' + esc(ctx.stamp) + (ctx.by ? ' by ' + esc(ctx.by) : '') + ' • Confidential</span>' +
-      '<span class="shrink-0 text-center">MGI KPI Portal • Supported by IT Department</span>' +
+      '<span class="shrink-0 text-center">' + PRODUCT_NAME + ' • Supported by IT Department</span>' +
       '<span data-pdf-page class="flex-1 min-w-0 text-right font-semibold text-text-secondary">Page 1 of 1</span>' +
     '</div>' +
   '</div>';
@@ -272,8 +280,8 @@ function pdfRender(libs, sheets, ctx, fileName) {
   doc.setProperties({
     title: meta.title,
     subject: meta.subject,
-    author: 'MGI KPI Portal',
-    creator: 'MGI KPI Portal',
+    author: PRODUCT_NAME,
+    creator: PRODUCT_NAME,
     keywords: meta.keywords
   });
   var chain = Promise.resolve();

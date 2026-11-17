@@ -1,6 +1,6 @@
-# MGI KPIs Management System - Frontend
+# Performance Management System - Frontend
 
-Tampilan web PT Macme Global Indonesia KPIs Management System. Halaman statis (HTML, CSS, JS)
+Tampilan web Performance Management System untuk MGI dan TCMW. Halaman statis (HTML, CSS, JS)
 yang di-host di GitHub Pages dan memanggil backend Google Apps Script lewat REST (JSON).
 
 Live: `https://iqbalawork.github.io/kms-mgi/`

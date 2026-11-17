@@ -301,6 +301,13 @@
     -webkit-mask-image: radial-gradient(120% 90% at 100% 0%, #000 0%, transparent 70%);
     mask-image: radial-gradient(120% 90% at 100% 0%, #000 0%, transparent 70%);
   }
+  .pms-mark { display: block; flex-shrink: 0; }
+  .pms-mark-light { --pms-tile: #fff; --pms-bar: #8B1E1E; }
+  .login-org { display: inline-flex; align-items: center; gap: .5rem; padding: .375rem .75rem .375rem .375rem; border-radius: .75rem; background: #fff; color: #0F172A; font-size: 13px; font-weight: 700; letter-spacing: .02em; }
+  .login-org-line { border: 1px solid #E2E8F0; }
+  .login-org img { width: 1.75rem; height: 1.75rem; object-fit: contain; }
+  .topbar-org-logo { display: none; }
+  @media (min-width: 640px) { .topbar-org-logo:not(.hidden) { display: block; } }
   .login-cards { display: none; position: relative; height: 9.5rem; margin-top: 2rem; }
   @media (min-width: 1280px) and (min-height: 860px) { .login-cards { display: block; } }
   .login-card { position: absolute; border-radius: .875rem; }

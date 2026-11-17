@@ -172,7 +172,7 @@ function heroNameHtml(full) {
   var cut = name.lastIndexOf(' ');
   return esc(name.slice(0, cut + 1)) +
     '<span class="whitespace-nowrap">' + esc(name.slice(cut + 1)) +
-      '<span class="material-symbols-outlined hero-heart" title="Thank you for your work at MGI" aria-hidden="true">favorite</span></span>';
+      '<span class="material-symbols-outlined hero-heart" title="Thank you for your work" aria-hidden="true">favorite</span></span>';
 }
 
 function initials(name) {

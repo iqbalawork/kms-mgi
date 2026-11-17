@@ -8,7 +8,7 @@ function rptContext(md, opts) {
   return {
     head: {
       title: title,
-      line: esc((annual ? '' : md.monthName + ' • ') + 'FY' + md.year + (md.theme ? ' • ' + md.theme : '') + ' • PT Macme Global Indonesia'),
+      line: esc((annual ? '' : md.monthName + ' • ') + 'FY' + md.year + (md.theme ? ' • ' + md.theme : '') + ' • ' + originBrand(opts.origin).name),
       right: md.scopeLabel,
       rightLine: annual
         ? (md.released ? 'Released to employees on ' + fmtDate(md.rules.releasedAt) : 'Not released to employees yet')
@@ -20,6 +20,7 @@ function rptContext(md, opts) {
       subject: md.scopeLabel + ', generated on ' + fmtStamp(opts.when),
       keywords: 'KPI, report, FY' + md.year
     },
+    origins: opts.origin ? [opts.origin] : ((S.user && S.user.origins) || ['MGI', 'TCMW']),
     stamp: fmtStamp(opts.when),
     by: opts.by,
     quality: 0.8

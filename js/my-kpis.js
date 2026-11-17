@@ -581,7 +581,7 @@ function roleSection(r) {
           '<input type="checkbox" class="mt-0.5 w-4 h-4 rounded border-border-medium text-primary-container focus:ring-primary-container" data-role-declare="' + key + '"' +
             ' onchange="MGI.onDeclareChange(\'' + key + '\')">' +
           '<span class="text-body-sm text-text-secondary leading-relaxed">I declare that the realization data and supporting documents for the <strong>' +
-            esc(r.label) + '</strong> role are valid, match the field operational records, and can be accounted for to the Management of PT Macme Global Indonesia.</span>' +
+            esc(r.label) + '</strong> role are valid, match the field operational records, and can be accounted for to the Management of ' + esc(S.user && S.user.Origin ? originBrand(S.user.Origin).name : 'the company') + '.</span>' +
         '</label>' +
         '<p class="text-body-sm text-text-muted flex items-center gap-1.5 pl-6" data-role-hint="' + key + '"></p>' +
       '</div>' +
