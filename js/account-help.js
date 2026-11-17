@@ -164,7 +164,7 @@ function helpMessage(user, support, help, ctx) {
   var topic = C.topics[help.topic] || null;
   var month = ctx.month ? C.months[ctx.month - 1] + ' ' + ctx.year : '';
   var role = ctx.role || [user.Position, user.Department].filter(Boolean).join(' / ');
-  var place = [ctx.page, month].filter(Boolean).join(', ');
+  var place = [['PMS Portal', ctx.page].filter(Boolean).join(' • '), month].filter(Boolean).join(', ');
   var line = !topic ? C.general
            : help.topic === 'change' && ctx.role && month ? fillCopy(C.changeFor, { role: ctx.role, month: month })
            : topic[1];
