@@ -17,6 +17,8 @@ function initSummary() {
       fillDeptOptions();
       renderActiveSummary();
     });
+    fillSumOrigins();
+    $('sum-origin').addEventListener('change', onSumOriginChange);
     $('sum-dept').addEventListener('change', function () {
       S.sumPage = 1;
       S.annPage = 1;
@@ -43,6 +45,7 @@ function initSummary() {
     fillMonthOptions();
     $('sum-month').value = String(jump.month);
     $('sum-search').value = '';
+    $('sum-origin').value = jump.origin || '';
     S.sumPick = { division: jump.division || '', department: jump.department || '' };
   }
 
@@ -53,9 +56,9 @@ function initSummary() {
   loadActiveSummary();
 }
 
-function openSummaryFor(year, month, filter, division, department) {
+function openSummaryFor(year, month, filter, division, department, origin) {
   S.sumJump = { year: parseInt(year, 10) || S.user.year, month: parseInt(month, 10) || 1, filter: filter || 'all',
-                division: division || '', department: department || '' };
+                division: division || '', department: department || '', origin: origin || '' };
   go('summary');
 }
 
@@ -170,6 +173,34 @@ function sumData() {
   return S.sumView === 'annual' ? S.annual : S.summary;
 }
 
+function sumOrigin() {
+  var sel = $('sum-origin');
+  return sel ? sel.value : '';
+}
+
+function inSumOrigin(r) {
+  var origin = sumOrigin();
+  return !origin || r.Origin === origin;
+}
+
+function fillSumOrigins() {
+  var sel = $('sum-origin');
+  if (!sel) return;
+  var keep = sel.value;
+  var list = (S.user && S.user.origins) || [];
+  sel.innerHTML = '<option value="">All Origins</option>' + list.map(function (o) {
+    return '<option value="' + esc(o) + '">' + esc(o) + '</option>';
+  }).join('');
+  sel.value = list.indexOf(keep) > -1 ? keep : '';
+}
+
+function onSumOriginChange() {
+  S.sumPage = 1;
+  S.annPage = 1;
+  fillSumFilters();
+  renderActiveSummary();
+}
+
 function sumDivision() {
   var sel = $('sum-division');
   return sel ? sel.value : '';
@@ -185,7 +216,7 @@ function fillSumDivisions() {
   var data = sumData();
   if (!sel || !data) return;
   var keep = S.sumPick ? S.sumPick.division : sel.value;
-  var list = distinct(data.rows || [], 'Division');
+  var list = distinct((data.rows || []).filter(inSumOrigin), 'Division');
   sel.innerHTML = '<option value="">All Divisions</option>' +
     list.map(function (d) {
       return '<option value="' + esc(d) + '">' + esc(d) + '</option>';
@@ -198,8 +229,8 @@ function fillDeptOptions() {
   var data = sumData();
   if (!data) return;
   var division = sumDivision();
-  var list = division
-    ? distinct((data.rows || []).filter(function (r) { return eqiJs(r.Division, division); }), 'Department')
+  var list = division || sumOrigin()
+    ? distinct((data.rows || []).filter(function (r) { return inSumOrigin(r) && (!division || eqiJs(r.Division, division)); }), 'Department')
     : (data.departments || []);
   var keep = S.sumPick ? S.sumPick.department : dept.value;
   S.sumPick = null;
@@ -238,6 +269,7 @@ function baseRows() {
   var dept = $('sum-dept').value;
   var q = ($('sum-search').value || '').trim().toLowerCase();
   return S.summary.rows.filter(function (r) {
+    if (!inSumOrigin(r)) return false;
     if (division && !eqiJs(r.Division, division)) return false;
     if (dept && !eqiJs(r.Department, dept)) return false;
     if (q && (r.Full_Name + ' ' + r.NIK).toLowerCase().indexOf(q) === -1) return false;

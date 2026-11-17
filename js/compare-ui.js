@@ -141,7 +141,7 @@ function cmpSlotHtml(slot, ready) {
         '<div class="flex flex-col min-w-[12rem] flex-1">' +
           '<span class="flex items-center gap-2 min-w-0">' + cmpTag(slot) + '<span class="text-title-md text-text-primary truncate">' + esc(r.Full_Name) + '</span></span>' +
           '<span class="text-body-sm text-text-secondary truncate">' + esc(cmpRoleText(r)) + '</span>' +
-          '<span class="text-label-xs text-text-muted truncate">NIK ' + esc(r.NIK) + (r.Division ? ' • ' + esc(r.Division) : '') + ' • ' + cmpMonthsText(r.kpiMonths) + ' • Avg KPI ' + cmpScore(r.kpiMonths > 0 ? r.avgScore : null) + '</span>' +
+          '<span class="text-label-xs text-text-muted truncate">NIK ' + esc(r.NIK) + (r.Division ? ' • ' + esc(r.Division) : '') + (r.Origin ? ' • ' + esc(r.Origin) : '') + ' • ' + cmpMonthsText(r.kpiMonths) + ' • Avg KPI ' + cmpScore(r.kpiMonths > 0 ? r.avgScore : null) + '</span>' +
         '</div>' +
         '<div class="flex items-center gap-1 shrink-0">' +
           '<button type="button" class="btn btn-secondary !py-1 !px-2.5 !text-label-sm" onclick="MGI.openComparePick(\'' + slot + '\')" aria-expanded="' + (open ? 'true' : 'false') + '">Change</button>' +

@@ -35,7 +35,8 @@ function cmpPickList(slot) {
   var rows = cmpCandidates().map(function (r, i) { return { r: r, i: i }; }).filter(function (x) {
     var r = x.r;
     if (other && String(r.NIK) === String(other.nik) && r.roleKey === other.roleKey) return false;
-    return !q || (r.Full_Name + ' ' + r.NIK + ' ' + cmpRoleText(r) + ' ' + (r.Division || '')).toLowerCase().indexOf(q) > -1;
+    if (!inSumOrigin(r)) return false;
+    return !q || (r.Full_Name + ' ' + r.NIK + ' ' + cmpRoleText(r) + ' ' + (r.Division || '') + ' ' + (r.Origin || '')).toLowerCase().indexOf(q) > -1;
   });
   var same = other ? rows.filter(function (x) { return x.r.roleKey === other.roleKey; }) : [];
   var rest = other ? rows.filter(function (x) { return x.r.roleKey !== other.roleKey; }) : rows;

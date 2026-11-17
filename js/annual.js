@@ -7,13 +7,13 @@ function exportAnnualCsv() {
     return;
   }
 
-  var header = ['NIK', 'Full Name', 'Division', 'Department', 'Position', 'KPI Months', 'Avg KPI Score']
+  var header = ['NIK', 'Full Name', 'Origin', 'Division', 'Department', 'Position', 'KPI Months', 'Avg KPI Score']
     .concat(MONTHS.map(function (m) { return m.substring(0, 3); }));
   var lines = [csvLine(header)];
 
   rows.forEach(function (r) {
     lines.push(csvLine([
-      r.NIK, r.Full_Name, r.Division, r.Department, r.Position, r.kpiMonths,
+      r.NIK, r.Full_Name, r.Origin || '', r.Division, r.Department, r.Position, r.kpiMonths,
       isNum(r.avgScore) ? Number(r.avgScore).toFixed(2) : ''
     ].concat(r.months.map(function (v) {
       return isNum(v) ? Number(v).toFixed(2) : '';
@@ -71,6 +71,7 @@ function annualRows() {
   var dept = $('sum-dept').value;
   var q = ($('sum-search').value || '').trim().toLowerCase();
   return sortedBy(S.annual.rows.filter(function (r) {
+    if (!inSumOrigin(r)) return false;
     if (division && !eqiJs(r.Division, division)) return false;
     if (dept && !eqiJs(r.Department, dept)) return false;
     if (q && (r.Full_Name + ' ' + r.NIK).toLowerCase().indexOf(q) === -1) return false;
@@ -190,7 +191,7 @@ function renderAnnualTable() {
               '<span class="material-symbols-outlined text-[16px]">compare_arrows</span></button>' +
           '</span>' +
           '<span class="text-text-secondary leading-snug">' + esc(r.Position) + ' / ' + esc(r.Department) + '</span>' +
-          '<span class="text-text-muted leading-snug">' + esc(r.NIK) + (r.Division ? ' • ' + esc(r.Division) : '') + '</span>' +
+          '<span class="text-text-muted leading-snug">' + esc(r.NIK) + (r.Division ? ' • ' + esc(r.Division) : '') + (r.Origin ? ' • ' + esc(r.Origin) : '') + '</span>' +
           (!r.isHome || r.roleInactive
             ? '<span class="flex items-center gap-1 flex-wrap mt-0.5">' +
                 (r.isHome ? '' : '<span class="pill pill-maroon !py-0 !px-1 !text-[9px]" title="Additional role">Additional</span>') +

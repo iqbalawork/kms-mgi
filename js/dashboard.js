@@ -776,7 +776,7 @@ function renderDashInsights(s) {
 
 function openDashJump(index) {
   var j = (S.dashJumps || [])[index];
-  if (j) openSummaryFor(j.year, j.month, j.filter, j.division, j.department);
+  if (j) openSummaryFor(j.year, j.month, j.filter, j.division, j.department, j.origin);
 }
 
 function dashCell(v, muted) {

@@ -90,7 +90,7 @@ function renderSummaryTable() {
           '<div class="flex flex-col min-w-0">' +
             nameLink(r.Full_Name, r.NIK, r.roleKey, S.summary.year, 'text-body-md font-bold truncate') +
             '<span class="text-label-xs text-text-secondary">' + esc(r.Position) + ' / ' + esc(r.Department) + '</span>' +
-            '<span class="flex items-center gap-1 flex-wrap text-[11px] text-text-muted">NIK ' + esc(r.NIK) +
+            '<span class="flex items-center gap-1 flex-wrap text-[11px] text-text-muted">NIK ' + esc(r.NIK) + (r.Origin ? ' • ' + esc(r.Origin) : '') +
               (r.isHome ? '' : '<span class="pill pill-maroon !py-0 !px-1.5 !text-[11px]">Additional Role</span>') +
               (r.roleInactive ? '<span class="pill pill-neutral !py-0 !px-1.5 !text-[11px]">Inactive Role</span>' : '') +
             '</span>' +
@@ -344,14 +344,14 @@ function exportCsv() {
 
   var maxKpi = rows.reduce(function (m, r) { return Math.max(m, r.items.length); }, 0);
 
-  var header = ['NIK', 'Full Name', 'Position (Role)', 'Department (Role)', 'Period'];
+  var header = ['NIK', 'Full Name', 'Origin', 'Position (Role)', 'Department (Role)', 'Period'];
   for (var k = 1; k <= maxKpi; k++) header.push('K' + k + ' Score', 'K' + k + ' Realization');
   header.push('Total Score', 'Rating', 'Submission Status', 'Evidence Link', 'Evidence Type');
 
   var lines = [csvLine(header)];
 
   rows.forEach(function (r) {
-    var line = [r.NIK, r.Full_Name, r.Position, r.Department, S.summary.period];
+    var line = [r.NIK, r.Full_Name, r.Origin || '', r.Position, r.Department, S.summary.period];
     for (var i = 0; i < maxKpi; i++) {
       var it = r.items[i];
       line.push(it && isNum(it.ScoreDisplay) ? it.ScoreDisplay : '');
