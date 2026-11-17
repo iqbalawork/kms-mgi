@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,notes,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,start,sticky_note_2,stop,style,support,support_agent,swap_horiz,swap_vert,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
   <link rel="stylesheet" href="./css/app.css?v=e0d7d4e5">
-  <link rel="stylesheet" href="./css/tailwind.css?v=74a4d551">
+  <link rel="stylesheet" href="./css/tailwind.css?v=99f60f10">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
 
@@ -651,10 +651,14 @@
 
           <div id="mk-health" class="hidden">
             <div id="mkh-filter-bar" class="lg:sticky lg:top-16 z-20 bg-white border border-slate-200 shadow-xs rounded-xl px-4 py-3 mb-4">
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
                 <div>
                   <label for="mkh-year" class="form-label">Year</label>
                   <select id="mkh-year" class="field" onchange="MGI.onKpiHealthYear(this.value)"></select>
+                </div>
+                <div>
+                  <label for="mkh-origin" class="form-label">Origin</label>
+                  <select id="mkh-origin" class="field" onchange="MGI.onKpiHealthOrigin()"><option value="">All Origins</option></select>
                 </div>
                 <div>
                   <label for="mkh-division" class="form-label">Division</label>
@@ -792,7 +796,8 @@
             <div class="bg-surface-card rounded-xl shadow-level-1 border border-border-light overflow-hidden">
               <div class="px-4 py-3 border-b border-border-light flex flex-col sm:flex-row sm:items-center gap-3">
                 <div id="map-tabs" class="seg"></div>
-                <div class="relative flex-1 sm:max-w-xs sm:ml-auto">
+                <select id="map-origin" class="field sm:!w-40 sm:ml-auto" aria-label="Origin" onchange="MGI.onMapOriginChange()"><option value="">All Origins</option></select>
+                <div class="relative flex-1 sm:max-w-xs">
                   <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px] pointer-events-none">search</span>
                   <input id="map-emp-search" type="search" aria-label="Search employees" class="field !pl-10"
                          placeholder="Search NIK, name or email" oninput="MGI.renderEmployeeList()">
@@ -1278,9 +1283,9 @@
 <script src="./js/dashboard.js?v=c7a757f5"></script>
 <script src="./js/my-kpis.js?v=445a9b8e"></script>
 <script src="./js/my-kpis-submit.js?v=61b09dfe"></script>
-<script src="./js/mapping.js?v=4f4f1a66"></script>
+<script src="./js/mapping.js?v=ca168276"></script>
 <script src="./js/mapping-workspace.js?v=37555f49"></script>
-<script src="./js/kpi-health.js?v=4969203e"></script>
+<script src="./js/kpi-health.js?v=d4ce5dca"></script>
 <script src="./js/master-kpis.js?v=990f0b07"></script>
 <script src="./js/master-kpis-edit.js?v=a30308a9"></script>
 <script src="./js/summary.js?v=d68a25d6"></script>
@@ -1302,6 +1307,6 @@
 <script src="./js/compare-context.js?v=2118e075"></script>
 <script src="./js/compare-context-ui.js?v=3c3a93ef"></script>
 <script src="./js/guide-reviewer.js?v=193c5944"></script>
-<script src="./js/main.js?v=92aa2ed5"></script>
+<script src="./js/main.js?v=dde58ada"></script>
 </body>
 </html>

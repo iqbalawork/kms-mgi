@@ -69,11 +69,39 @@ function fillKpiHealthFilters() {
   }).join('');
   yearSel.value = String(d.year);
 
+  var originSel = $('mkh-origin');
+  var keepOrigin = originSel.value;
+  var origins = d.origins || [];
+  originSel.innerHTML = '<option value="">All Origins</option>' + origins.map(function (o) {
+    return '<option value="' + esc(o) + '">' + esc(o) + '</option>';
+  }).join('');
+  originSel.value = origins.indexOf(keepOrigin) > -1 ? keepOrigin : '';
+  fillKpiHealthDivisions();
+}
+
+function kpiHealthKpis() {
+  var d = S.kpiHealth;
+  if (!d) return [];
+  var sel = $('mkh-origin');
+  var origin = sel ? sel.value : '';
+  if (!origin) return d.kpis || [];
+  return (d.kpis || []).filter(function (k) {
+    var o = k.byOrigin && k.byOrigin[origin];
+    return o && o.holders > 0;
+  }).map(function (k) { return Object.assign({}, k, k.byOrigin[origin]); });
+}
+
+function onKpiHealthOrigin() {
+  fillKpiHealthDivisions();
+  renderKpiHealth();
+}
+
+function fillKpiHealthDivisions() {
   var divSel = $('mkh-division');
   var keep = divSel.value;
   var seen = {};
   var divisions = [];
-  (d.kpis || []).forEach(function (k) {
+  kpiHealthKpis().forEach(function (k) {
     var name = k.Division || '-';
     if (!seen[name]) { seen[name] = true; divisions.push(name); }
   });
@@ -97,7 +125,7 @@ function fillKpiHealthRoles() {
   var keep = roleSel.value;
   var seen = {};
   var roles = [];
-  (d.kpis || []).forEach(function (k) {
+  kpiHealthKpis().forEach(function (k) {
     if (division && (k.Division || '-') !== division) return;
     var name = kpiHealthRole(k);
     if (!seen[name]) { seen[name] = true; roles.push(name); }
@@ -258,7 +286,7 @@ function renderKpiHealth() {
   var role = $('mkh-role').value;
   var flag = $('mkh-flag').value;
   var q = ($('mkh-search').value || '').trim().toLowerCase();
-  var base = (d.kpis || []).filter(function (k) {
+  var base = kpiHealthKpis().filter(function (k) {
     if (division && (k.Division || '-') !== division) return false;
     if (role && kpiHealthRole(k) !== role) return false;
     if (q && (k.KPI_ID + ' ' + k.KPI_Name + ' ' + (k.Metrics || '') + ' ' + k.Position + ' ' + k.Department).toLowerCase().indexOf(q) === -1) return false;
@@ -279,7 +307,7 @@ function renderKpiHealth() {
   $('mkh-tbody').innerHTML = list.map(kpiHealthRowHtml).join('');
   $('mkh-empty').innerHTML = !empty ? '' :
     '<div class="bg-surface-card rounded-xl border border-dashed border-border-medium p-space-xl text-center">' +
-      ((d.kpis || []).length ? emptyState('search', 'No KPIs match these filters.') : emptyState('empty', 'FY' + esc(d.year) + ' has no Master KPIs yet.')) +
+      ((d.kpis || []).length ? emptyState('search', $('mkh-origin') && $('mkh-origin').value && !kpiHealthKpis().length ? 'No employee from ' + esc($('mkh-origin').value) + ' holds a KPI in FY' + esc(d.year) + ' yet.' : 'No KPIs match these filters.') : emptyState('empty', 'FY' + esc(d.year) + ' has no Master KPIs yet.')) +
     '</div>';
   schedulePins();
 }

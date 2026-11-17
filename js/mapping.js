@@ -64,6 +64,7 @@ function loadOverview() {
       if (year !== mapYear()) return;
       S.overview = data;
       S.employees = data.rows;
+      fillMapOrigins();
       autoMapTab();
       renderMapYears();
       renderOverviewStats();
@@ -110,9 +111,37 @@ function renderOverviewStats() {
       '', 0);
 }
 
+function mapOrigin() {
+  var sel = $('map-origin');
+  return sel ? sel.value : '';
+}
+
+function fillMapOrigins() {
+  var sel = $('map-origin');
+  if (!sel) return;
+  var keep = sel.value;
+  var list = (S.user && S.user.origins) || [];
+  sel.innerHTML = '<option value="">All Origins</option>' + list.map(function (o) {
+    return '<option value="' + esc(o) + '">' + esc(o) + '</option>';
+  }).join('');
+  sel.value = list.indexOf(keep) > -1 ? keep : '';
+}
+
+function onMapOriginChange() {
+  renderEmployeeTabs();
+  renderEmployeeList();
+}
+
 function mapTabCounts() {
   var o = S.overview || {};
-  return { unassigned: o.unassignedCount || 0, incomplete: o.incompleteCount || 0, assigned: o.assignedCount || 0 };
+  var origin = mapOrigin();
+  if (!origin) return { unassigned: o.unassignedCount || 0, incomplete: o.incompleteCount || 0, assigned: o.assignedCount || 0 };
+  var rows = (o.rows || []).filter(function (r) { return r.Origin === origin; });
+  return {
+    unassigned: rows.filter(function (r) { return !r.hasMapping; }).length,
+    incomplete: rows.filter(function (r) { return r.hasMapping && !r.allValid; }).length,
+    assigned:   rows.filter(function (r) { return r.hasMapping; }).length
+  };
 }
 
 function autoMapTab() {
@@ -145,8 +174,10 @@ function setMapTab(key) {
 function renderEmployeeList() {
   if (!S.overview) return;
   var q = ($('map-emp-search').value || '').toLowerCase();
+  var origin = mapOrigin();
 
   var rows = S.overview.rows.filter(function (r) {
+    if (origin && r.Origin !== origin) return false;
     if (S.mapTab === 'unassigned' && r.hasMapping) return false;
     if (S.mapTab === 'assigned' && !r.hasMapping) return false;
     if (S.mapTab === 'incomplete' && (!r.hasMapping || r.allValid)) return false;
@@ -188,7 +219,7 @@ function renderEmployeeList() {
         '<span class="flex flex-col min-w-0 flex-1">' +
           '<span class="text-body-md font-bold text-text-primary truncate">' + esc(r.Full_Name) + '</span>' +
           '<span class="text-label-xs text-text-muted truncate">' + esc(r.NIK) + ' • ' +
-            esc(r.Position) + ' / ' + esc(r.Department) + '</span>' +
+            esc(r.Position) + ' / ' + esc(r.Department) + (r.Origin ? ' • ' + esc(r.Origin) : '') + '</span>' +
           emailLine(r.Email) +
           (groupChips ? '<span class="flex flex-wrap gap-1 mt-1">' + groupChips + '</span>' : '') +
         '</span>' +
