@@ -12,6 +12,7 @@ function initDashboard() {
     yearSel.dataset.wired = '1';
     fillDashYears([S.user.year]);
     yearSel.addEventListener('change', onDashYearChange);
+    $('dash-origin').addEventListener('change', onDashOriginChange);
     $('dash-division').addEventListener('change', onDashDivisionChange);
     $('dash-department').addEventListener('change', onDashDepartmentChange);
   }
@@ -55,6 +56,7 @@ function loadDashboard(year, quiet) {
       renderScopeBanner('dash-scope', data.scope);
       renderThemeSlot('dash-theme', data.year, data.theme);
       fillDashYears(data.years);
+      fillDashOrigins();
       fillDashDivisions();
       renderDashboard();
     })
@@ -74,10 +76,32 @@ function refreshDashboard() {
   loadDashboard(S.dashYear || S.user.year, true);
 }
 
+function fillDashOrigins() {
+  var sel = $('dash-origin');
+  var keep = sel.value;
+  var list = (S.dash && S.dash.origins) || [];
+  sel.innerHTML = '<option value="">All Origins</option>' + list.map(function (o) {
+    return '<option value="' + esc(o) + '">' + esc(o) + '</option>';
+  }).join('');
+  sel.value = list.indexOf(keep) !== -1 ? keep : '';
+}
+
+function dashSource() {
+  if (!S.dash) return null;
+  var origin = $('dash-origin').value;
+  return origin && S.dash.byOrigin && S.dash.byOrigin[origin] ? S.dash.byOrigin[origin] : S.dash;
+}
+
+function onDashOriginChange() {
+  fillDashDivisions();
+  renderDashboard();
+}
+
 function fillDashDivisions() {
   var sel = $('dash-division');
   var keep = sel.value;
-  var list = (S.dash && S.dash.divisions) || [];
+  var src = dashSource();
+  var list = (src && src.divisions) || [];
   sel.innerHTML = '<option value="">All Divisions</option>' + list.map(function (d) {
     return '<option value="' + esc(d.name) + '">' + esc(d.name) + '</option>';
   }).join('');
@@ -89,7 +113,8 @@ function fillDashDepartments() {
   var sel = $('dash-department');
   var keep = sel.value;
   var division = $('dash-division').value;
-  var list = (S.dash && S.dash.divisions) || [];
+  var src = dashSource();
+  var list = (src && src.divisions) || [];
   var seen = {};
   list.forEach(function (d) {
     d.departments.forEach(function (dep) { seen[dep] = (seen[dep] || 0) + 1; });
@@ -125,6 +150,8 @@ function onDashDepartmentChange() {
 }
 
 function resetDashFilters() {
+  $('dash-origin').value = '';
+  fillDashDivisions();
   $('dash-division').value = '';
   $('dash-department').value = '';
   fillDashDepartments();
@@ -135,21 +162,24 @@ function dashFilter() {
   var dep = $('dash-department').value;
   var parts = dep ? dep.split('||') : [];
   return {
+    origin:     $('dash-origin').value,
     division:   parts.length ? parts[0] : $('dash-division').value,
     department: parts.length ? parts[1] : ''
   };
 }
 
 function dashSlice() {
-  if (!S.dash || !S.dash.slices) return null;
+  var src = dashSource();
+  if (!src || !src.slices) return null;
   var f = dashFilter();
   var key = f.department ? 'dep:' + f.division + '|' + f.department : f.division ? 'div:' + f.division : 'all';
-  return S.dash.slices[key] || S.dash.slices.all;
+  return src.slices[key] || src.slices.all;
 }
 
 function dashScopeLabel() {
   var f = dashFilter();
-  return f.department ? f.department + ' (' + f.division + ')' : f.division || 'All divisions';
+  var where = f.department ? f.department + ' (' + f.division + ')' : f.division || 'All divisions';
+  return f.origin ? f.origin + ' • ' + where : where;
 }
 
 function dashMonth(m, full) {
@@ -319,7 +349,7 @@ function renderDashStats(s) {
   var rateBar = !isNum(c.rate) ? 'bg-status-info' : c.rate >= 80 ? 'bg-status-success' : c.rate >= 50 ? 'bg-status-warning' : 'bg-status-danger';
 
   $('dash-stats').innerHTML =
-    statCard('YTD Company Average', 'insights', ytdBand ? 'text-status-' + ytdBand.key + '-text' : 'text-text-muted',
+    statCard(dashFilter().origin ? 'YTD ' + dashFilter().origin + ' Average' : 'YTD Company Average', 'insights', ytdBand ? 'text-status-' + ytdBand.key + '-text' : 'text-text-muted',
       ytdBand ? s.ytdAvg.toFixed(2) : '-', '%',
       ytdBand ? 'Rating: ' + esc(ytdBand.label) + ' • Feb to Dec, ' + s.scoredScorecards + ' scored scorecards'
               : 'No counted months scored yet',
@@ -676,7 +706,7 @@ function renderDashInsights(s) {
   var f = dashFilter();
   S.dashJumps = [];
   var jump = function (month, label) {
-    S.dashJumps.push({ year: year, month: month, filter: 'pending', division: f.division, department: f.department });
+    S.dashJumps.push({ year: year, month: month, filter: 'pending', division: f.division, department: f.department, origin: f.origin });
     return { label: label, js: 'MGI.openDashJump(' + (S.dashJumps.length - 1) + ')' };
   };
 
