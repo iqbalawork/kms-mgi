@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,notes,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,start,sticky_note_2,stop,style,support,support_agent,swap_horiz,swap_vert,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?v=1fb9c0d2">
-  <link rel="stylesheet" href="./css/tailwind.css?v=b06a9d28">
+  <link rel="stylesheet" href="./css/app.css?v=acb1b25d">
+  <link rel="stylesheet" href="./css/tailwind.css?v=df40ef52">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
 
@@ -99,12 +99,12 @@
       </ul>
     </div>
     <div class="relative flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70 mr-1">Used by</span>
-        <span class="login-org"><img data-org-logo-of="MGI" alt="PT Macme Global Indonesia" width="96" height="96"><span>MGI</span></span>
-        <span class="login-org"><img data-org-logo-of="TCMW" alt="PT Tunas Cahaya Mandiri Widyatama" width="96" height="96"><span>TCMW</span></span>
+      <div class="login-used flex flex-col items-start gap-y-0.5 xl:flex-row xl:items-center xl:gap-x-3 text-white/85">
+        <span class="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/60 mr-1">Used by</span>
+        <span class="login-org-name">PT Macme Global Indonesia</span>
+        <span class="login-org-name">PT Tunas Cahaya Mandiri Widyatama</span>
       </div>
-      <p class="text-xs text-white/70">Supported by IT Department.</p>
+      <p class="text-xs text-white/60">Supported by IT Department.</p>
     </div>
   </aside>
   <div class="flex items-center justify-center p-4 sm:p-8">
@@ -144,10 +144,10 @@
       <p class="flex items-start gap-2"><span class="material-symbols-outlined text-[18px] shrink-0">mail</span><span>First time? Use the 6-character login code from your invitation email.</span></p>
       <p class="flex items-start gap-2"><span class="material-symbols-outlined text-[18px] shrink-0">support_agent</span><span>Forgot your password? Contact HR / Admin to reset it.</span></p>
     </div>
-    <div class="lg:hidden mt-space-lg flex flex-wrap items-center justify-center gap-2">
-      <span class="text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted mr-1">Used by</span>
-      <span class="login-org login-org-line"><img data-org-logo-of="MGI" alt="PT Macme Global Indonesia" width="96" height="96"><span>MGI</span></span>
-      <span class="login-org login-org-line"><img data-org-logo-of="TCMW" alt="PT Tunas Cahaya Mandiri Widyatama" width="96" height="96"><span>TCMW</span></span>
+    <div class="login-used lg:hidden mt-space-lg flex flex-col items-center gap-0.5 text-center text-text-secondary">
+      <span class="mb-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted">Used by</span>
+      <span class="login-org-name">PT Macme Global Indonesia</span>
+      <span class="login-org-name">PT Tunas Cahaya Mandiri Widyatama</span>
     </div>
   </form>
   </div>
@@ -1287,7 +1287,7 @@
 <script src="./js/logo.js?v=6cd91d62"></script>
 <script src="./js/state.js?v=b7db0392"></script>
 <script src="./js/util.js?v=062a1d6e"></script>
-<script src="./js/auth.js?v=d0b09f03"></script>
+<script src="./js/auth.js?v=4bfaa359"></script>
 <script src="./js/access-year.js?v=5cb5b1e2"></script>
 <script src="./js/account-help.js?v=ac3827c9"></script>
 <script src="./js/shell.js?v=b9f77061"></script>

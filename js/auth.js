@@ -8,10 +8,6 @@ function boot() {
   window.addEventListener('beforeunload', onBeforeUnload);
   window.addEventListener('hashchange', onHashChange);
   watchPhoneMode();
-  document.querySelectorAll('[data-org-logo-of]').forEach(function (img) {
-    img.src = originLogo(img.getAttribute('data-org-logo-of'));
-  });
-
   S.token = loadToken();
   resolveSession();
 }

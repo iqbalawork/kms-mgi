@@ -306,9 +306,8 @@
   .brand-logos-light { gap: .375rem; padding: .375rem; border-radius: 1rem; background: #fff; box-shadow: 0 10px 15px -3px rgb(0 0 0 / .2); }
   .brand-logos-light img { height: 2.25rem; }
   .brand-logos-sm img { height: 2.75rem; }
-  .login-org { display: inline-flex; align-items: center; gap: .5rem; padding: .375rem .75rem .375rem .375rem; border-radius: .75rem; background: #fff; color: #0F172A; font-size: 13px; font-weight: 700; letter-spacing: .02em; }
-  .login-org-line { border: 1px solid #E2E8F0; }
-  .login-org img { width: 1.75rem; height: 1.75rem; object-fit: contain; }
+  .login-org-name { font-size: 13px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
+  @media (min-width: 1280px) { .login-org-name + .login-org-name::before { content: "\00B7"; margin-right: .75rem; opacity: .6; } }
   .topbar-org-logo { display: none; }
   @media (min-width: 640px) { .topbar-org-logo:not(.hidden) { display: block; } }
   .login-cards { display: none; position: relative; height: 9.5rem; margin-top: 2rem; }
