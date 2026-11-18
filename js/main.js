@@ -143,6 +143,7 @@ var MGI = {
   guideJump: guideJump,
   setGuideTab: setGuideTab,
   openReviewerGuide: openReviewerGuide,
+  openGuide: openGuide,
   renderGuideCalc: renderGuideCalc,
   onDeclareChange: onDeclareChange,
   togglePasswordField: togglePasswordField,

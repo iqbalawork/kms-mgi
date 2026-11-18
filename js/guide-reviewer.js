@@ -4,31 +4,50 @@ function canReview() {
   return !!(S.user && (S.user.isAdmin || isReportViewer(S.user)));
 }
 
+function canAdminGuide() {
+  return !!(S.user && S.user.isAdmin);
+}
+
+function guideTabFor(tab) {
+  if (tab === 'admin' && canAdminGuide()) return 'admin';
+  if (tab === 'reviewer' && canReview()) return 'reviewer';
+  return 'everyone';
+}
+
 function setGuideTab(tab) {
-  S.guideTab = tab === 'reviewer' && canReview() ? 'reviewer' : 'everyone';
+  S.guideTab = guideTabFor(tab);
   syncGuideTabs();
 }
 
 function syncGuideTabs() {
-  var reviewer = S.guideTab === 'reviewer' && canReview();
+  var tab = guideTabFor(S.guideTab);
   if ($('guide-tabs')) $('guide-tabs').classList.toggle('hidden', !canReview());
   document.querySelectorAll('[data-guide-tab]').forEach(function (b) {
-    var on = (b.dataset.guideTab === 'reviewer') === reviewer;
+    var on = b.dataset.guideTab === tab;
     b.classList.toggle('is-active', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
+    if (b.dataset.guideTab === 'admin') b.classList.toggle('hidden', !canAdminGuide());
   });
-  if ($('guide-everyone')) $('guide-everyone').classList.toggle('hidden', reviewer);
+  if ($('guide-everyone')) $('guide-everyone').classList.toggle('hidden', tab !== 'everyone');
   if ($('guide-reviewer')) {
-    $('guide-reviewer').classList.toggle('hidden', !reviewer);
-    if (reviewer) $('guide-reviewer').innerHTML = reviewerGuideHtml();
+    $('guide-reviewer').classList.toggle('hidden', tab !== 'reviewer');
+    if (tab === 'reviewer') $('guide-reviewer').innerHTML = reviewerGuideHtml();
+  }
+  if ($('guide-admin')) {
+    $('guide-admin').classList.toggle('hidden', tab !== 'admin');
+    $('guide-admin').innerHTML = tab === 'admin' ? adminGuideHtml() : '';
   }
 }
 
-function openReviewerGuide(section) {
-  S.guideTab = 'reviewer';
+function openGuide(tab, section) {
+  S.guideTab = guideTabFor(tab);
   if (S.view === 'guide') syncGuideTabs();
   else go('guide');
   setTimeout(function () { guideJump(section); }, 60);
+}
+
+function openReviewerGuide(section) {
+  openGuide('reviewer', section);
 }
 
 function rgSection(id, title, body) {
@@ -47,32 +66,16 @@ function rgList(items) {
   return '<ul class="rg-list">' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>';
 }
 
-function rgHealthHtml() {
+function rgFlagWords() {
   var live = !!S.kpiHealth;
   var r = kpiHealthRules(S.kpiHealth);
-  var flag = function (key) { var f = HEALTH_FLAGS[key]; return '<span class="pill ' + f.pill + ' !text-[11px] whitespace-nowrap">' + esc(f.label) + '</span>'; };
-  var rule = function (text, fallback) { return live ? text : fallback; };
-  return '<p class="text-body-sm text-text-secondary mb-space-sm">Master KPIs > KPI Health checks whether each target is set at the right level, from every submission of the fiscal year. Trial months and the automatic 1.0 of off-cycle quarterly KPIs are not counted. Admin only.</p>' +
-    rgTable(['Column', 'Definition'], [
-      ['Holders', 'Employees mapped to the KPI that year.'],
-      ['Submissions', 'Scored months across all holders.'],
-      ['At 1.0 / At 0.2', 'Share of submissions on the top tier and on the lowest tier.'],
-      ['Avg Tier', 'Average tier of all submissions. It shows how hard the KPI is, without its weight.'],
-      ['Points lost', 'Weight × (1 − avg tier): the KPI score points a holder loses on this KPI in an average month. It ranks which reviews matter most.'],
-      ['Flag', 'The verdict on the target, with the rules below.']
-    ]) +
-    '<div class="mt-space-md">' + rgTable(['Flag', 'Rule'], [
-      [flag('hard'), rule(r.hardPct + '% or more of submissions at tier ' + healthTierText(r.hardTier, false) + '. The target may be too high.', 'Most submissions at the lowest tiers, as set in System Settings. The target may be too high.')],
-      [flag('easy'), rule(r.easyPct + '% or more of submissions at tier ' + healthTierText(r.easyTier, true) + '. The target may be too low.', 'Most submissions at the top tier, as set in System Settings. The target may be too low.')],
-      [flag('healthy'), 'Results spread across the tiers.'],
-      [flag('thin'), rule('Fewer than ' + plural(r.minEntries, 'submission') + ', too few to judge.', 'Too few submissions to judge, as set in System Settings.')]
-    ]) + '</div>' +
-    '<h3 class="text-title-md text-text-primary mt-space-md mb-2">How to use it</h3>' + rgList([
-      'Sort by Points lost to choose which KPIs to review first.',
-      'Read the Flag for the diagnosis. Unrealistic or Easy points at the target; Healthy does not.',
-      'A Healthy KPI with high Points lost is an important KPI that people are not reaching yet. Coach the work, do not lower the target.',
-      'Compare uses the same definitions for its Gap from Unrealistic KPIs and Score lifted by Easy KPIs notes.'
-    ]);
+  return '<p class="text-body-sm text-text-secondary mt-space-md"><strong>What Unrealistic and Easy mean.</strong> ' +
+    (live
+      ? 'A KPI is Unrealistic when ' + r.hardPct + '% or more of its submissions land at tier ' + healthTierText(r.hardTier, false) +
+        ', and Easy when ' + r.easyPct + '% or more land at tier ' + healthTierText(r.easyTier, true) + ', with at least ' + plural(r.minEntries, 'submission') + '. '
+      : 'A KPI is Unrealistic when most of its submissions land at the lowest tiers, and Easy when most land at tier 1.0. ') +
+    'The definitions are set per year by Admin / HR, who reviews these targets in KPI Health.' +
+    (canAdminGuide() ? ' ' + guideLink('admin', 'ag-health', 'See KPI Health') : '') + '</p>';
 }
 
 function reviewerGuideHtml() {
@@ -80,12 +83,21 @@ function reviewerGuideHtml() {
   var lv = CMP_FLAG_LEVELS;
   var pill = function (key) { return '<span class="pill ' + lv[key].pill + ' !text-[11px] whitespace-nowrap">' + lv[key].label + '</span>'; };
   var pills = function () { return '<span class="rg-pills">' + Array.prototype.slice.call(arguments).map(pill).join('') + '</span>'; };
-  var nav = [['rg-compare', 'How Compare works'], ['rg-reading', 'Reading the numbers'], ['rg-peers', 'Standing among peers'],
-    ['rg-history', 'Track record'], ['rg-flags', 'Before you decide'], ['rg-health', 'KPI Health'], ['rg-use', 'Promotion and efficiency']];
+  var nav = [['rg-reports', 'Dashboard and Summary'], ['rg-compare', 'How Compare works'], ['rg-reading', 'Reading the numbers'], ['rg-peers', 'Standing among peers'],
+    ['rg-history', 'Track record'], ['rg-flags', 'Before you decide'], ['rg-use', 'Promotion and efficiency']];
   return '<nav class="guide-nav no-print" aria-label="Reviewer guide sections"><span class="guide-nav-title">On this page</span>' +
       nav.map(function (n) { return '<button type="button" class="guide-nav-link" onclick="MGI.guideJump(\'' + n[0] + '\')">' + n[1] + '</button>'; }).join('') +
     '</nav>' +
-    '<p class="text-body-sm text-text-muted mb-space-lg max-w-3xl">For Admin and Report Viewers. It explains the reports that compare people, so a decision rests on the same reading for everyone. Thresholds on this page follow the live settings.</p>' +
+    '<p class="text-body-sm text-text-muted mb-space-lg max-w-3xl">For Admin and Report Viewers. It explains the reports and how to compare people, so a decision rests on the same reading for everyone. Thresholds on this page follow the live settings.</p>' +
+
+    rgSection('rg-reports', 'Dashboard and Summary Report', rgTable(['View', 'What it answers', 'Notes'], [
+      ['Dashboard', 'How the company is doing this year.', 'Year to date average, completion rate, latest month, monthly trend, and average by division. Filter by Origin, Division, and Department.'],
+      ['Monthly', 'Who submitted one period, and with what result.', 'Role index per employee for the chosen month, with missing KPIs and evidence. Admin can send reminders and allow one more change here.'],
+      ['Annual', 'How each employee did over the year.', 'Average KPI score over the months each person submitted, with its rating band. Trial months are left out.'],
+      ['Compare', 'How two people differ.', 'See the sections below.'],
+      ['PDF reports', 'A copy to share.', 'Company monthly report and the Performance Evaluation report. They carry a Draft mark until the year is released.'],
+      ['Report Access', 'What you can see.', 'A Report Viewer with one division sees only that division, with a banner on each report.']
+    ])) +
 
     rgSection('rg-compare', 'How Compare works', rgList([
       '<strong>Head-to-head.</strong> Every number that compares A and B uses only the months both submitted. A month only one of them submitted is listed as "Left out" and does not count, so one extra month cannot flip the result.',
@@ -142,10 +154,7 @@ function reviewerGuideHtml() {
         ['No longer holds the role', pill('info'), 'The scorecard belongs to a role the person has left.'],
         ['Different roles', pill('info'), 'A and B hold different roles.']
       ]) + '</div>' +
-      '<p class="flex flex-wrap items-center gap-2 text-label-xs text-text-muted mt-space-sm">Unrealistic and Easy follow the KPI Health definitions of that year in System Settings.' +
-        '<button type="button" class="cmp-guide-link no-print" onclick="MGI.guideJump(\'rg-health\')">See KPI Health</button></p>') +
-
-    rgSection('rg-health', 'KPI Health', rgHealthHtml()) +
+      rgFlagWords()) +
 
     rgSection('rg-use', 'Using Compare for promotion and for efficiency',
       '<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">' +

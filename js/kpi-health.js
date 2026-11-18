@@ -263,7 +263,7 @@ function kpiHealthLegend(d) {
     '<p class="mkh-note">' +
       '<span>Not counted: ' + (trial.length ? esc(trial.join(' and ')) + ' (trial) and ' : '') + 'the automatic 1.0 of off-cycle quarters. ' +
       'Points lost is per holder a month: it ranks reviews, the Flag says whether the target is the problem.</span>' +
-      cmpGuideLink('rg-health', 'How to read KPI Health') +
+      guideLink('admin', 'ag-health', 'How to read KPI Health') +
     '</p>';
 }
 
