@@ -169,7 +169,7 @@ function renderEvalResult() {
           '<td class="pt-2 text-right font-bold tabular-nums text-text-primary">' + (res.complete ? scoreText(res.score) : '-') + '</td></tr></tfoot>' +
       '</table>' +
       '<div class="flex flex-col gap-2">' + gradeScaleHtml(rules.grades, res.score, false) +
-        '<div class="flex flex-wrap gap-x-3 gap-y-1.5 text-[11px]">' + gradeLegendHtml(rules.grades) + '</div></div>' +
+        '<div class="flex flex-wrap gap-x-3 gap-y-1.5 text-[11px]">' + gradeLegendHtml(rules.grades, true) + '</div></div>' +
     '</div>';
 
   if ($('ev-remarks-count')) $('ev-remarks-count').textContent = e.draft.remarks.length;

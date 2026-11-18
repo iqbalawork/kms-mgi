@@ -30,10 +30,6 @@ function renderGuideBands() {
   if (!host) return;
   var b = bandValues();
 
-  var seg = function (key, width, label) {
-    return '<div class="bg-status-' + key + ' h-full flex items-center justify-center text-[11px] font-bold text-white" style="width:' + width + '%">' +
-      (width >= 14 ? label : '') + '</div>';
-  };
   var card = function (key, icon, text, note) {
     return '<div class="rounded-xl border border-border-light bg-surface-page p-space-md flex items-start gap-space-sm">' +
       '<span class="w-9 h-9 rounded-lg bg-status-' + key + '-subtle text-status-' + key + '-text flex items-center justify-center shrink-0">' +
@@ -44,13 +40,11 @@ function renderGuideBands() {
   };
 
   host.innerHTML =
-    '<div class="flex h-10 w-full rounded-lg overflow-hidden border border-border-light mb-space-md" aria-hidden="true">' +
-      seg('danger', b.good, 'Needs Attention') + seg('info', b.excellent - b.good, 'Good') + seg('success', 100 - b.excellent, 'Excellent') +
-    '</div>' +
+    '<div class="mb-space-md">' + bandScaleHtml(b) + '</div>' +
     '<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">' +
-      card('success', 'workspace_premium', bandRange('success'), 'Outstanding results. Keep it up.') +
-      card('info', 'thumb_up', bandRange('info'), 'Solid performance within the expected range.') +
       card('danger', 'flag', bandRange('danger'), 'Below expectations and worth a closer look.') +
+      card('info', 'thumb_up', bandRange('info'), 'Solid performance within the expected range.') +
+      card('success', 'workspace_premium', bandRange('success'), 'Outstanding results. Keep it up.') +
     '</div>';
 }
 

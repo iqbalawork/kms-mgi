@@ -209,7 +209,7 @@ function renderPerfPreview() {
 
   $('perf-g-E').textContent = isNum(d.grades.D) ? 'Below ' + num(d.grades.D, 2) : '-';
   $('perf-g-preview').innerHTML = gradeError ? '' : gradeScaleHtml(d.grades, null, true);
-  $('perf-g-legend').innerHTML = gradeError ? '' : gradeLegendHtml(d.grades);
+  $('perf-g-legend').innerHTML = gradeError ? '' : gradeLegendHtml(d.grades, true);
 
   if (error) {
     $('perf-example').innerHTML = '<span class="text-text-muted">Fix the rules above to see an example.</span>';
@@ -339,7 +339,7 @@ function renderGuidePerformance() {
           '</table>' +
         '</div>' +
         '<div class="flex flex-col gap-2">' + gradeScaleHtml(rules.grades, ex.score, true) +
-          '<div class="flex flex-wrap gap-x-3 gap-y-1.5 text-label-xs">' + gradeLegendHtml(rules.grades) + '</div></div>' +
+          '<div class="flex flex-wrap gap-x-3 gap-y-1.5 text-label-xs">' + gradeLegendHtml(rules.grades, true) + '</div></div>' +
       '</div>' +
     '</div>';
 }

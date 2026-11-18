@@ -77,8 +77,9 @@ function gradeRanges(grades) {
   });
 }
 
-function gradeLegendHtml(grades) {
-  return gradeRanges(grades).map(function (r) {
+function gradeLegendHtml(grades, alongBar) {
+  var ranges = gradeRanges(grades);
+  return (alongBar ? ranges.slice().reverse() : ranges).map(function (r) {
     return '<span class="inline-flex items-center gap-1.5 whitespace-nowrap">' + gradeBadge(r.grade) +
       '<span class="text-text-secondary">' + esc(r.label) + '</span></span>';
   }).join('');

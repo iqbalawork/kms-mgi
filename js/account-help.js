@@ -14,14 +14,11 @@ function applyRole(user) {
   $('topbar-title').textContent     = PRODUCT_NAME;
   $('topbar-fy').textContent        = 'FY' + user.year;
   $('topbar-fy').title              = 'Active fiscal year';
-  $('sidebar-subtitle').textContent = (user.Origin ? user.Origin + ' • ' : '') + 'FY' + user.year;
-  $('app-footer-year').textContent  = Math.max(new Date().getFullYear(), 2027);
+  $('sidebar-subtitle').textContent = originBrand(user.Origin).name;
+  $('sidebar-subtitle').title       = originBrand(user.Origin).name;
+  $('app-footer-year').textContent  = new Date().getFullYear();
   $('app-footer-org').textContent   = originBrand(user.Origin).name;
   document.querySelectorAll('[data-org-logo]').forEach(function (img) { setOrgLogo(img, user.Origin); });
-  $('sidebar-name').textContent     = user.Full_Name;
-  $('sidebar-role').textContent     = user.Position || '-';
-  $('sidebar-avatar').textContent   = initials(user.Full_Name);
-  $('sidebar-avatar').title         = user.Full_Name;
 
   var sysRole = userRoleLabel(user);
   $('topbar-role').innerHTML =

@@ -321,7 +321,7 @@ function bandScaleHtml(d) {
 }
 
 function bandLegendHtml(d) {
-  return bandSegments(d).slice().reverse().map(function (seg) {
+  return bandSegments(d).map(function (seg) {
     return '<span class="inline-flex items-center gap-1.5 whitespace-nowrap">' + bandBadge(seg.key) +
       '<span class="font-semibold text-text-primary">' + esc(BAND_META[seg.key].label) + '</span>' +
       '<span class="text-text-secondary">' + esc(seg.label) + '</span></span>';
