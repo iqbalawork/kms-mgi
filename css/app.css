@@ -312,7 +312,6 @@
   @media (min-width: 640px) { .topbar-org-logo:not(.hidden) { display: block; } }
   .sidebar-org-name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
   @media (min-width: 1024px) {
-    body:not(.sidebar-collapsed) #topbar .topbar-org-logo,
     body:not(.sidebar-collapsed) #topbar-title,
     body:not(.sidebar-collapsed) .topbar-slash { display: none !important; }
     body:not(.sidebar-collapsed) .topbar-crumb-wrap { display: flex !important; }

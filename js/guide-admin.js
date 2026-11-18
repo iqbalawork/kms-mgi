@@ -41,7 +41,7 @@ function agHealthHtml() {
 
 function adminGuideHtml() {
   var nav = [['ag-year', 'The fiscal year'], ['ag-month', 'Every month'], ['ag-health', 'KPI Health'], ['ag-release', 'Evaluation and Release'],
-    ['ag-access', 'Who can see what'], ['ag-fix', 'Common requests'], ['ag-editor', 'Editor jobs']];
+    ['ag-access', 'Who can see what'], ['ag-fix', 'Common requests']];
   var yes = '<span class="material-symbols-outlined text-[18px] text-status-success" aria-label="Yes">check</span>';
   var no = '<span class="text-text-muted" aria-label="No">-</span>';
   return '<nav class="guide-nav no-print" aria-label="Admin guide sections"><span class="guide-nav-title">On this page</span>' +
@@ -104,14 +104,5 @@ function adminGuideHtml() {
       ['A KPI is wrong', 'Master KPIs, edit it, or deactivate it. Submitted months keep their history.'],
       ['A new employee is missing', 'The employee list syncs from the HR database every day. Ask the system owner to run the sync for an urgent case.'],
       ['Someone sees an empty new year', 'The year is not active yet. Switch it in Fiscal Year when it is ready.']
-    ])) +
-
-    rgSection('ag-editor', 'Apps Script editor jobs',
-      '<p class="text-body-sm text-text-secondary mb-space-sm">These run from the Apps Script editor by the script owner, not from this app. Each one writes to the log.</p>' +
-      rgTable(['Job', 'When'], [
-        ['backupDatabase', 'Before a large change. A daily backup trigger can be installed with installBackupTrigger.'],
-        ['migrateKpiIdFormatDryRun, then migrateKpiIdFormatApply', 'Once, to rename old KPI-T IDs to KPI-yy-xxxx. Read the dry run log first; the apply makes a backup copy itself.'],
-        ['clearAppCache', 'When a sheet was edited by hand and the app still shows old data.'],
-        ['installDailySyncTrigger, installCacheTrigger', 'Once, when the system is set up.']
-      ]));
+    ]));
 }
