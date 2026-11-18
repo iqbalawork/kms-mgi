@@ -244,9 +244,9 @@ function kpiHealthRules(d) {
 function kpiHealthDef(label, value, flag) {
   var f = flag ? HEALTH_FLAGS[flag] : null;
   return '<div class="mkh-def">' +
-    '<span class="mkh-def-label' + (f ? ' ' + f.text : '') + '">' +
-      (f ? '<span class="material-symbols-outlined text-[16px]" aria-hidden="true">' + f.icon + '</span>' : '') + esc(label) +
-    '</span>' +
+    (f
+      ? '<span class="pill ' + f.pill + ' !py-0 !text-[11px] self-start"><span class="material-symbols-outlined text-[14px]" aria-hidden="true">' + f.icon + '</span>' + esc(label) + '</span>'
+      : '<span class="mkh-def-label">' + esc(label) + '</span>') +
     '<span class="mkh-def-value">' + esc(value) + '</span>' +
   '</div>';
 }
@@ -263,7 +263,6 @@ function kpiHealthLegend(d) {
     '<p class="mkh-note">' +
       '<span>Not counted: ' + (trial.length ? esc(trial.join(' and ')) + ' (trial) and ' : '') + 'the automatic 1.0 of off-cycle quarters. ' +
       'Points lost is per holder a month: it ranks reviews, the Flag says whether the target is the problem.</span>' +
-      guideLink('admin', 'ag-health', 'How to read KPI Health') +
     '</p>';
 }
 
