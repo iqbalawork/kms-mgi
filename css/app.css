@@ -301,8 +301,11 @@
     -webkit-mask-image: radial-gradient(120% 90% at 100% 0%, #000 0%, transparent 70%);
     mask-image: radial-gradient(120% 90% at 100% 0%, #000 0%, transparent 70%);
   }
-  .pms-mark { display: block; flex-shrink: 0; }
-  .pms-mark-light { --pms-tile: #fff; --pms-bar: #8B1E1E; }
+  .brand-logos { display: inline-flex; align-items: center; gap: .625rem; flex-shrink: 0; }
+  .brand-logos img { height: 3.5rem; width: auto; object-fit: contain; }
+  .brand-logos-light { gap: .375rem; padding: .375rem; border-radius: 1rem; background: #fff; box-shadow: 0 10px 15px -3px rgb(0 0 0 / .2); }
+  .brand-logos-light img { height: 2.25rem; }
+  .brand-logos-sm img { height: 2.75rem; }
   .login-org { display: inline-flex; align-items: center; gap: .5rem; padding: .375rem .75rem .375rem .375rem; border-radius: .75rem; background: #fff; color: #0F172A; font-size: 13px; font-weight: 700; letter-spacing: .02em; }
   .login-org-line { border: 1px solid #E2E8F0; }
   .login-org img { width: 1.75rem; height: 1.75rem; object-fit: contain; }
