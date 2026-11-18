@@ -146,7 +146,7 @@ function showKpiHealthRow(html) {
   $('mkh-card').classList.remove('hidden');
   $('mkh-empty').classList.add('hidden');
   if (!$('mkh-thead').innerHTML) $('mkh-thead').innerHTML = kpiHealthHead(S.healthSort || { key: 'flag', dir: 1 });
-  $('mkh-tbody').innerHTML = '<tr><td colspan="10">' + html + '</td></tr>';
+  $('mkh-tbody').innerHTML = '<tr><td colspan="11">' + html + '</td></tr>';
 }
 
 function kpiHealthHead(sort) {
@@ -161,6 +161,7 @@ function kpiHealthHead(sort) {
     sortHead('At ' + (rules.easyTier >= 1 ? '1.0' : '≥' + Number(rules.easyTier).toFixed(1)), 'top', sort, 'sortKpiHealth', 'text-right') +
     sortHead('At ' + (rules.hardTier <= 0.2 ? '0.2' : '≤' + Number(rules.hardTier).toFixed(1)), 'bottom', sort, 'sortKpiHealth', 'text-right') +
     sortHead('Avg Tier', 'tier', sort, 'sortKpiHealth', 'text-right') +
+    sortHead('Points lost', 'lost', sort, 'sortKpiHealth', 'text-right whitespace-nowrap') +
     sortHead('Flag', 'flag', sort, 'sortKpiHealth', 'text-center') +
   '</tr>';
 }
@@ -190,7 +191,8 @@ function kpiHealthSorted(list) {
     entries: function (k) { return k.entries; },
     top:     function (k) { return k.pctTop; },
     bottom:  function (k) { return k.pctBottom; },
-    tier:    function (k) { return k.avgTier; }
+    tier:    function (k) { return k.avgTier; },
+    lost:    function (k) { return k.ptsLost; }
   }[sort.key];
   var byRole = function (a, b) {
     var x = kpiHealthRole(a).toLowerCase();
@@ -245,7 +247,8 @@ function kpiHealthLegend(d) {
     (trial.length
       ? trial.join(' and ') + (trial.length === 1 ? ' is a trial month and is' : ' are trial months and are') + ' left out. '
       : '') +
-    'Automatic tier 1.0 for off-cycle quarterly KPIs is not a submission and is not counted. Compare uses the same definitions for its Easy and Unrealistic notes.';
+    'Automatic tier 1.0 for off-cycle quarterly KPIs is not a submission and is not counted. Compare uses the same definitions for its Easy and Unrealistic notes. ' +
+    'Points lost is weight × (1 − avg tier): the KPI score points a holder loses on this KPI in an average month. Sort by it to see which reviews matter most; the Flag still says whether the target itself is the problem.';
 }
 
 function kpiHealthRowHtml(k) {
@@ -274,6 +277,12 @@ function kpiHealthRowHtml(k) {
     '<td class="text-right text-code-num">' + esc(pct(k.pctTop)) + '</td>' +
     '<td class="text-right text-code-num">' + esc(pct(k.pctBottom)) + '</td>' +
     '<td class="text-right text-code-num font-semibold">' + (isNum(k.avgTier) ? k.avgTier.toFixed(2) : '-') + '</td>' +
+    '<td class="text-right whitespace-nowrap" title="Average points a month this KPI costs each holder: weight × (1 − avg tier)">' +
+      (!isNum(k.ptsLost) ? '<span class="text-text-muted">-</span>'
+        : k.ptsLost > 0 ? '<span class="text-code-num font-semibold text-status-danger-text">-' + esc(num(k.ptsLost, 2)) + '</span>'
+        : '<span class="text-code-num text-text-muted">0</span>') +
+      '<span class="block text-[11px] text-text-muted">weight ' + esc(num(k.WeightPercent, 1)) + '%</span>' +
+    '</td>' +
     '<td class="text-center"><span class="pill ' + f.pill + ' !py-0 !text-[11px] whitespace-nowrap">' + esc(f.label) + '</span></td>' +
   '</tr>';
 }
