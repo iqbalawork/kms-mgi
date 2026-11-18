@@ -241,14 +241,30 @@ function kpiHealthRules(d) {
   };
 }
 
+function kpiHealthDef(label, value, flag) {
+  var f = flag ? HEALTH_FLAGS[flag] : null;
+  return '<div class="mkh-def">' +
+    '<span class="mkh-def-label' + (f ? ' ' + f.text : '') + '">' +
+      (f ? '<span class="material-symbols-outlined text-[16px]" aria-hidden="true">' + f.icon + '</span>' : '') + esc(label) +
+    '</span>' +
+    '<span class="mkh-def-value">' + esc(value) + '</span>' +
+  '</div>';
+}
+
 function kpiHealthLegend(d) {
+  var r = kpiHealthRules(d);
   var trial = (d.trialMonths || []).map(function (m) { return MONTHS[m - 1]; }).filter(Boolean);
-  return healthRuleText(kpiHealthRules(d)) + ' ' +
-    (trial.length
-      ? trial.join(' and ') + (trial.length === 1 ? ' is a trial month and is' : ' are trial months and are') + ' left out. '
-      : '') +
-    'Automatic tier 1.0 for off-cycle quarterly KPIs is not a submission and is not counted. Compare uses the same definitions for its Easy and Unrealistic notes. ' +
-    'Points lost is weight × (1 − avg tier): the KPI score points a holder loses on this KPI in an average month. Sort by it to see which reviews matter most; the Flag still says whether the target itself is the problem.';
+  return '<div class="mkh-defs">' +
+      kpiHealthDef('Easy', r.easyPct + '%+ at tier ' + healthTierText(r.easyTier, true), 'easy') +
+      kpiHealthDef('Unrealistic', r.hardPct + '%+ at tier ' + healthTierText(r.hardTier, false), 'hard') +
+      kpiHealthDef('Flag needs', r.minEntries + '+ submissions') +
+      kpiHealthDef('Points lost', 'weight × (1 − avg tier)') +
+    '</div>' +
+    '<p class="mkh-note">' +
+      '<span>Not counted: ' + (trial.length ? esc(trial.join(' and ')) + ' (trial) and ' : '') + 'the automatic 1.0 of off-cycle quarters. ' +
+      'Points lost is per holder a month: it ranks reviews, the Flag says whether the target is the problem.</span>' +
+      cmpGuideLink('rg-health', 'How to read KPI Health') +
+    '</p>';
 }
 
 function kpiHealthRowHtml(k) {
@@ -306,7 +322,7 @@ function renderKpiHealth() {
   $('mkh-summary').innerHTML = HEALTH_ORDER.map(function (key) {
     return kpiHealthCard(key, counts[key] || 0, flag === key);
   }).join('');
-  $('mkh-legend').textContent = kpiHealthLegend(d);
+  $('mkh-legend').innerHTML = kpiHealthLegend(d);
 
   var list = kpiHealthSorted(base.filter(function (k) { return !flag || k.flag === flag; }));
   var empty = !list.length;
