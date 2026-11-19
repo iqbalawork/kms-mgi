@@ -98,7 +98,7 @@ function adminGuideHtml() {
       ]) + '</div>') +
 
     rgSection('ag-fix', 'Common requests', rgTable(['Request', 'What to do'], [
-      ['Forgot password', 'Mapping KPI, open the employee, Reset password. They get a one-time login code by email and set a new password.'],
+      ['Forgot password', 'Mapping KPI > Password requests: check the person, then Approve and send code. Confirm by WhatsApp or chat first when it is a personal email. You can still reset any account from its employee row.'],
       ['Change after submitting', 'Summary Report > Monthly, Allow 1 more change on that role, while the period is open.'],
       ['Missed the cut-off', 'Open the period again in Submission Periods with a new cut-off date, then close it after.'],
       ['A KPI is wrong', 'Master KPIs, edit it, or deactivate it. Submitted months keep their history.'],

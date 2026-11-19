@@ -308,7 +308,9 @@ var READ_FNS = {
   getAdminSummary: 1, getAnnualRecap: 1, getPeriodSettings: 1, getMasterCatalog: 1, getMappingOverview: 1,
   getMappingForEmployee: 1, getCategories: 1, getRatingBands: 1, getAdminAccess: 1, getPerformanceEvaluation: 1,
   getPerformanceSettings: 1, getPerformanceRules: 1, getReportAccess: 1, getYearThemes: 1, getFiscalYear: 1,
-  getKpiHealth: 1
+  getKpiHealth: 1, getPasswordRequests: 1
 };
+
+var FORGOT_COOLDOWN_MS = 60000;
 
 var AUTH_SCREENS = ['app-loading', 'app-denied', 'app-login', 'app-password', 'app-shell'];

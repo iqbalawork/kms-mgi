@@ -41,6 +41,7 @@ function applyRole(user) {
       { id: 'settings', icon: 'settings',  label: 'System Settings' }
     ]));
     go(viewFromHash() || (isPhone() ? 'my-kpis' : 'dashboard'));
+    refreshPasswordRequests();
   } else {
     var viewer = isReportViewer(user);
     var drop = ['view-mapping', 'view-settings', 'view-master-kpis', 'view-evaluation'];

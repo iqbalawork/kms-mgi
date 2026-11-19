@@ -47,6 +47,7 @@ function onMapYearChange(value) {
 
 function initMapping() {
   S.categories = null;
+  refreshPasswordRequests();
   renderMapYears();
   var reopen = S.mapping && !$('map-workspace').classList.contains('hidden')
     ? S.mapping.employee.NIK : '';
@@ -322,6 +323,7 @@ function confirmResetPassword() {
       restore();
       closeResetPassword();
       row.account = res.account;
+      refreshPasswordRequests();
       if (S.mapping && S.mapping.employee.NIK === row.NIK) renderWeightHero();
       renderEmployeeList();
       toast(res.message, res.account === 'queued' ? 'warning' : res.success ? 'success' : 'error');
