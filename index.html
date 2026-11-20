@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,falling,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,notes,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,start,sticky_note_2,stop,style,support,support_agent,swap_horiz,swap_vert,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,tooltip,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?v=153180e3">
+  <link rel="stylesheet" href="./css/app.css?v=325206c1">
   <link rel="stylesheet" href="./css/tailwind.css?v=6fddeae7">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
@@ -1022,7 +1022,27 @@
           </div>
 
           <div id="sum-compare" class="hidden"></div>
-          <div id="sum-departments" class="hidden"></div>
+          <div id="sum-departments" class="hidden">
+            <div id="dpt-loading" class="hidden"><div class="skeleton h-28 w-full mb-space-md"></div><div class="skeleton h-64 w-full"></div></div>
+            <div id="dpt-error" class="hidden"></div>
+            <div id="dpt-main" class="hidden">
+              <div id="dpt-intro"></div>
+              <div id="dpt-cards" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2 mb-space-md"></div>
+              <div class="pin-card bg-surface-card rounded-xl shadow-level-1 border border-border-light" id="dpt-card">
+                <div class="pin-wrap">
+                  <div id="dpt-pin" class="pin-head" aria-hidden="true"></div>
+                  <div id="dpt-scroll" class="table-scroll">
+                    <table class="data-table dept-table">
+                      <colgroup><col style="width:23%"><col style="width:7%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:10%"><col style="width:27%"></colgroup>
+                      <thead id="dpt-thead"><tr><th>Department</th><th class="text-right">People</th><th>Avg KPI</th><th class="text-right">Below Good</th><th>Trend</th><th class="text-right">Submitted</th><th>Signals</th></tr></thead>
+                      <tbody id="dpt-tbody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div id="dpt-empty" class="hidden"></div>
+            </div>
+          </div>
         </section>
 
         <section id="view-evaluation" class="hidden">
@@ -1297,14 +1317,14 @@
 <script src="./js/config.js?v=b6462838"></script>
 <script src="./js/core.js?v=1acd3b19"></script>
 <script src="./js/logo.js?v=6cd91d62"></script>
-<script src="./js/state.js?v=0ed4502b"></script>
+<script src="./js/state.js?v=ba56ca22"></script>
 <script src="./js/util.js?v=062a1d6e"></script>
 <script src="./js/auth.js?v=4bfaa359"></script>
 <script src="./js/access-year.js?v=5cb5b1e2"></script>
 <script src="./js/account-help.js?v=09c6cfcc"></script>
 <script src="./js/shell.js?v=5e3f26a7"></script>
 <script src="./js/dashboard.js?v=c7a757f5"></script>
-<script src="./js/my-kpis.js?v=78e3514c"></script>
+<script src="./js/my-kpis.js?v=2aa79f5d"></script>
 <script src="./js/my-kpis-submit.js?v=61b09dfe"></script>
 <script src="./js/password-requests.js?v=ea9f7b08"></script>
 <script src="./js/mapping.js?v=5f1bec96"></script>
@@ -1327,10 +1347,10 @@
 <script src="./js/settings-kpi-health.js?v=3d42f176"></script>
 <script src="./js/settings.js?v=1dde415e"></script>
 <script src="./js/compare.js?v=2ced5077"></script>
-<script src="./js/compare-ui.js?v=b51c26ee"></script>
+<script src="./js/compare-ui.js?v=c5c27156"></script>
 <script src="./js/compare-context.js?v=2118e075"></script>
 <script src="./js/compare-context-ui.js?v=3c3a93ef"></script>
-<script src="./js/departments.js?v=9b74427b"></script>
+<script src="./js/departments.js?v=7d54b56f"></script>
 <script src="./js/guide-admin.js?v=0dff84e5"></script>
 <script src="./js/guide-reviewer.js?v=c73c8344"></script>
 <script src="./js/main.js?v=72d67c00"></script>

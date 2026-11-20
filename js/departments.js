@@ -1,15 +1,20 @@
 'use strict';
 
+function deptState(state) {
+  ['dpt-loading', 'dpt-error', 'dpt-main'].forEach(function (id) {
+    if ($(id)) $(id).classList.toggle('hidden', id !== 'dpt-' + state);
+  });
+}
+
 function loadDepartments() {
-  var host = $('sum-departments');
-  if (!host) return;
+  if (!$('sum-departments')) return;
   var year = activeSumYear();
   if (S.depts && S.depts.year === year) {
     fillSumFilters();
     renderDepartments();
     return;
   }
-  host.innerHTML = '<div class="skeleton h-28 w-full mb-space-md"></div><div class="skeleton h-64 w-full"></div>';
+  deptState('loading');
   api('getDepartmentSignals', year)
     .then(function (data) {
       if (data.year !== activeSumYear()) return;
@@ -20,7 +25,8 @@ function loadDepartments() {
       renderDepartments();
     })
     .catch(function (err) {
-      host.innerHTML = '<div class="bg-surface-card rounded-xl border border-border-light p-space-xl">' + loadErrorHtml(err.message, 'reloadDepartments') + '</div>';
+      deptState('error');
+      $('dpt-error').innerHTML = '<div class="bg-surface-card rounded-xl border border-border-light p-space-xl">' + loadErrorHtml(err.message, 'reloadDepartments') + '</div>';
     });
 }
 
@@ -93,74 +99,68 @@ function deptAvg(avg) {
   return '<span class="inline-flex items-center gap-1.5 whitespace-nowrap">' + bandBadge(b.key) + '<span class="text-code-num font-semibold">' + esc(num(avg, 2)) + '</span></span>';
 }
 
-function deptChips(x, list, kind) {
-  if (!list.length) return '';
-  var key = x.key + ':' + kind;
+function deptItems(x, t) {
+  var items = t.items || [];
+  if (!items.length) return '';
+  var key = x.key + ':' + t.key;
   var all = S.deptMore === key;
-  var shown = all ? list : list.slice(0, DEPT_CHIP_LIMIT);
-  var label = kind === 'weak' ? 'Most missed KPIs' : 'Unrealistic in KPI Health';
-  return '<div class="dept-chips"><span class="dept-chips-title">' + label + '</span>' +
+  var shown = all ? items : items.slice(0, DEPT_CHIP_LIMIT);
+  return '<span class="dept-items">' +
     shown.map(function (k) {
       return '<span class="dept-chip">' + esc(k.KPI_Name) +
-        (k.count > 1 ? '<span class="dept-chip-count">' + k.count + ' roles</span>' : '') +
-        (kind === 'weak' ? '<span class="dept-chip-count">' + k.low + '%</span>' : '') + '</span>';
+        (isNum(k.low) ? '<span class="dept-chip-count">' + k.low + '%</span>' : '') +
+        (k.count > 1 ? '<span class="dept-chip-count">' + k.count + ' roles</span>' : '') + '</span>';
     }).join('') +
-    (list.length > DEPT_CHIP_LIMIT
+    (items.length > DEPT_CHIP_LIMIT
       ? '<button type="button" class="dept-chip-more" onclick="event.stopPropagation();MGI.toggleDeptMore(\'' + esc(key) + '\')">' +
-          (all ? 'Show less' : '+' + (list.length - DEPT_CHIP_LIMIT) + ' more') + '</button>'
+          (all ? 'Show less' : '+' + (items.length - DEPT_CHIP_LIMIT) + ' more') + '</button>'
       : '') +
-  '</div>';
+  '</span>';
+}
+
+function deptAlso(x) {
+  var keys = x.tags.map(function (t) { return t.key; });
+  var out = [];
+  if (x.secondRoles && keys.indexOf('capacity') === -1) out.push(plural(x.secondRoles, 'person', 'people') + ' also ' + (x.secondRoles === 1 ? 'holds' : 'hold') + ' another role');
+  if (x.singleRoles.length) out.push('One holder: ' + x.singleRoles.join(', '));
+  if (x.kpis.easy && keys.indexOf('stretch') === -1) out.push(plural(x.kpis.easy, 'Easy KPI'));
+  if (x.kpis.unrealistic && keys.indexOf('targets') === -1) out.push(plural(x.kpis.unrealistic, 'Unrealistic KPI'));
+  if (x.spread && x.spread.value > 0 && keys.indexOf('consistency') === -1) out.push('Widest gap in a role: ' + num(x.spread.value, 2) + ' pts');
+  if (isNum(x.kbi) || isNum(x.s360)) out.push('KBI ' + (isNum(x.kbi) ? num(x.kbi, 2) : '-') + ' / 360 ' + (isNum(x.s360) ? num(x.s360, 2) : '-'));
+  return out;
 }
 
 function deptDetailHtml(x) {
   var rules = S.depts.rules;
-  var signals = x.tooEarly
-    ? '<p class="dept-empty">Too early to read: a department needs at least ' + plural(rules.MIN_PEOPLE, 'person', 'people') +
-        ' and ' + plural(rules.MIN_MONTHS, 'counted month') + ' before it gets signals.</p>'
-    : x.tags.length
-      ? x.tags.map(function (t) {
-          var m = DEPT_TAGS[t.key];
-          var lines = t.lines && t.lines.length ? t.lines : [t.evidence];
-          return '<div class="dept-signal">' +
-            '<p class="dept-signal-title"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">' + m.icon + '</span>' + esc(m.label) + '</p>' +
-            '<ul class="dept-signal-lines">' + lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ul>' +
-            (t.note ? '<p class="dept-signal-note"><span class="material-symbols-outlined text-[16px]" aria-hidden="true">warning</span>' + esc(t.note) + '</p>' : '') +
-            '<p class="dept-signal-hint">' + esc(m.hint) + '</p>' +
-          '</div>';
-        }).join('')
-      : '<p class="dept-empty">No development signal. Results are spread normally across the people and KPIs of this department.</p>';
-
-  var facts = [
-    ['Below Good', isNum(x.belowGood) ? pct(x.belowGood) + ' of ' + plural(x.scored, 'person', 'people') : '-'],
-    ['Widest spread in a role', x.spread ? num(x.spread.value, 2) + ' pts, ' + x.spread.role : '-'],
-    ['Submitted', isNum(x.submission) ? pct(x.submission) + ' of due months' : '-'],
-    ['Also hold another role', plural(x.secondRoles, 'person', 'people')],
-    ['Roles with one holder', x.singleRoles.length ? x.singleRoles.join(', ') : 'None'],
-    ['KPI Health', plural(x.kpis.judged, 'KPI') + ': ' + x.kpis.unrealistic + ' Unrealistic, ' + x.kpis.easy + ' Easy']
-  ];
-  if (isNum(x.kbi) || isNum(x.s360)) facts.push(['KBI / 360', (isNum(x.kbi) ? num(x.kbi, 2) : '-') + ' / ' + (isNum(x.s360) ? num(x.s360, 2) : '-')]);
-
-  return '<div class="dept-detail">' +
-    '<div class="dept-detail-grid">' +
-      '<section><h3 class="dept-detail-head">Signals</h3><div class="flex flex-col gap-2">' + signals + '</div></section>' +
-      '<section><h3 class="dept-detail-head">At a glance</h3><dl class="dept-facts">' + facts.map(function (f) {
-        return '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>';
-      }).join('') + '</dl></section>' +
-    '</div>' +
-    deptChips(x, x.weakKpis || [], 'weak') +
-    deptChips(x, x.unrealisticKpis || [], 'hard') +
-    ((x.unrealisticKpis || []).length
-      ? '<button type="button" class="cmp-guide-link self-start" onclick="event.stopPropagation();MGI.openDeptHealth()">' +
-          '<span class="material-symbols-outlined text-[16px]" aria-hidden="true">monitor_heart</span>Open KPI Health</button>'
-      : '') +
-  '</div>';
+  if (x.tooEarly) {
+    return '<p class="dept-note">Too early to read: a department needs at least ' + plural(rules.MIN_PEOPLE, 'person', 'people') +
+      ' and ' + plural(rules.MIN_MONTHS, 'counted month') + ' before it gets signals.</p>';
+  }
+  var also = deptAlso(x);
+  var hasHard = x.kpis.unrealistic > 0;
+  return (x.tags.length
+      ? '<table class="dept-signals"><thead><tr><th>Signal</th><th>What we see</th><th>Suggested direction</th></tr></thead><tbody>' +
+          x.tags.map(function (t) {
+            return '<tr><td>' + deptTagPill(t.key) + '</td>' +
+              '<td><span class="block">' + esc(t.summary || t.evidence) + '</span>' + deptItems(x, t) +
+                (t.note ? '<span class="dept-signal-note"><span class="material-symbols-outlined text-[16px]" aria-hidden="true">warning</span>' + esc(t.note) + '</span>' : '') + '</td>' +
+              '<td class="text-text-secondary">' + esc(DEPT_TAGS[t.key].hint) + '</td></tr>';
+          }).join('') +
+        '</tbody></table>'
+      : '<p class="dept-note">No development signal. Results are spread normally across the people and KPIs of this department.</p>') +
+    (also.length || hasHard
+      ? '<div class="dept-also">' + (also.length ? '<span><strong>Also:</strong> ' + esc(also.join(' • ')) + '</span>' : '<span></span>') +
+          (hasHard ? '<button type="button" class="cmp-guide-link" onclick="event.stopPropagation();MGI.openDeptHealth()">' +
+            '<span class="material-symbols-outlined text-[16px]" aria-hidden="true">monitor_heart</span>Open KPI Health</button>' : '') +
+        '</div>'
+      : '');
 }
 
 function deptRowHtml(x) {
   var open = S.deptOpen === x.key;
-  return '<tr class="dept-row' + (x.tooEarly ? ' is-early' : '') + (open ? ' is-open' : '') + '" data-dept="' + esc(x.key) + '"' +
+  return '<tr class="acc-row dept-row' + (x.tooEarly ? ' is-early' : '') + (open ? ' is-open' : '') + '" data-dept="' + esc(x.key) + '"' +
       ' onclick="MGI.toggleDept(\'' + esc(x.key).replace(/'/g, '\\\'') + '\')" aria-expanded="' + (open ? 'true' : 'false') + '">' +
-    '<td><span class="flex items-center gap-2"><span class="dept-chevron material-symbols-outlined text-[20px]" aria-hidden="true">expand_more</span>' +
+    '<td><span class="flex items-center gap-2"><span class="acc-chevron material-symbols-outlined" aria-hidden="true">' + (open ? 'expand_less' : 'expand_more') + '</span>' +
       '<span class="min-w-0"><span class="block text-label-md font-semibold text-text-primary">' + esc(x.Department) + '</span>' +
       '<span class="block text-label-xs text-text-secondary">' + esc(x.Division || '-') + '</span></span></span></td>' +
     '<td class="text-right text-code-num">' + esc(num(x.people, 0)) + '</td>' +
@@ -174,7 +174,7 @@ function deptRowHtml(x) {
         : '<span class="text-label-xs text-text-muted">No signal</span>') +
     '</span></td>' +
   '</tr>' +
-  (open ? '<tr class="dept-detail-row"><td colspan="7">' + deptDetailHtml(x) + '</td></tr>' : '');
+  (open ? '<tr class="acc-body"><td colspan="7"><div class="dept-detail">' + deptDetailHtml(x) + '</div></td></tr>' : '');
 }
 
 function deptCardHtml(k, count, n, total) {
@@ -196,9 +196,9 @@ function deptCardHtml(k, count, n, total) {
 }
 
 function renderDepartments() {
-  var host = $('sum-departments');
   var d = S.depts;
-  if (!host || !d) return;
+  if (!$('sum-departments') || !d) return;
+  deptState('main');
   var base = deptList();
   var counts = {};
   DEPT_TAG_ORDER.forEach(function (k) { counts[k] = 0; });
@@ -206,19 +206,17 @@ function renderDepartments() {
   if (S.deptTag && !counts[S.deptTag]) S.deptTag = '';
   var list = base.filter(function (x) { return !S.deptTag || x.tags.some(function (t) { return t.key === S.deptTag; }); });
 
-  host.innerHTML =
+  $('dpt-intro').innerHTML =
     '<div class="rounded-xl border border-border-light bg-surface-card shadow-level-1 px-4 py-3 mb-space-md flex flex-wrap items-center justify-between gap-2">' +
       '<p class="text-body-sm text-text-secondary"><strong class="text-text-primary">Signals to discuss with the department head.</strong> They are not a verdict and not a headcount number. ' +
         'Each person counts once, in their home department' + (d.trialMonths.length ? ', and trial months are left out' : '') + '.</p>' +
       guideLink('admin', 'ag-departments', 'How to read Departments') +
-    '</div>' +
-    '<div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2 mb-space-md">' +
-      DEPT_TAG_ORDER.map(function (k, n) { return deptCardHtml(k, counts[k], n, DEPT_TAG_ORDER.length); }).join('') +
-    '</div>' +
-    (list.length
-      ? '<div class="bg-surface-card rounded-xl shadow-level-1 border border-border-light overflow-hidden"><div class="table-scroll"><table class="data-table dept-table">' +
-          '<colgroup><col style="width:23%"><col style="width:7%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:10%"><col style="width:27%"></colgroup>' +
-          '<thead><tr><th>Department</th><th class="text-right">People</th><th>Avg KPI</th><th class="text-right">Below Good</th><th>Trend</th><th class="text-right">Submitted</th><th>Signals</th></tr></thead>' +
-          '<tbody>' + list.map(deptRowHtml).join('') + '</tbody></table></div></div>'
-      : '<div class="bg-surface-card rounded-xl border border-dashed border-border-medium p-space-xl text-center">' + emptyState('search', 'No departments match these filters.') + '</div>');
+    '</div>';
+  $('dpt-cards').innerHTML = DEPT_TAG_ORDER.map(function (k, n) { return deptCardHtml(k, counts[k], n, DEPT_TAG_ORDER.length); }).join('');
+  $('dpt-card').classList.toggle('hidden', !list.length);
+  $('dpt-empty').classList.toggle('hidden', !!list.length);
+  $('dpt-tbody').innerHTML = list.map(deptRowHtml).join('');
+  $('dpt-empty').innerHTML = list.length ? '' :
+    '<div class="bg-surface-card rounded-xl border border-dashed border-border-medium p-space-xl text-center">' + emptyState('search', 'No departments match these filters.') + '</div>';
+  schedulePins();
 }

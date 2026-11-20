@@ -462,9 +462,9 @@ function cmpKpiPanelHtml(A, B, kpis) {
     var tierCell = function (s) {
       return s ? (s.avgScore === null ? '<span class="text-text-muted">-</span>' : cmpAvgTierChip(s.avgScore)) : '<span class="pill pill-neutral !text-[11px]">Not mapped</span>';
     };
-    var main = '<tr class="scroll-mt-40 ' + (open ? 'bg-surface-page cmp-kpi-open' : '') + '" data-kpi-row="' + esc(x.id) + '">' +
-      '<td><button type="button" class="flex items-start gap-2 text-left w-full" onclick="MGI.toggleCompareKpi(' + n + ')" aria-expanded="' + (open ? 'true' : 'false') + '">' +
-        '<span class="material-symbols-outlined text-[20px] text-text-muted">' + (open ? 'expand_less' : 'expand_more') + '</span>' +
+    var main = '<tr class="acc-row scroll-mt-40' + (open ? ' is-open cmp-kpi-open' : '') + '" data-kpi-row="' + esc(x.id) + '" onclick="MGI.toggleCompareKpi(' + n + ')">' +
+      '<td><button type="button" class="flex items-start gap-2 text-left w-full" aria-expanded="' + (open ? 'true' : 'false') + '">' +
+        '<span class="acc-chevron material-symbols-outlined" aria-hidden="true">' + (open ? 'expand_less' : 'expand_more') + '</span>' +
         '<span class="min-w-0"><span class="block font-semibold text-text-primary">' + esc(k.KPI_Name) + '</span>' +
         '<span class="block text-label-xs text-text-muted">' + esc(k.KPI_ID) + ' • ' + esc(k.Label) + ' • target ' + esc(targetLabel(k)) + (k.Unit ? ' ' + esc(k.Unit) : '') + '</span>' +
         (x.focus !== null ? '<span class="pill pill-info !text-[11px] mt-1">Same tier, different realization</span>' : '') +

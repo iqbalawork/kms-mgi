@@ -265,7 +265,8 @@ var PIN_TABLES = [
   { key: 'sum',  bar: 'sum-filter-bar' },
   { key: 'ann',  bar: 'sum-filter-bar' },
   { key: 'eval', bar: 'eval-filter-bar' },
-  { key: 'mkh',  bar: 'mkh-filter-bar' }
+  { key: 'mkh',  bar: 'mkh-filter-bar' },
+  { key: 'dpt',  bar: 'sum-filter-bar' }
 ];
 
 var SP_OPTIONS = ['', 'SP1', 'SP2', 'SP3'];

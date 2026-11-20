@@ -613,7 +613,7 @@ function renderEmpHistory() {
   host.innerHTML =
     '<section class="role-group role-history shadow-level-1 shrink-0 !mt-0' + (open ? '' : ' is-collapsed') + '" data-emp-history>' +
       '<div class="role-group-head !px-space-lg !py-space-md" onclick="MGI.toggleEmpHistory()" title="Click to expand or collapse history">' +
-        '<span class="material-symbols-outlined text-[22px] text-text-secondary" data-chevron>' +
+        '<span class="material-symbols-outlined text-[20px] text-text-secondary" data-chevron>' +
           (open ? 'expand_less' : 'expand_more') + '</span>' +
         '<span class="material-symbols-outlined text-[22px] text-text-muted">history</span>' +
         '<h2 class="text-title-lg text-text-secondary">KPI History (Inactive)</h2>' +
