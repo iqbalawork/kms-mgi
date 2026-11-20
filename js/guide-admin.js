@@ -41,7 +41,7 @@ function agHealthHtml() {
 
 function agDepartmentsHtml() {
   var r = (S.depts && S.depts.rules) || DEPT_RULES_FALLBACK;
-  var tag = function (key, rule) { var t = DEPT_TAGS[key]; return [deptTagPill(key), esc(rule), esc(t.hint)]; };
+  var tag = function (key, extra) { return [deptTagPill(key), esc(deptRuleText(key, r) + (extra ? ' ' + extra : '')), esc(DEPT_TAGS[key].hint)]; };
   return '<p class="text-body-sm text-text-secondary mb-space-sm">Summary Report > Departments reads every department of the year and points to the kind of development it may need. ' +
       'Each person counts once, in their home department, and trial months are left out. These are signals to discuss with the department head, not a verdict and not a headcount number.</p>' +
     rgTable(['Measure', 'Definition'], [
@@ -52,14 +52,14 @@ function agDepartmentsHtml() {
       ['Submitted', 'Months submitted out of the months that were due, from each person\'s first submission.']
     ]) +
     '<div class="mt-space-md">' + rgTable(['Signal', 'Shows when', 'Suggested direction'], [
-      tag('targets', r.TARGET_SHARE + '% or more of the department KPIs are Unrealistic in KPI Health.'),
-      tag('capability', 'A KPI that is not Unrealistic has ' + r.WEAK_SHARE + '% or more of its submissions at tier ' + Number(r.WEAK_TIER).toFixed(1) + ' or lower.'),
-      tag('consistency', 'People in one role (at least ' + r.SPREAD_MIN + ') are ' + r.SPREAD + ' points or more apart.'),
-      tag('capacity', r.BELOW_GOOD + '% or more are below Good, and ' + r.SECOND_ROLES + ' or more also hold another role, or most KPIs are missed. With Target calibration it asks to check the targets first.'),
-      tag('stretch', r.EASY_SHARE + '% or more of the KPIs are Easy and the average is Excellent.'),
-      tag('discipline', 'Less than ' + r.SUBMIT_PCT + '% of due months were submitted while the average is Good or better.'),
-      tag('behaviour', 'KBI or 360 is ' + r.BEHAVIOUR_GAP + ' points or more below the company while KPI results are Good or better (at least ' + r.BEHAVIOUR_MIN + ' people with a score).'),
-      tag('falling', 'The monthly average drops ' + Math.abs(r.FALL_SLOPE) + ' point a month or more over at least ' + r.FALL_MONTHS + ' months.')
+      tag('targets'),
+      tag('capability'),
+      tag('consistency'),
+      tag('capacity', 'With Target calibration it asks to check the targets first.'),
+      tag('stretch'),
+      tag('discipline'),
+      tag('behaviour', 'It needs at least ' + r.BEHAVIOUR_MIN + ' people with a score.'),
+      tag('falling')
     ]) + '</div>' +
     '<p class="text-label-xs text-text-muted mt-space-sm">A department with fewer than ' + r.MIN_PEOPLE + ' people or fewer than ' + r.MIN_MONTHS + ' counted months shows Too early to read.</p>';
 }

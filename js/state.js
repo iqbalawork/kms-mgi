@@ -330,6 +330,8 @@ var DEPT_RULES_FALLBACK = {
   SUBMIT_PCT: 80, BEHAVIOUR_GAP: 10, BEHAVIOUR_MIN: 3, FALL_SLOPE: -1, FALL_MONTHS: 4
 };
 
+var DEPT_CHIP_LIMIT = 6;
+
 var DEPT_TAG_ORDER = ['targets', 'capability', 'consistency', 'capacity', 'stretch', 'discipline', 'behaviour', 'falling'];
 
 var AUTH_SCREENS = ['app-loading', 'app-denied', 'app-login', 'app-password', 'app-shell'];

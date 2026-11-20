@@ -157,6 +157,8 @@ var MGI = {
   pickDeptTag: pickDeptTag,
   toggleDept: toggleDept,
   reloadDepartments: reloadDepartments,
+  toggleDeptMore: toggleDeptMore,
+  openDeptHealth: openDeptHealth,
   onForgotKey: onForgotKey,
   sendForgot: sendForgot,
   openPasswordApprove: openPasswordApprove,
