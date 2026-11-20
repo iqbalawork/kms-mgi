@@ -313,4 +313,23 @@ var READ_FNS = {
 
 var FORGOT_COOLDOWN_MS = 60000;
 
+var DEPT_TAGS = {
+  targets:     { label: 'Target calibration', icon: 'tune',          hint: 'Review the targets with the department head before anything else.' },
+  capability:  { label: 'Capability',         icon: 'menu_book',     hint: 'Training or a clear SOP for the KPIs most people miss.' },
+  consistency: { label: 'Consistency',        icon: 'balance',       hint: 'Results differ widely in one role. Pair strong and weak performers and align the way of working.' },
+  capacity:    { label: 'Capacity review',    icon: 'groups',        hint: 'Check the workload with the department head. This is not a headcount number.' },
+  stretch:     { label: 'Ready to stretch',   icon: 'trending_up',   hint: 'Raise the targets or add responsibilities, and look for promotion candidates.' },
+  discipline:  { label: 'Discipline',         icon: 'event_busy',    hint: 'Results are fine but months are missed. Agree on submitting on time with the department head.' },
+  behaviour:   { label: 'Behaviour',          icon: 'group',         hint: 'KPI results are fine while KBI or 360 lag. Soft skill or leadership development.' },
+  falling:     { label: 'Falling',            icon: 'trending_down', hint: 'Results drop month after month. Ask what changed.' }
+};
+
+var DEPT_RULES_FALLBACK = {
+  MIN_PEOPLE: 4, MIN_MONTHS: 3, WEAK_SHARE: 50, WEAK_TIER: 0.4, SPREAD: 25, SPREAD_MIN: 3,
+  BELOW_GOOD: 60, SECOND_ROLES: 2, BROAD_WEAK: 75, TARGET_SHARE: 25, EASY_SHARE: 25,
+  SUBMIT_PCT: 80, BEHAVIOUR_GAP: 10, BEHAVIOUR_MIN: 3, FALL_SLOPE: -1, FALL_MONTHS: 4
+};
+
+var DEPT_TAG_ORDER = ['targets', 'capability', 'consistency', 'capacity', 'stretch', 'discipline', 'behaviour', 'falling'];
+
 var AUTH_SCREENS = ['app-loading', 'app-denied', 'app-login', 'app-password', 'app-shell'];

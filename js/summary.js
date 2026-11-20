@@ -51,6 +51,7 @@ function initSummary() {
 
   S.summary = null;
   S.annual = null;
+  S.depts = null;
   S.reports = {};
   applySumView();
   loadActiveSummary();
@@ -67,7 +68,9 @@ function activeSumYear() {
 }
 
 function loadActiveSummary() {
-  if (S.sumView === 'compare') {
+  if (S.sumView === 'departments') {
+    loadDepartments();
+  } else if (S.sumView === 'compare') {
     loadCompare();
   } else if (S.sumView === 'annual') {
     loadAnnualRecap();
@@ -77,33 +80,50 @@ function loadActiveSummary() {
 }
 
 function renderActiveSummary() {
-  if (S.sumView === 'compare') renderCompare();
+  if (S.sumView === 'departments') renderDepartments();
+  else if (S.sumView === 'compare') renderCompare();
   else if (S.sumView === 'annual') renderAnnual();
   else applySummaryFilters();
 }
 
+function canSeeDepartments() {
+  return !!(S.user && S.user.isAdmin);
+}
+
 function applySumView() {
+  if (S.sumView === 'departments' && !canSeeDepartments()) S.sumView = 'monthly';
   var annual = S.sumView === 'annual';
   var compare = S.sumView === 'compare';
-  $('sum-monthly-panel').classList.toggle('hidden', annual || compare);
+  var depts = S.sumView === 'departments';
+  $('sum-monthly-panel').classList.toggle('hidden', annual || compare || depts);
   $('sum-annual-panel').classList.toggle('hidden', !annual);
   $('sum-compare').classList.toggle('hidden', !compare);
-  $('sum-month-field').classList.toggle('hidden', annual || compare);
+  if ($('sum-departments')) $('sum-departments').classList.toggle('hidden', !depts);
+  $('sum-month-field').classList.toggle('hidden', annual || compare || depts);
   $('sum-report-btn').classList.toggle('hidden', annual);
   if ($('sum-filter-bar')) $('sum-filter-bar').classList.toggle('is-static', compare);
   ['sum-division-field', 'sum-dept-field', 'sum-search-field', 'sum-actions'].forEach(function (id) {
     if ($(id)) $(id).classList.toggle('hidden', compare);
   });
+  ['sum-dept-field', 'sum-search-field', 'sum-actions'].forEach(function (id) {
+    if ($(id) && depts) $(id).classList.add('hidden');
+  });
   document.querySelectorAll('#sum-view-tabs [data-sum-view]').forEach(function (b) {
     var on = b.dataset.sumView === S.sumView;
     b.classList.toggle('is-active', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
+    if (b.dataset.sumView === 'departments') b.classList.toggle('hidden', !canSeeDepartments());
   });
 }
 
 function setSumView(view) {
-  S.sumView = view === 'annual' || view === 'compare' ? view : 'monthly';
+  S.sumView = view === 'annual' || view === 'compare' || (view === 'departments' && canSeeDepartments()) ? view : 'monthly';
   applySumView();
+
+  if (S.sumView === 'departments') {
+    loadDepartments();
+    return;
+  }
 
   if (S.sumView === 'compare') {
     loadCompare();
@@ -134,6 +154,7 @@ function onYearChange() {
   S.sumYear = year;
   S.summary = null;
   S.annual = null;
+  S.depts = null;
   S.sumPage = 1;
   S.annPage = 1;
   fillMonthOptions();
@@ -170,6 +191,7 @@ function fillMonthOptions() {
 }
 
 function sumData() {
+  if (S.sumView === 'departments') return S.depts;
   return S.sumView === 'annual' ? S.annual : S.summary;
 }
 
