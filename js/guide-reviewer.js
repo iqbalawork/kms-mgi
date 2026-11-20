@@ -55,10 +55,21 @@ function rgSection(id, title, body) {
     '<h2 class="text-title-lg text-text-primary mb-space-sm">' + title + '</h2>' + body + '</section>';
 }
 
-function rgTable(head, rows) {
-  return '<div class="table-scroll"><table class="data-table text-body-sm">' +
-    '<thead><tr>' + head.map(function (h) { return '<th scope="col">' + h + '</th>'; }).join('') + '</tr></thead>' +
-    '<tbody>' + rows.map(function (r) { return '<tr>' + r.map(function (c, n) { return '<td' + (n ? '' : ' class="font-semibold text-text-primary whitespace-nowrap"') + '>' + c + '</td>'; }).join('') + '</tr>'; }).join('') +
+function rgTable(head, colsOrRows, maybeRows) {
+  var rows = maybeRows || colsOrRows;
+  var cols = maybeRows ? colsOrRows : null;
+  var spec = head.map(function (h, n) {
+    var c = (cols || [])[n];
+    if (typeof c === 'string') c = { w: c };
+    return c || { w: n ? '' : RG_FIRST_COL };
+  });
+  var align = function (n) { return spec[n].center ? ' class="text-center"' : ''; };
+  return '<div class="table-scroll"><table class="data-table rg-table text-body-sm">' +
+    '<colgroup>' + spec.map(function (c) { return c.w ? '<col style="width:' + c.w + '">' : '<col>'; }).join('') + '</colgroup>' +
+    '<thead><tr>' + head.map(function (h, n) { return '<th scope="col"' + align(n) + '>' + h + '</th>'; }).join('') + '</tr></thead>' +
+    '<tbody>' + rows.map(function (r) {
+      return '<tr>' + r.map(function (c, n) { return '<td' + (n ? align(n) : ' class="font-semibold text-text-primary"') + '>' + c + '</td>'; }).join('') + '</tr>';
+    }).join('') +
     '</tbody></table></div>';
 }
 
@@ -90,7 +101,7 @@ function reviewerGuideHtml() {
     '</nav>' +
     '<p class="text-body-sm text-text-muted mb-space-lg max-w-3xl">For Admin and Report Viewers. It explains the reports and how to compare people, so a decision rests on the same reading for everyone. Thresholds on this page follow the live settings.</p>' +
 
-    rgSection('rg-reports', 'Dashboard and Summary Report', rgTable(['View', 'What it answers', 'Notes'], [
+    rgSection('rg-reports', 'Dashboard and Summary Report', rgTable(['View', 'What it answers', 'Notes'], RG_THREE_TEXT, [
       ['Dashboard', 'How the company is doing this year.', 'Year to date average, completion rate, latest month, monthly trend, and average by division. Filter by Origin, Division, and Department.'],
       ['Monthly', 'Who submitted one period, and with what result.', 'Role index per employee for the chosen month, with missing KPIs and evidence. Admin can send reminders and allow one more change here.'],
       ['Annual', 'How each employee did over the year.', 'Average KPI score over the months each person submitted, with its rating band. Trial months are left out.'],
@@ -106,7 +117,7 @@ function reviewerGuideHtml() {
       '<strong>Same role or different roles.</strong> With the same role every analysis is available, including KPI Deep Dive. With different roles targets differ, so compare patterns and standing, not scores.'
     ])) +
 
-    rgSection('rg-reading', 'Reading the numbers', rgTable(['Item', 'What it means', 'How it is calculated'], [
+    rgSection('rg-reading', 'Reading the numbers', rgTable(['Item', 'What it means', 'How it is calculated'], RG_THREE_TEXT, [
       ['Trend', 'Whether results are rising or falling.', 'Slope of a straight line through the monthly scores of the months both submitted, in points a month. Needs at least ' + CMP_MIN_MONTHS + ' months. Within ±' + CMP_FLAT_SLOPE + ' a month it reads as flat.'],
       ['Tier mix', 'How often KPIs land on each tier.', 'One block per KPI per month. Counts are not weighted. Off-cycle quarterly KPIs are left out.'],
       ['Where points are lost', 'Which KPIs cost the most points.', 'Weight × (1 − tier), averaged per month. Together they add up to 100 minus the average KPI score.'],
@@ -140,7 +151,7 @@ function reviewerGuideHtml() {
     rgSection('rg-flags', 'Before you decide',
       '<p class="text-body-sm text-text-secondary mb-space-sm">The panel under the Summary lists what could change or weaken a decision. Its verdict reads <strong>Not ready for a decision</strong> when any High flag exists, <strong>Ready, read the notes</strong> when only Watch or Info flags exist, and <strong>No red flags</strong> otherwise. When the same flag fits both people, it shows once with both tags. Info notes stay folded under the list.</p>' +
       rgTable(['Severity', 'Meaning'], [[pill('high'), esc(lv.high.text)], [pill('watch'), esc(lv.watch.text)], [pill('info'), esc(lv.info.text)]]) +
-      '<div class="mt-space-md">' + rgTable(['Flag', 'Severity', 'Rule'], [
+      '<div class="mt-space-md">' + rgTable(['Flag', 'Severity', 'Rule'], RG_LABEL_PILL, [
         ['Too little data', pill('high'), 'Fewer than ' + CMP_MIN_MONTHS + ' scored months in the period.'],
         ['Missed submissions', pills('high', 'watch'), 'High from ' + CMP_MISS_N + ' missed months or ' + CMP_MISS_PCT + '% of due months, Watch for fewer. A due month has passed and is not a trial month; the current month never counts as missed. When both missed the same months, it shows once.'],
         ['Few shared months', pill('watch'), 'Fewer than ' + CMP_MIN_MONTHS + ' months submitted by both.'],

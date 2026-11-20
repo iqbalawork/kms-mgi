@@ -51,7 +51,7 @@ function agDepartmentsHtml() {
       ['Trend', 'Slope of the department monthly average, in points a month.'],
       ['Submitted', 'Months submitted out of the months that were due, from each person\'s first submission.']
     ]) +
-    '<div class="mt-space-md">' + rgTable(['Signal', 'Shows when', 'Suggested direction'], [
+    '<div class="mt-space-md">' + rgTable(['Signal', 'Shows when', 'Suggested direction'], RG_THREE_TEXT, [
       tag('targets'),
       tag('capability'),
       tag('consistency'),
@@ -105,7 +105,7 @@ function adminGuideHtml() {
     ])) +
 
     rgSection('ag-access', 'Who can see what',
-      rgTable(['Page', 'Employee', 'Report Viewer', 'Admin'], [
+      rgTable(['Page', 'Employee', 'Report Viewer', 'Admin'], RG_MATRIX, [
         ['My KPIs', yes, yes, yes],
         ['Guide > Scoring', yes, yes, yes],
         ['Guide > Reviewer Guide', no, yes, yes],

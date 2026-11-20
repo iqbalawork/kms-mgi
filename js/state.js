@@ -333,6 +333,11 @@ var DEPT_RULES_FALLBACK = {
 
 var DEPT_CHIP_LIMIT = 6;
 
+var RG_FIRST_COL = '14rem';
+var RG_THREE_TEXT = [RG_FIRST_COL, '35%', ''];
+var RG_LABEL_PILL = [RG_FIRST_COL, '9rem', ''];
+var RG_MATRIX = [RG_FIRST_COL, { w: '', center: true }, { w: '', center: true }, { w: '', center: true }];
+
 var DEPT_TAG_ORDER = ['targets', 'capability', 'consistency', 'capacity', 'stretch', 'discipline', 'behaviour', 'falling'];
 
 var AUTH_SCREENS = ['app-loading', 'app-denied', 'app-login', 'app-password', 'app-shell'];
