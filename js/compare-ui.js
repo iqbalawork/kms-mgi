@@ -426,7 +426,7 @@ function cmpLabelMixHtml(A, B, months) {
     return '<tr><td class="font-semibold text-text-primary">' + esc(labelMeta(l).short || l) + '</td>' + cell(ma[l]) + cell(mb[l]) + '</tr>';
   }).join('');
   return '<div class="bg-surface-card rounded-xl shadow-level-1 border border-border-light overflow-hidden">' +
-    '<div class="p-space-lg pb-space-sm"><h3 class="text-title-md text-text-primary">By KPI type</h3>' +
+    '<div class="p-space-lg pb-space-sm"><h3 class="flex items-center gap-1 text-title-md text-text-primary">By KPI type' + tipBtn('label', 'the KPI types') + '</h3>' +
     '<p class="text-body-sm text-text-muted">Different roles have different KPIs, so this compares how each kind of KPI is handled.</p></div>' +
     '<div class="table-scroll"><table class="data-table text-body-sm">' +
       '<thead><tr><th scope="col">KPI type</th><th scope="col">' + cmpTag('a') + ' KPIs and weight</th><th scope="col">' + cmpTag('a') + ' At tier 1.0</th>' +

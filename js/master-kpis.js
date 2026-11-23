@@ -149,6 +149,7 @@ function masterRoleHtml(role, fallback) {
           : '') +
         (mixed ? '<span class="pill pill-warning !py-0 !text-[11px]">Partly active</span>' : '') +
         (mapped ? '<span class="pill pill-info !py-0 !text-[11px]">Used by ' + mapped + ' mappings</span>' : '') +
+        (anyActive || mapped ? tipBtn('role-group', 'the role group status') : '') +
       '</div>' +
     '</div>' +
     '<label class="switch shrink-0" onclick="event.stopPropagation()" title="' +

@@ -426,7 +426,7 @@ function renderSummaryHead() {
   if (!host) return;
   host.innerHTML = '<tr>' +
     sortHead('Employee', 'name', S.sumSort, 'sortSummary', 'min-w-[260px]') +
-    '<th class="min-w-[240px]">Score per KPI</th>' +
+    '<th class="min-w-[240px]"><span class="inline-flex items-center gap-1">Score per KPI' + tipBtn('score-per-kpi') + '</span></th>' +
     sortHead('Total Score', 'score', S.sumSort, 'sortSummary', 'text-right') +
     sortHead('Status', 'status', S.sumSort, 'sortSummary', 'text-center') +
     '<th class="text-center">Evidence</th>' +

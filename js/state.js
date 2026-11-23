@@ -199,7 +199,7 @@ var GLOSSARY = {
                   body: 'A review that gathers input on your behaviour, skills, and impact at work from several people who work around you. It is scored from 0 to 100.',
                   guide: 'guide-performance' },
   discipline:   { title: 'Discipline',
-                  body: 'Your discipline score for the year, entered by HR from 0 to 100.',
+                  body: 'Reflects attendance over the year: how often and how late someone arrives, and how many days they are absent, with or without a valid reason. HR scores it from 0 to 100.',
                   guide: 'guide-performance' },
   final:        { title: 'Performance Score and Grade',
                   body: 'Your result for the year. Each part (KPI, KBI, 360, and Discipline) is multiplied by its weight and added up to a score out of 100. The score sets your grade, from A to E.',
@@ -245,6 +245,10 @@ var GLOSSARY = {
                   body: 'Employees who have used every change allowed for this month. Only HR / Admin can allow another change.' },
   'legacy-evidence': { title: 'Combined evidence (legacy)',
                   body: 'An older single file that covers every role of this employee for the month, uploaded before evidence was kept per role.' },
+  'role-group': { title: 'Role group status',
+                  body: 'Active weight is the total weight of the active KPIs in this role, and it should be 100%. Partly active means some KPIs in the group are switched off. Used by shows how many employee mappings use this role group.' },
+  'score-per-kpi': { title: 'Score per KPI',
+                  body: 'Each chip is one KPI of the role, in the order of the role list (K1, K2, and so on). The number is its tier score on a 0 to 100 scale, so tier 0.8 shows as 80. A lock means the KPI is off-cycle that month.' },
   periods:      { title: 'Period states',
                   body: 'Open: employees can submit or change the month until the cut-off shown. Closed: the month was opened, but its cut-off has passed. Locked: the month is not open. Reopened: opened again after its regular cut-off. Early: opened before the month has started.' }
 };

@@ -841,7 +841,7 @@ function renderDashHeatmap(s) {
   var head = '<tr>' +
     '<th class="w-[200px] !px-4 !py-3">' + esc(field) + '</th>' +
     '<th class="w-[136px] !px-3 !py-3 !tracking-normal"><span class="inline-flex items-center gap-1">Submitted' + tipBtn('completion', 'Submitted') + '</span></th>' +
-    '<th class="w-[88px] !px-1 !py-3 text-center !whitespace-normal !tracking-normal leading-tight border-l border-slate-200">YTD Feb to Dec</th>' +
+    '<th class="w-[88px] !px-1 !py-3 text-center !whitespace-normal !tracking-normal leading-tight border-l border-slate-200">YTD Feb to Dec' + tipBtn('ytd', 'the YTD average') + '</th>' +
     s.months.map(function (m) {
       return '<th class="!px-1 !py-3 text-center !whitespace-normal !tracking-normal leading-tight' + (m.trial ? ' recap-trial' : '') + '">' +
         dashMonth(m.month) + (m.trial ? '<span class="block text-[9px] font-normal normal-case">Trial</span>' : '') + '</th>';
