@@ -428,13 +428,13 @@ function renderEvalHead() {
   var sort = S.evalSort;
   $('eval-thead').innerHTML = '<tr>' +
     sortHead('Employee', 'name', sort, 'sortEvaluation', 'min-w-[280px]') +
-    sortHead('Avg KPI', 'avg', sort, 'sortEvaluation', 'text-right !px-3', w('kpi')) +
-    sortHead('KBI', 'kbi', sort, 'sortEvaluation', 'text-right', w('kbi')) +
-    sortHead('360', 's360', sort, 'sortEvaluation', 'text-right', w('s360')) +
-    sortHead('Discipline', 'discipline', sort, 'sortEvaluation', 'text-right !px-3', w('discipline')) +
-    sortHead('Performance Score', 'score', sort, 'sortEvaluation', 'text-right !px-3 !whitespace-normal leading-tight min-w-[104px]') +
-    sortHead('Grade', 'grade', sort, 'sortEvaluation', 'text-center !px-3') +
-    sortHead('SP Warning', 'sp', sort, 'sortEvaluation', 'min-w-[140px]') +
+    sortHead('Avg KPI', 'avg', sort, 'sortEvaluation', 'text-right !px-3 whitespace-nowrap', w('kpi'), 'avg-kpi') +
+    sortHead('KBI', 'kbi', sort, 'sortEvaluation', 'text-right whitespace-nowrap', w('kbi'), 'kbi') +
+    sortHead('360', 's360', sort, 'sortEvaluation', 'text-right whitespace-nowrap', w('s360'), 's360') +
+    sortHead('Discipline', 'discipline', sort, 'sortEvaluation', 'text-right !px-3 whitespace-nowrap', w('discipline'), 'discipline') +
+    sortHead('Performance Score', 'score', sort, 'sortEvaluation', 'text-right !px-3 !whitespace-normal leading-tight min-w-[104px]', '', 'final') +
+    sortHead('Grade', 'grade', sort, 'sortEvaluation', 'text-center !px-3 whitespace-nowrap', '', 'grade') +
+    sortHead('SP Warning', 'sp', sort, 'sortEvaluation', 'min-w-[140px] whitespace-nowrap', '', 'sp') +
     '<th class="text-right">Actions</th>' +
   '</tr>';
 }

@@ -413,12 +413,12 @@ function nextSort(current, key, first) {
   return current && current.key === key ? { key: key, dir: -current.dir } : { key: key, dir: first };
 }
 
-function sortHead(label, key, sort, fn, cls, extra) {
+function sortHead(label, key, sort, fn, cls, extra, tip) {
   var on = !!(sort && sort.key === key);
   return '<th scope="col" class="' + (cls || '') + '" aria-sort="' + (!on ? 'none' : sort.dir > 0 ? 'ascending' : 'descending') + '">' +
     '<button type="button" class="th-sort' + (on ? ' is-sorted' : '') + '" onclick="MGI.' + fn + '(\'' + key + '\')" title="Sort by ' + esc(label) + '">' +
       esc(label) + '<span class="material-symbols-outlined" aria-hidden="true">' + (!on ? 'unfold_more' : sort.dir > 0 ? 'arrow_upward' : 'arrow_downward') + '</span>' +
-    '</button>' + (extra || '') + '</th>';
+    '</button>' + (tip ? tipBtn(tip, label) : '') + (extra || '') + '</th>';
 }
 
 function renderSummaryHead() {

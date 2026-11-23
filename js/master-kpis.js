@@ -187,8 +187,12 @@ function masterRoleHtml(role, fallback) {
       '<table class="data-table mk-table">' +
         '<thead><tr>' +
           '<th>KPI ID</th><th class="min-w-[220px]">KPI Name</th><th class="min-w-[200px]">Metrics</th>' +
-          '<th class="text-right">Target</th><th>Unit</th><th class="text-right">Weight</th><th>Label</th><th>Duration</th>' +
-          '<th class="text-right">Multiplier</th><th class="text-center">Target is B</th><th class="text-center">Status</th><th class="text-right">Action</th>' +
+          '<th class="text-right">Target</th><th>Unit</th><th class="text-right">Weight</th>' +
+          '<th><span class="inline-flex items-center gap-1">Label' + tipBtn('label') + '</span></th>' +
+          '<th><span class="inline-flex items-center gap-1">Duration' + tipBtn('duration') + '</span></th>' +
+          '<th class="text-right"><span class="inline-flex items-center gap-1">Multiplier' + tipBtn('multiplier', 'Multiplier') + '</span></th>' +
+          '<th class="text-center"><span class="inline-flex items-center gap-1">Target is B' + tipBtn('target-b', 'Target is B') + '</span></th>' +
+          '<th class="text-center">Status</th><th class="text-right">Action</th>' +
         '</tr></thead>' +
         '<tbody>' + rows + '</tbody>' +
       '</table>' +

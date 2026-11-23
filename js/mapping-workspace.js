@@ -639,7 +639,7 @@ function renderCatalogue() {
             '<span class="text-title-md text-text-primary">' + esc(g.label) + '</span>' +
             (isHome
               ? '<span class="pill pill-neutral !py-0 !text-[11px]">Home Role</span>'
-              : '<span class="pill pill-maroon !py-0 !text-[11px]">Additional Role</span>') +
+              : '<span class="pill pill-maroon !py-0 !text-[11px]">Additional Role</span>') + tipBtn('roles', 'home and additional roles') +
           '</div>' +
           '<div class="flex items-center gap-space-xs flex-wrap">' +
             (g.division ? '<span class="text-label-xs text-text-muted">' + esc(g.division) + '</span>' : '') +

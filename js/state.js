@@ -177,7 +177,7 @@ var GLOSSARY = {
                   body: 'Higher is better: reach the target or go above it. Lower is better: stay at or below the target. Must match target: only the exact target scores 1.0. A strict target scores 1.0 only when you beat it; meeting it exactly scores 0.8.',
                   guide: 'guide-tiers' },
   roles:        { title: 'Home and additional roles',
-                  body: 'Your home role is your main position. An additional role is another position you also hold. Each role has its own KPIs, is submitted on its own, and gets its own index.' },
+                  body: 'The home role is the main position of a person. An additional role is another position they also hold. Each role has its own KPIs, is submitted on its own, and gets its own index.' },
   tier:         { title: 'Tier score',
                   body: 'A score from 0.2 to 1.0 for each KPI in a month. 1.0 means the target was met. Each tier step further from the target lowers it by 0.2, down to 0.2.',
                   guide: 'guide-tiers' },
@@ -205,7 +205,28 @@ var GLOSSARY = {
                   body: 'Your result for the year. Each part (KPI, KBI, 360, and Discipline) is multiplied by its weight and added up to a score out of 100. The score sets your grade, from A to E.',
                   guide: 'guide-performance' },
   sp:           { title: 'SP (Surat Peringatan)',
-                  body: 'A formal warning letter. SP1 is the first level, SP2 the second, and SP3 the final one. It is recorded next to your yearly result and does not change the score.' }
+                  body: 'A formal warning letter. SP1 is the first level, SP2 the second, and SP3 the final one. It is recorded next to your yearly result and does not change the score.' },
+  grade:        { title: 'Grade',
+                  body: 'Set by the Performance Score, using the ranges in System Settings > Performance Scoring. A is the highest grade and E the lowest.' },
+  label:        { title: 'Label',
+                  body: 'How the realization is compared with the target. Increase: higher is better. Decrease: lower is better. Binary: only the exact target scores 1.0, and any other value scores 0.2.',
+                  guide: 'guide-tiers' },
+  duration:     { title: 'Duration',
+                  body: 'How often the KPI is due. Monthly KPIs are filled every month. Quarterly KPIs are filled in March, June, September, and December, and score 1.0 automatically in the months between.' },
+  multiplier:   { title: 'Multiplier (tier step)',
+                  body: 'How far the result can move before the tier score changes by 0.2. Employees see it as Tier Step. With a target of 100 and a multiplier of 10 on an Increase KPI, a result from 90 to just under 100 scores 0.8.',
+                  guide: 'guide-tiers' },
+  'target-b':   { title: 'Target is B (strict target)',
+                  body: 'Yes: the tier score is 1.0 only when the result beats the target, and meeting it exactly scores 0.8. No: meeting the target scores 1.0.',
+                  guide: 'guide-tiers' },
+  holders:      { title: 'Holders and submissions',
+                  body: 'Holders are the people who have this KPI in their mapping. Submissions are the scored months counted for it, without the trial month and the automatic 1.0 of off-cycle quarters.' },
+  'tier-share': { title: 'Share at the top and bottom tier',
+                  body: 'The share of submissions that land at the tier set for Easy (usually 1.0) and at the tier set for Unrealistic (usually 0.2). The thresholds are in System Settings > KPI Health.' },
+  'avg-tier':   { title: 'Average tier',
+                  body: 'The average tier score of the counted submissions. 1.0 means every submission met the target. Points lost uses it: weight × (1 − average tier).' },
+  periods:      { title: 'Period states',
+                  body: 'Open: employees can submit or change the month until the cut-off shown. Closed: the month was opened, but its cut-off has passed. Locked: the month is not open. Reopened: opened again after its regular cut-off. Early: opened before the month has started.' }
 };
 
 var LABEL_META = {

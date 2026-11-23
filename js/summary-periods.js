@@ -101,8 +101,8 @@ function renderPeriodControl() {
           '<span class="pill ' + (previous ? 'pill-neutral' : 'pill-brand') + ' !py-0.5 !text-[11px]">FY' + year + (previous ? ' • Previous year' : '') + '</span></h2>' +
         '<p class="text-body-sm text-text-muted max-w-2xl">Opening a month lets <strong class="text-text-secondary">every employee</strong> submit or change it until its cut-off. ' +
           'Uncheck it to lock it again.</p>' +
-        '<p class="text-body-sm text-text-muted mt-1"><strong class="text-text-secondary">' + openCount + ' of 12</strong> periods open' +
-          (notes.length ? ': ' + notes.join(', ') : '') + '.</p>' +
+        '<p class="text-body-sm text-text-muted mt-1 flex flex-wrap items-center gap-x-1"><span><strong class="text-text-secondary">' + openCount + ' of 12</strong> periods open' +
+          (notes.length ? ': ' + notes.join(', ') : '') + '.</span>' + tipBtn('periods', 'the period states') + '</p>' +
       '</div>' +
       '<div class="flex flex-wrap items-end gap-space-sm shrink-0">' +
         (years.length > 1

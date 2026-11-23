@@ -156,11 +156,11 @@ function kpiHealthHead(sort) {
     sortHead('KPI Name', 'name', sort, 'sortKpiHealth', 'min-w-[220px]') +
     sortHead('Role', 'role', sort, 'sortKpiHealth', 'min-w-[180px]') +
     '<th>Target</th>' +
-    sortHead('Holders', 'holders', sort, 'sortKpiHealth', 'text-right') +
+    sortHead('Holders', 'holders', sort, 'sortKpiHealth', 'text-right whitespace-nowrap', '', 'holders') +
     sortHead('Submissions', 'entries', sort, 'sortKpiHealth', 'text-right') +
-    sortHead('At ' + (rules.easyTier >= 1 ? '1.0' : '≥' + Number(rules.easyTier).toFixed(1)), 'top', sort, 'sortKpiHealth', 'text-right') +
+    sortHead('At ' + (rules.easyTier >= 1 ? '1.0' : '≥' + Number(rules.easyTier).toFixed(1)), 'top', sort, 'sortKpiHealth', 'text-right whitespace-nowrap', '', 'tier-share') +
     sortHead('At ' + (rules.hardTier <= 0.2 ? '0.2' : '≤' + Number(rules.hardTier).toFixed(1)), 'bottom', sort, 'sortKpiHealth', 'text-right') +
-    sortHead('Avg Tier', 'tier', sort, 'sortKpiHealth', 'text-right') +
+    sortHead('Avg Tier', 'tier', sort, 'sortKpiHealth', 'text-right whitespace-nowrap', '', 'avg-tier') +
     sortHead('Points lost', 'lost', sort, 'sortKpiHealth', 'text-right whitespace-nowrap') +
     sortHead('Flag', 'flag', sort, 'sortKpiHealth', 'text-center') +
   '</tr>';
