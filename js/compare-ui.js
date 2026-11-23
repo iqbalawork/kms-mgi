@@ -290,10 +290,10 @@ function cmpPeriodLabel(months) {
     ' • ' + months.length + (months.length === 1 ? ' counted month' : ' counted months');
 }
 
-function cmpDuoCard(title, icon, a, b, foot, id) {
+function cmpDuoCard(title, icon, a, b, foot, id, tip) {
   return '<div' + (id ? ' id="' + id + '"' : '') + ' class="scroll-mt-40 bg-surface-card rounded-xl p-5 shadow-level-1 border border-border-light flex flex-col gap-3">' +
     '<div class="flex items-center justify-between gap-3">' +
-      '<span class="text-sm font-medium text-slate-500">' + esc(title) + '</span>' +
+      '<span class="flex items-center gap-1 text-sm font-medium text-slate-500">' + esc(title) + (tip ? tipBtn(tip, title) : '') + '</span>' +
       '<span class="w-9 h-9 rounded-lg bg-slate-50 ring-1 ring-slate-200/70 flex items-center justify-center text-slate-600"><span class="material-symbols-outlined text-[20px]">' + icon + '</span></span>' +
     '</div>' +
     '<div class="flex flex-col gap-1.5">' +
@@ -322,8 +322,8 @@ function cmpOverviewPanelHtml(A, B, ov, mode, peers) {
         ? '<span class="block mt-1">Own months: A ' + cmpScore(ov.a.avg) + ' (' + ov.a.scored + '), B ' + cmpScore(ov.b.avg) + ' (' + ov.b.scored + ')</span>'
         : '')) +
     cmpDuoCard('Months Ahead', 'emoji_events', String(ov.wins.a), String(ov.wins.b),
-      ov.wins.both ? ov.wins.tie + ' even of ' + ov.wins.both + ' months scored by both' : 'No month scored by both yet') +
-    cmpDuoCard('Trend', 'insights', cmpTrendHtml(ov.a.trend), cmpTrendHtml(ov.b.trend), 'Points a month, from a straight line through the months both submitted', 'cmp-card-trend') +
+      ov.wins.both ? ov.wins.tie + ' even of ' + ov.wins.both + ' months scored by both' : 'No month scored by both yet', '', 'months-ahead') +
+    cmpDuoCard('Trend', 'insights', cmpTrendHtml(ov.a.trend), cmpTrendHtml(ov.b.trend), 'Points a month, from a straight line through the months both submitted', 'cmp-card-trend', 'trend') +
     cmpDuoCard('Submitted Months', 'fact_check', ov.a.scored + ' / ' + ov.a.due, ov.b.scored + ' / ' + ov.b.due,
       (ov.a.missing.length || ov.b.missing.length)
         ? 'Missing: ' + (ov.a.missing.length ? 'A ' + esc(monthNames(ov.a.missing)) : '') + (ov.a.missing.length && ov.b.missing.length ? '; ' : '') +
@@ -488,9 +488,10 @@ function cmpKpiPanelHtml(A, B, kpis) {
     '<div class="cmp-kpi-scroll"><table class="data-table cmp-kpi-table text-body-sm min-w-[980px]">' +
       '<thead><tr>' +
         '<th scope="col" class="min-w-[300px]">KPI</th><th scope="col" class="text-right">Weight</th>' +
-        '<th scope="col" class="text-center">' + cmpTag('a') + ' Avg tier</th><th scope="col" class="text-center">' + cmpTag('b') + ' Avg tier</th>' +
+        '<th scope="col" class="text-center">' + cmpTag('a') + ' Avg tier</th><th scope="col" class="text-center">' + cmpTag('b') + ' Avg tier' + tipBtn('avg-tier', 'average tier') + '</th>' +
         '<th scope="col" class="text-right">' + cmpTag('a') + ' Avg realization</th><th scope="col" class="text-right">' + cmpTag('b') + ' Avg realization</th>' +
-        '<th scope="col" class="text-center">On target</th><th scope="col" class="text-right">Gap</th>' +
+        '<th scope="col" class="text-center"><span class="inline-flex items-center gap-1">On target' + tipBtn('on-target') + '</span></th>' +
+        '<th scope="col" class="text-right"><span class="inline-flex items-center gap-1">Gap' + tipBtn('gap') + '</span></th>' +
       '</tr></thead>' +
       '<tbody>' + body + '</tbody>' +
     '</table></div>' +
@@ -564,7 +565,7 @@ function cmpKpiDetailHtml(A, B, x, n) {
 
   var tie = x.focus !== null
     ? '<div class="rounded-xl border border-blue-200 bg-blue-50/60 p-space-md flex flex-col gap-space-sm">' +
-        '<div><p class="text-body-sm font-semibold text-text-primary">Same tier, different realization</p>' +
+        '<div><p class="flex items-center gap-1 text-body-sm font-semibold text-text-primary">Same tier, different realization' + tipBtn('tier-position', 'the position within the tier') + '</p>' +
         '<p class="text-label-xs text-text-secondary">Same tier in ' + x.sameTierMonths + (x.sameTierMonths === 1 ? ' month' : ' months') + ', latest shown: ' + esc(MONTHS[x.focus].substring(0, 3)) + '</p></div>' +
         cmpPositionHtml('a', A.name, k, x.posA, x.focus) + cmpPositionHtml('b', B.name, k, x.posB, x.focus) +
         (!x.posA || !x.posB ? '<p class="text-label-xs text-text-secondary">This KPI has no tier steps, so only the realizations are shown.</p>' : '') +

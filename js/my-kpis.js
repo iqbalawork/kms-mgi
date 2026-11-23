@@ -769,11 +769,11 @@ function toggleEmpHistory() {
   if (chev) chev.textContent = S.empHistoryOpen ? 'expand_less' : 'expand_more';
 }
 
-function statCard(label, icon, valueClass, value, valueSuffix, caption, barClass, barPct) {
+function statCard(label, icon, valueClass, value, valueSuffix, caption, barClass, barPct, tip) {
   return '' +
     '<div class="bg-surface-card rounded-xl p-5 shadow-level-1 border border-border-light flex flex-col justify-between transition-all duration-150 hover:shadow-level-2">' +
       '<div class="flex items-center justify-between gap-3 mb-3">' +
-        '<span class="text-sm font-medium text-slate-500">' + esc(label) + '</span>' +
+        '<span class="flex items-center gap-1 text-sm font-medium text-slate-500">' + esc(label) + (tip ? tipBtn(tip, label) : '') + '</span>' +
         '<div class="w-9 h-9 rounded-lg bg-slate-50 ring-1 ring-slate-200/70 flex items-center justify-center text-slate-600">' +
           '<span class="material-symbols-outlined text-[20px]">' + icon + '</span>' +
         '</div>' +

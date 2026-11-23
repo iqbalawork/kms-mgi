@@ -353,7 +353,7 @@ function renderDashStats(s) {
       ytdBand ? s.ytdAvg.toFixed(2) : '-', '%',
       ytdBand ? 'Rating: ' + esc(ytdBand.label) + ' • Feb to Dec, ' + s.scoredScorecards + ' scored scorecards'
               : 'No counted months scored yet',
-      ytdBand ? 'bg-status-' + ytdBand.key : 'bg-surface-container', s.ytdAvg || 0) +
+      ytdBand ? 'bg-status-' + ytdBand.key : 'bg-surface-container', s.ytdAvg || 0, 'ytd') +
 
     statCard('Scorecards Monitored', 'badge', 'text-text-primary',
       s.scorecards, 'Scorecards',
@@ -364,13 +364,13 @@ function renderDashStats(s) {
       isNum(c.rate) ? c.rate.toFixed(1) : '-', '%',
       !isNum(c.rate) ? 'No completed months yet (January is a trial month)'
                       : c.completed + ' of ' + c.expected + ' submitted, Feb to ' + dashMonth(c.throughMonth),
-      rateBar, c.rate || 0) +
+      rateBar, c.rate || 0, 'completion') +
 
     statCard('Latest Month', 'calendar_month', 'text-text-primary',
       latest ? latest.avg.toFixed(2) : '-', latest ? '% in ' + dashMonth(latest.month, true) : '',
       latest ? 'Gap to YTD ' + (isNum(latest.gap) ? dashPts(latest.gap) : '-') + ' • ' + latest.completed + ' of ' + latest.total + ' submitted'
              : 'No completed month with scores yet',
-      'bg-status-info', latest && latest.total ? latest.completed / latest.total * 100 : 0);
+      'bg-status-info', latest && latest.total ? latest.completed / latest.total * 100 : 0, 'latest');
 }
 
 function chartFont(weight, size) {
@@ -840,7 +840,7 @@ function renderDashHeatmap(s) {
 
   var head = '<tr>' +
     '<th class="w-[200px] !px-4 !py-3">' + esc(field) + '</th>' +
-    '<th class="w-[136px] !px-3 !py-3 !tracking-normal" title="Share of due monthly scorecards submitted, trial month excluded">Submitted</th>' +
+    '<th class="w-[136px] !px-3 !py-3 !tracking-normal"><span class="inline-flex items-center gap-1">Submitted' + tipBtn('completion', 'Submitted') + '</span></th>' +
     '<th class="w-[88px] !px-1 !py-3 text-center !whitespace-normal !tracking-normal leading-tight border-l border-slate-200">YTD Feb to Dec</th>' +
     s.months.map(function (m) {
       return '<th class="!px-1 !py-3 text-center !whitespace-normal !tracking-normal leading-tight' + (m.trial ? ' recap-trial' : '') + '">' +

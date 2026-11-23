@@ -18,7 +18,7 @@ function renderSummaryTabs() {
     return '<button type="button" onclick="MGI.setSumFilter(\'' + t.key + '\')" class="seg-btn' +
            (active ? ' is-active' : '') + '">' +
            esc(t.label) + '<span class="seg-count">' + t.count + '</span></button>';
-  }).join('');
+  }).join('') + (tabs.some(function (t) { return t.key === 'locked'; }) ? tipBtn('no-changes') : '');
 }
 
 function setSumFilter(key) {
@@ -111,7 +111,7 @@ function renderSummaryTable() {
           ? '<a href="' + esc(r.evidence.File_URL) + '" target="_blank" rel="noopener noreferrer" ' +
             'class="btn btn-secondary !py-1.5 !px-3 !text-label-sm" title="' + esc(r.evidence.File_Name) + '" aria-label="View the evidence of ' + esc(r.Full_Name) + '">' +
               '<span class="material-symbols-outlined text-[16px] text-brand-maroon-dark">folder_open</span> View</a>' +
-            (r.evidence.legacy ? '<span class="block text-[11px] text-text-muted mt-1">Combined evidence (legacy)</span>' : '')
+            (r.evidence.legacy ? '<span class="flex items-center gap-1 text-[11px] text-text-muted mt-1">Combined evidence (legacy)' + tipBtn('legacy-evidence') + '</span>' : '')
           : '<span class="text-label-xs text-text-muted">No file</span>') +
       '</td>' +
     '</tr>';
