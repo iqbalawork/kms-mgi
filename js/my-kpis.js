@@ -491,7 +491,7 @@ function roleSection(r) {
         : multi
           ? (r.isHome
               ? '<span class="pill pill-neutral !text-[11px]">Home Role</span>'
-              : '<span class="pill pill-maroon !text-[11px]">Additional Role</span>')
+              : '<span class="pill pill-maroon !text-[11px]">Additional Role</span>') + tipBtn('roles', 'home and additional roles')
           : '') +
       (readOnly || r.valid ? '' : '<span class="pill pill-danger" title="The KPI weights of this role do not add up to 100%">Weight ' + r.percent + '%</span>') +
       '<span class="ml-auto flex flex-wrap items-center gap-space-sm">' +
@@ -500,7 +500,7 @@ function roleSection(r) {
           : progress.required ? progress.filled + ' of ' + progress.required + ' filled' : 'No KPI due this month') + '</span>' +
         (!readOnly && stage ? '<span class="pill ' + stage[0] + ' !text-[11px]"><span class="material-symbols-outlined text-[14px]">' + stage[1] + '</span>' + stage[2] + '</span>' : '') +
         changeChip +
-        (scored ? '<span class="pill pill-' + band(r.index).key + '">Index ' + num(r.index) + '</span>' : '') +
+        (scored ? '<span class="inline-flex items-center gap-1"><span class="pill pill-' + band(r.index).key + '">Index ' + num(r.index) + '</span>' + tipBtn('index', 'the role index') + '</span>' : '') +
       '</span>' +
     '</div>';
 
@@ -530,10 +530,10 @@ function roleSection(r) {
           '<th class="w-[72px] text-center">Weight</th>' +
           '<th class="kpi-unit w-[100px] text-center">Unit</th>' +
           '<th class="w-28 text-center">Duration</th>' +
-          '<th class="w-[116px] 2xl:w-[176px] text-center">Target</th>' +
+          '<th class="w-[116px] 2xl:w-[176px] text-center"><span class="inline-flex items-center gap-1">Target' + tipBtn('target', 'the target direction') + '</span></th>' +
           '<th class="w-[212px] 2xl:w-[288px]"><span class="inline-flex items-center gap-1 text-primary-container">' +
             '<span class="material-symbols-outlined text-[16px]">edit</span> Realization (Input)</span></th>' +
-          '<th class="w-[208px] text-right">Status / Achievement</th>' +
+          '<th class="w-[208px] text-right"><span class="inline-flex items-center gap-1">Status / Achievement' + tipBtn('status', 'status and achievement') + '</span></th>' +
         '</tr></thead>' +
         '<tbody>' + r.items.map(rowMyKpi).join('') + '</tbody>' +
       '</table>' +

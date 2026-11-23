@@ -288,6 +288,18 @@
     box-shadow: 0 1px 2px rgba(139,30,30,.25), 0 4px 10px -4px rgba(139,30,30,.35);
   }
   .nav-link.is-active .material-symbols-outlined { color: #fff; }
+  .tip-btn { display: inline-flex; align-items: center; justify-content: center; width: 1.25rem; height: 1.25rem; margin: -2px 0; border-radius: 9999px; color: #94A3B8; vertical-align: middle; flex-shrink: 0; cursor: help; transition: color .15s, background-color .15s; }
+  .tip-btn .material-symbols-outlined { font-size: 16px; }
+  .tip-btn:hover, .tip-btn[aria-expanded="true"] { color: #8B1E1E; background: #FDF2F2; }
+  .tip-btn:focus-visible { outline: 2px solid #8B1E1E; outline-offset: 1px; }
+  body.is-phone .tip-btn { width: 1.75rem; height: 1.75rem; margin: -6px -4px; }
+  .tip-pop { position: fixed; z-index: 140; padding: .75rem .875rem; border-radius: .75rem; background: #0F172A; color: #E2E8F0; font-size: 12px; font-weight: 400; line-height: 1.5; letter-spacing: normal; text-transform: none; text-align: left; white-space: normal; box-shadow: 0 12px 28px -8px rgba(15,23,42,.45); }
+  .tip-pop-title { margin-bottom: .25rem; font-size: 12px; font-weight: 700; color: #fff; }
+  .tip-pop-more { margin-top: .5rem; padding: 0; font-size: 12px; font-weight: 600; color: #FCA5A5; text-decoration: underline; text-underline-offset: 2px; }
+  .tip-pop-more:focus-visible { outline: 2px solid #FCA5A5; outline-offset: 2px; border-radius: 2px; }
+  .kpi-status-help { display: none; }
+  @media (max-width: 767px) { .kpi-status-help { display: flex; } }
+  .pdf-sheet .tip-btn { display: none !important; }
   .dept-card-wrap { position: relative; }
   .dept-card { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; width: 100%; height: 100%; padding: .625rem .75rem; border-radius: .75rem; background: #fff; border: 1px solid #E2E8F0; box-shadow: 0 1px 2px rgba(15,23,42,.04); text-align: left; transition: all .15s; }
   .dept-card:not(.is-zero):hover { box-shadow: 0 4px 12px -4px rgba(15,23,42,.12); border-color: #CBD5E1; }
@@ -1044,7 +1056,7 @@
   }
 
   @media print {
-    #sidebar, #topbar, #toast-host, .no-print, .pin-head { display: none !important; }
+    #sidebar, #topbar, #toast-host, #tip-pop, .no-print, .pin-head { display: none !important; }
     #app-body { padding: 0 !important; }
     body { background: #fff; }
   }

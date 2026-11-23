@@ -60,6 +60,7 @@ function pdfLogosHtml(ctx) {
 }
 
 function pdfSheetHtml(ctx, body) {
+  body = noTips(body);
   var h = pdfHead(ctx);
   var title = '<p class="text-[16px] font-bold text-slate-900 leading-tight">' + esc(h.title) + '</p>';
   return '<div class="pdf-sheet">' +

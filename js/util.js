@@ -635,3 +635,127 @@ function onBeforeUnload(ev) {
   ev.preventDefault();
   ev.returnValue = '';
 }
+
+function tipBtn(key, label) {
+  var g = GLOSSARY[key];
+  if (!g) return '';
+  return '<button type="button" class="tip-btn no-print" data-tip="' + key + '" aria-label="About ' + esc(label || g.title) + '" aria-expanded="false"' +
+    ' onclick="MGI.toggleTip(this, event)" onmouseenter="MGI.hoverTip(this, true)" onmouseleave="MGI.hoverTip(this, false)" onfocus="MGI.focusTip(this)" onblur="MGI.blurTip(this, event)">' +
+    '<span class="material-symbols-outlined" aria-hidden="true">info</span></button>';
+}
+
+function noTips(html) {
+  return String(html).replace(/<button type="button" class="tip-btn[^"]*"[^>]*>[\s\S]*?<\/button>/g, '');
+}
+
+function tipHtml(key) {
+  var g = GLOSSARY[key];
+  return '<p class="tip-pop-title">' + esc(g.title) + '</p><p>' + esc(g.body) + '</p>' +
+    (g.guide ? '<button type="button" class="tip-pop-more" onmousedown="event.preventDefault()" onclick="MGI.tipGuide(\'' + g.guide + '\')">Learn more in the Guide</button>' : '');
+}
+
+function placeTip(btn, pop) {
+  if (!btn.getBoundingClientRect || !window.innerWidth) return;
+  var r = btn.getBoundingClientRect();
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+  var w = Math.min(288, vw - 16);
+  pop.style.width = w + 'px';
+  var left = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, vw - w - 8));
+  var h = pop.offsetHeight || 0;
+  var top = r.bottom + 8;
+  if (top + h > vh - 8 && r.top - h - 8 >= 8) top = r.top - h - 8;
+  pop.style.left = Math.round(left) + 'px';
+  pop.style.top = Math.round(top) + 'px';
+}
+
+function openTip(btn, mode) {
+  var key = btn && btn.getAttribute('data-tip');
+  var pop = $('tip-pop');
+  if (!key || !GLOSSARY[key] || !pop) return;
+  if (S.tip && S.tip.btn !== btn) closeTip(false);
+  if (S.tip && S.tip.btn === btn) {
+    if (mode === 'click') S.tip.mode = 'click';
+    return;
+  }
+  pop.innerHTML = tipHtml(key);
+  pop.classList.remove('hidden');
+  btn.setAttribute('aria-expanded', 'true');
+  btn.setAttribute('aria-describedby', 'tip-pop');
+  S.tip = { btn: btn, key: key, mode: mode };
+  placeTip(btn, pop);
+}
+
+function closeTip(refocus) {
+  var t = S.tip;
+  if (!t) return;
+  S.tip = null;
+  var pop = $('tip-pop');
+  if (pop) { pop.classList.add('hidden'); pop.innerHTML = ''; }
+  t.btn.setAttribute('aria-expanded', 'false');
+  t.btn.removeAttribute('aria-describedby');
+  if (refocus && t.btn.focus) t.btn.focus();
+}
+
+function toggleTip(btn, ev) {
+  if (ev && ev.stopPropagation) ev.stopPropagation();
+  if (ev && ev.preventDefault) ev.preventDefault();
+  if (S.tip && S.tip.btn === btn && S.tip.mode === 'click') { closeTip(false); return; }
+  openTip(btn, 'click');
+}
+
+function hoverTip(btn, on) {
+  if (S.tipHoverTimer) { clearTimeout(S.tipHoverTimer); S.tipHoverTimer = null; }
+  if (on) { if (!S.tip || S.tip.btn !== btn) openTip(btn, 'hover'); return; }
+  if (S.tip && S.tip.btn === btn && S.tip.mode === 'hover') {
+    S.tipHoverTimer = setTimeout(function () { if (S.tip && S.tip.mode === 'hover') closeTip(false); }, 150);
+  }
+}
+
+function focusTip(btn) {
+  if (btn.matches && !btn.matches(':focus-visible')) return;
+  openTip(btn, 'focus');
+}
+
+function blurTip(btn, ev) {
+  var next = ev && ev.relatedTarget;
+  var pop = $('tip-pop');
+  if (next && pop && pop.contains && pop.contains(next)) return;
+  if (S.tip && S.tip.btn === btn && S.tip.mode === 'focus') closeTip(false);
+}
+
+function tipGuide(section) {
+  closeTip(false);
+  openGuide('everyone', section);
+}
+
+function onTipKey(ev) {
+  if (!S.tip || ev.key !== 'Escape') return;
+  ev.preventDefault();
+  if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+  closeTip(true);
+}
+
+function onTipOutside(ev) {
+  if (!S.tip) return;
+  var target = ev && ev.target;
+  var pop = $('tip-pop');
+  if (target && pop && pop.contains && pop.contains(target)) return;
+  if (target && target.closest && target.closest('.tip-btn')) return;
+  closeTip(false);
+}
+
+function wireTips() {
+  document.addEventListener('keydown', onTipKey, true);
+  document.addEventListener('click', onTipOutside);
+  window.addEventListener('resize', function () { closeTip(false); });
+  document.addEventListener('scroll', function (ev) {
+    var pop = $('tip-pop');
+    if (S.tip && !(pop && pop.contains && pop.contains(ev.target))) closeTip(false);
+  }, true);
+  var pop = $('tip-pop');
+  if (pop) {
+    pop.addEventListener('mouseenter', function () { if (S.tipHoverTimer) { clearTimeout(S.tipHoverTimer); S.tipHoverTimer = null; } });
+    pop.addEventListener('mouseleave', function () { if (S.tip && S.tip.mode === 'hover') closeTip(false); });
+  }
+}

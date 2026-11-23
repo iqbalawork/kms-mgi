@@ -2,6 +2,11 @@
 
 var MGI = {
   boot: boot,
+  toggleTip: toggleTip,
+  hoverTip: hoverTip,
+  focusTip: focusTip,
+  blurTip: blurTip,
+  tipGuide: tipGuide,
   go: go,
   toggleSidebar: toggleSidebar,
   skipToContent: skipToContent,

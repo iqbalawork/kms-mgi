@@ -5,6 +5,7 @@ function boot() {
   wirePinnedHeads();
   document.addEventListener('wheel', onNumberWheel, { passive: false });
   wireModalHost();
+  wireTips();
   window.addEventListener('beforeunload', onBeforeUnload);
   window.addEventListener('hashchange', onHashChange);
   watchPhoneMode();

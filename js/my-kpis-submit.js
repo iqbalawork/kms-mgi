@@ -207,7 +207,8 @@ function renderTableFooter(roleKey) {
       (dirty
         ? '<span class="material-symbols-outlined text-[16px] text-status-info">edit_note</span> Your changes count after you submit. The index shows your last submission.'
         : '<span class="material-symbols-outlined text-[16px]">info</span> Role index = Σ (Weight × Tier Score) × 100, calculated when you submit.') +
-    '</p>';
+    '</p>' +
+    '<p class="kpi-status-help text-body-sm text-text-muted flex items-center gap-1.5">What Achieved, Close, Below, and Critical mean' + tipBtn('status', 'status and achievement') + '</p>';
 }
 
 function receiptHtml(r) {

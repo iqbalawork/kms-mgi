@@ -58,6 +58,7 @@ var S = {
   allowChange: null,
   submitConfirm: null,
   help:        { open: false, topic: '', note: '', roleKey: '' },
+  tip:         null,
   helpWired:   false,
   helpScrollWired: false,
   dashJumps:   [],
@@ -164,6 +165,48 @@ var PERF_COMPONENTS = [
 ];
 
 var GRADES = ['A', 'B', 'C', 'D', 'E'];
+
+var GLOSSARY = {
+  index:        { title: 'Role index',
+                  body: 'Your score for this role in the month, from 0 to 100. Each KPI adds its weight times its tier score, so a KPI weighted 30% at tier 0.8 adds 24 points.',
+                  guide: 'guide-calc' },
+  status:       { title: 'Status and achievement',
+                  body: 'Achievement compares your realization with the target as a percentage. The tier score from 0.2 to 1.0 is what counts toward your index. Achieved means tier 0.8 or higher, Close is 0.6, Below is 0.4, and Critical is 0.2.',
+                  guide: 'guide-tiers' },
+  target:       { title: 'Target direction',
+                  body: 'Higher is better: reach the target or go above it. Lower is better: stay at or below the target. Must match target: only the exact target scores 1.0. A strict target scores 1.0 only when you beat it; meeting it exactly scores 0.8.',
+                  guide: 'guide-tiers' },
+  roles:        { title: 'Home and additional roles',
+                  body: 'Your home role is your main position. An additional role is another position you also hold. Each role has its own KPIs, is submitted on its own, and gets its own index.' },
+  tier:         { title: 'Tier score',
+                  body: 'A score from 0.2 to 1.0 for each KPI in a month. 1.0 means the target was met. Each tier step further from the target lowers it by 0.2, down to 0.2.',
+                  guide: 'guide-tiers' },
+  'tier-step':  { title: 'Tier step',
+                  body: 'How far the result can move before the tier score changes by 0.2. With a target of 100 and a step of 10 on a Higher is better KPI, a result from 90 to just under 100 scores 0.8.',
+                  guide: 'guide-tiers' },
+  'index-score': { title: 'Index score',
+                  body: 'The points this KPI adds to the role index in a month: its weight times its tier score. The most it can add is its weight.',
+                  guide: 'guide-calc' },
+  'kpi-months': { title: 'KPI months',
+                  body: 'Months with a submitted KPI score that count toward the year. The trial month at the start of the year is left out.' },
+  'avg-kpi':    { title: 'Average KPI score',
+                  body: 'The average of your monthly role index over the counted months. It is the KPI part of your Performance Score.',
+                  guide: 'guide-performance' },
+  kbi:          { title: 'KBI (Key Behaviour Indicator)',
+                  body: 'A measurable action or observable behaviour that drives the desired outcomes and reflects the company culture. HR scores it from 0 to 100.',
+                  guide: 'guide-performance' },
+  s360:         { title: '360 Evaluation',
+                  body: 'A review that gathers input on your behaviour, skills, and impact at work from several people who work around you. It is scored from 0 to 100.',
+                  guide: 'guide-performance' },
+  discipline:   { title: 'Discipline',
+                  body: 'Your discipline score for the year, entered by HR from 0 to 100.',
+                  guide: 'guide-performance' },
+  final:        { title: 'Performance Score and Grade',
+                  body: 'Your result for the year. Each part (KPI, KBI, 360, and Discipline) is multiplied by its weight and added up to a score out of 100. The score sets your grade, from A to E.',
+                  guide: 'guide-performance' },
+  sp:           { title: 'SP (Surat Peringatan)',
+                  body: 'A formal warning letter. SP1 is the first level, SP2 the second, and SP3 the final one. It is recorded next to your yearly result and does not change the score.' }
+};
 
 var LABEL_META = {
   Increase: { short: 'Higher is better',  icon: 'trending_up',   text: 'text-emerald-700', tone: 'bg-emerald-50 text-emerald-700 border-emerald-200' },

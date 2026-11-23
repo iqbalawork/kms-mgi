@@ -241,18 +241,18 @@ function executiveSummaryHtml(data, role, modal, note) {
   var counted = MONTHS.filter(function (m, i) { return trial.indexOf(i + 1) === -1; });
   var span = counted.length ? counted[0].substring(0, 3) + ' to ' + counted[counted.length - 1].substring(0, 3) : 'No counted months';
 
-  var tile = function (label, value, caption) {
+  var tile = function (label, value, caption, tip) {
     return '<div class="rounded-lg border border-border-light bg-white px-3 py-2.5 min-w-0 flex flex-col">' +
-      '<span class="text-label-xs uppercase tracking-wider text-text-muted truncate" title="' + esc(label) + '">' + esc(label) + '</span>' +
+      '<span class="flex items-center gap-1 min-w-0"><span class="text-label-xs uppercase tracking-wider text-text-muted truncate" title="' + esc(label) + '">' + esc(label) + '</span>' + (tip ? tipBtn(tip, label) : '') + '</span>' +
       '<span class="mt-1 text-headline-md font-bold tabular-nums leading-tight">' + value + '</span>' +
       '<span class="mt-auto pt-0.5 text-[11px] text-text-muted truncate">' + (caption || '&nbsp;') + '</span>' +
     '</div>';
   };
 
   var tiles = [
-    tile('KPI Months', '<span class="text-text-primary">' + role.kpiMonths + '</span>', esc(span)),
+    tile('KPI Months', '<span class="text-text-primary">' + role.kpiMonths + '</span>', esc(span), 'kpi-months'),
     tile('Avg KPI Score', avg === null ? '<span class="text-text-muted">-</span>'
-      : '<span class="text-status-' + band(avg).key + '-text">' + avg.toFixed(2) + '%</span>', weight('kpi'))
+      : '<span class="text-status-' + band(avg).key + '-text">' + avg.toFixed(2) + '%</span>', weight('kpi'), 'avg-kpi')
   ];
   var result = '';
   var calc = '';
@@ -264,7 +264,7 @@ function executiveSummaryHtml(data, role, modal, note) {
       if (!(Number(rules.weights[key]) > 0)) return;
       var label = key === 'discipline' ? 'Discipline' : perfComponent(key).label + ' Score';
       tiles.push(tile(label, isNum(ev[key]) ? '<span class="text-text-primary">' + num(ev[key], 2) + '</span>'
-        : '<span class="text-text-muted text-title-md">Pending</span>', weight(key)));
+        : '<span class="text-text-muted text-title-md">Pending</span>', weight(key), key));
     });
     result = finalResultHtml(ev, rules);
     calc = scoreCalcHtml(ev);
@@ -273,7 +273,7 @@ function executiveSummaryHtml(data, role, modal, note) {
       ? '<span class="pill pill-success !text-[11px]"><span class="material-symbols-outlined text-[14px]">verified</span>Released ' + esc(fmtDate(rules.releasedAt)) + '</span>'
       : '<span class="pill pill-neutral !text-[11px]" title="Employees cannot see these results yet">Draft, not released</span>';
     if (ev.spLevel || ev.remarks) {
-      pills += spPill(ev.spLevel, ev.remarks);
+      pills += spPill(ev.spLevel, ev.remarks) + (ev.spLevel ? tipBtn('sp', 'SP') : '');
       extra = '<p class="mt-space-sm text-label-xs text-text-muted"><strong class="text-text-secondary">Remarks SP:</strong> ' +
         esc(ev.remarks || 'No remarks') + '</p>';
     }
@@ -327,7 +327,7 @@ function scoreCalcHtml(ev) {
 function finalResultHtml(ev, rules) {
   if (!ev.complete) {
     return '<div class="h-full rounded-xl border border-dashed border-border-medium bg-white p-4 flex flex-col justify-center gap-1">' +
-      '<p class="text-label-xs uppercase tracking-wider text-text-muted">Final Result</p>' +
+      '<p class="flex items-center gap-1 text-label-xs uppercase tracking-wider text-text-muted">Final Result' + tipBtn('final', 'the final result') + '</p>' +
       '<p class="text-headline-md font-bold text-text-secondary">Pending</p>' +
       '<p class="text-body-sm text-text-muted">Needs ' + esc(ev.missing.join(', ')) + ' before the Performance Score and Grade can be calculated.</p>' +
     '</div>';
@@ -336,7 +336,7 @@ function finalResultHtml(ev, rules) {
   return '<div class="h-full rounded-xl border px-4 py-3 flex flex-col justify-between gap-2 ' + GRADE_TINTS[ev.grade] + '">' +
     '<div class="flex items-start justify-between gap-4">' +
       '<div class="min-w-0">' +
-        '<p class="text-label-xs uppercase tracking-wider text-text-secondary">Performance Score</p>' +
+        '<p class="flex items-center gap-1 text-label-xs uppercase tracking-wider text-text-secondary">Performance Score' + tipBtn('final', 'the Performance Score and Grade') + '</p>' +
         '<p class="mt-1 text-[32px] leading-10 font-bold tabular-nums text-slate-900">' + scoreText(ev.score) +
           '<span class="text-body-md font-semibold text-text-muted"> / 100</span></p>' +
       '</div>' +
@@ -495,9 +495,9 @@ function deepDiveTarget(k) {
   return prefix + fmtKpiValue(k.Target, k.Unit || '');
 }
 
-function ddChip(label, value, raw) {
+function ddChip(label, value, raw, tip) {
   return '<div class="report-chip">' +
-    '<span class="text-label-xs uppercase tracking-wider text-text-muted">' + esc(label) + '</span>' +
+    '<span class="flex items-center gap-1 text-label-xs uppercase tracking-wider text-text-muted">' + esc(label) + (tip ? tipBtn(tip, label) : '') + '</span>' +
     (raw ? '<span class="mt-0.5">' + value + '</span>'
          : '<span class="text-label-md font-semibold text-text-primary truncate">' + esc(value) + '</span>') +
   '</div>';
@@ -514,7 +514,7 @@ function deepDiveRibbonHtml(k) {
   return '<div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-space-sm">' +
     ddChip('Direction', direction, true) +
     ddChip('Target', target, true) +
-    ddChip('Tier Step', k.Label === 'Binary' ? 'Not used' : num(k.Multiplier, 2) + (k.Unit ? ' ' + k.Unit : '') + ' per tier') +
+    ddChip('Tier Step', k.Label === 'Binary' ? 'Not used' : num(k.Multiplier, 2) + (k.Unit ? ' ' + k.Unit : '') + ' per tier', false, 'tier-step') +
     ddChip('Duration', durationPill(k.Duration, true), true) +
     ddChip('Weight', pct(k.WeightPercent)) +
     ddChip('Unit', k.Unit || '-') +
@@ -904,8 +904,8 @@ function deepDiveTableHtml(data, k) {
           '<th class="!px-2 !py-2 text-right !tracking-normal">Target</th>' +
           '<th class="!px-2 !py-2 text-right !tracking-normal">Realization</th>' +
           '<th class="!px-2 !py-2 text-right !tracking-normal">Gap to Target</th>' +
-          '<th class="w-[56px] !px-2 !py-2 text-center !tracking-normal">Tier</th>' +
-          '<th class="!px-2 !py-2 text-right !tracking-normal">Index Score</th>' +
+          '<th class="w-[64px] !px-2 !py-2 text-center !tracking-normal"><span class="inline-flex items-center gap-0.5">Tier' + tipBtn('tier', 'the tier score') + '</span></th>' +
+          '<th class="!px-2 !py-2 text-right !tracking-normal"><span class="inline-flex items-center justify-end gap-0.5">Index Score' + tipBtn('index-score', 'the index score') + '</span></th>' +
         '</tr></thead>' +
         '<tbody>' + rows + '</tbody>' +
       '</table>' +
