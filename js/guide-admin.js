@@ -61,7 +61,7 @@ function agDepartmentsHtml() {
       tag('behaviour', 'It needs at least ' + r.BEHAVIOUR_MIN + ' people with a score.'),
       tag('falling')
     ]) + '</div>' +
-    '<p class="text-label-xs text-text-muted mt-space-sm">A department with fewer than ' + r.MIN_PEOPLE + ' people or fewer than ' + r.MIN_MONTHS + ' counted months shows Too early to read.</p>';
+    '<p class="text-label-xs text-text-muted mt-space-sm">A department with fewer than ' + r.MIN_MONTHS + ' counted months shows Too early to read. A team under ' + r.SMALL_TEAM + ' people is still read: Capacity is shown as a count of people, Falling needs ' + (r.FALL_MONTHS + 2) + ' months, and Consistency and Behaviour need at least ' + r.SPREAD_MIN + ' people.</p>';
 }
 
 function adminGuideHtml() {

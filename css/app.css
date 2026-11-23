@@ -309,6 +309,7 @@
   .dept-table { table-layout: fixed; width: 100%; min-width: 960px; }
   .dept-table td { vertical-align: middle; }
   .dept-row.is-early td { color: #64748B; }
+  .dept-small { color: #B45309; font-weight: 600; cursor: help; }
   .dept-detail { display: flex; flex-direction: column; gap: .75rem; padding-left: 1.75rem; }
   .dept-signals { width: 100%; border: 1px solid #E2E8F0; border-radius: .75rem; border-collapse: separate; border-spacing: 0; overflow: hidden; font-size: 13px; }
   .dept-signals th { padding: .5rem .875rem; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #475569; }

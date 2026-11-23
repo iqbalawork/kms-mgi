@@ -72,11 +72,11 @@ function deptRuleText(key, r) {
     targets:     r.TARGET_SHARE + '% or more of the department KPIs are Unrealistic in KPI Health.',
     capability:  'A KPI that is not Unrealistic has ' + r.WEAK_SHARE + '% or more of its submissions at tier ' + Number(r.WEAK_TIER).toFixed(1) + ' or lower.',
     consistency: 'People in one role (at least ' + r.SPREAD_MIN + ') are ' + r.SPREAD + ' points or more apart.',
-    capacity:    r.BELOW_GOOD + '% or more are below Good, and ' + r.SECOND_ROLES + ' or more also hold another role, or most KPIs are missed.',
+    capacity:    r.BELOW_GOOD + '% or more are below Good, and ' + r.SECOND_ROLES + ' or more (or half of a small team) also hold another role, or most KPIs are missed.',
     stretch:     r.EASY_SHARE + '% or more of the KPIs are Easy and the average is Excellent.',
     discipline:  'Less than ' + r.SUBMIT_PCT + '% of due months were submitted while the average is Good or better.',
     behaviour:   'KBI or 360 is ' + r.BEHAVIOUR_GAP + ' points or more below the company while KPI results are Good or better.',
-    falling:     'The monthly average drops ' + Math.abs(r.FALL_SLOPE) + ' point a month or more over at least ' + r.FALL_MONTHS + ' months.'
+    falling:     'The monthly average drops ' + Math.abs(r.FALL_SLOPE) + ' point a month or more over at least ' + r.FALL_MONTHS + ' months, or ' + (r.FALL_MONTHS + 2) + ' months in a team under ' + r.SMALL_TEAM + ' people.'
   }[key] || '';
 }
 
@@ -133,8 +133,7 @@ function deptAlso(x) {
 function deptDetailHtml(x) {
   var rules = S.depts.rules;
   if (x.tooEarly) {
-    return '<p class="dept-note">Too early to read: a department needs at least ' + plural(rules.MIN_PEOPLE, 'person', 'people') +
-      ' and ' + plural(rules.MIN_MONTHS, 'counted month') + ' before it gets signals.</p>';
+    return '<p class="dept-note">Too early to read: a department needs ' + plural(rules.MIN_MONTHS, 'counted month') + ' before it gets signals.</p>';
   }
   var also = deptAlso(x);
   var hasHard = x.kpis.unrealistic > 0;
@@ -162,7 +161,8 @@ function deptRowHtml(x) {
       ' onclick="MGI.toggleDept(\'' + esc(x.key).replace(/'/g, '\\\'') + '\')" aria-expanded="' + (open ? 'true' : 'false') + '">' +
     '<td><span class="flex items-center gap-2"><span class="acc-chevron material-symbols-outlined" aria-hidden="true">' + (open ? 'expand_less' : 'expand_more') + '</span>' +
       '<span class="min-w-0"><span class="block text-label-md font-semibold text-text-primary">' + esc(x.Department) + '</span>' +
-      '<span class="block text-label-xs text-text-secondary">' + esc(x.Division || '-') + '</span></span></span></td>' +
+      '<span class="block text-label-xs text-text-secondary">' + esc(x.Division || '-') +
+        (x.small ? ' • <span class="dept-small" title="Under ' + S.depts.rules.SMALL_TEAM + ' people. Signals about people are shown as counts.">Small team</span>' : '') + '</span></span></span></td>' +
     '<td class="text-right text-code-num">' + esc(num(x.people, 0)) + '</td>' +
     '<td>' + deptAvg(x.avg) + '</td>' +
     '<td class="text-right text-code-num">' + (isNum(x.belowGood) ? esc(pct(x.belowGood)) : '-') + '</td>' +
