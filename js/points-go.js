@@ -14,9 +14,6 @@ function pointsGoHtml(data, role, surface) {
   var pdf = surface === 'pdf';
   var list = pointsLost(role, deepDiveMonths(data));
   var total = Math.max(0, Math.round((100 - avg) * 100) / 100);
-  var shown = list.slice(0, pdf ? 3 : 5);
-  var rest = list.slice(shown.length);
-  var restLost = Math.round(rest.reduce(function (s, x) { return s + x.lost; }, 0) * 100) / 100;
   var max = list.length ? list[0].lost : 0;
   var next = pointsGoNext(avg);
   var need = next ? Math.round((next.at - avg) * 100) / 100 : 0;
@@ -50,8 +47,7 @@ function pointsGoHtml(data, role, surface) {
 
   var body = !list.length && unscored < 0.05
     ? '<p class="text-body-sm text-text-secondary">Every counted month earned every point.</p>'
-    : '<ul class="pg-list">' + shown.map(row).join('') +
-        (rest.length ? plain('+ ' + plural(rest.length, 'other KPI'), restLost) : '') +
+    : '<ul class="pg-list">' + list.map(row).join('') +
         (unscored >= 0.05 ? plain('KPIs with no score in some counted months', unscored) : '') +
       '</ul>' +
       (next
@@ -60,16 +56,29 @@ function pointsGoHtml(data, role, surface) {
             esc(nameText) + (levers.length === 1 ? ' alone holds ' : (held >= need ? ' together hold ' : ' hold ')) + '<strong>' + held.toFixed(2) + '</strong>.</span></p>'
         : '<p class="pg-next is-top"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">workspace_premium</span><span>Already Excellent. The list shows where the last points went.</span></p>');
 
-  return '<div class="rounded-xl border border-border-light p-space-md ' + (pdf ? 'mt-space-md bg-white' : 'mb-space-lg ' + (surface === 'modal' ? 'bg-surface-page' : 'bg-surface-card shadow-level-1')) + '">' +
-    '<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1 mb-space-sm">' +
-      '<div class="min-w-0">' +
-        '<h3 class="flex items-center gap-1 text-title-md text-text-primary">Where the points go' + tipBtn('points-lost') + '</h3>' +
-        '<p class="text-label-xs text-text-muted mt-1">Avg KPI Score ' + avg.toFixed(2) + ': <strong class="text-text-secondary">' + total.toFixed(2) + ' points a month</strong> were not earned. ' +
-          'Points lost per KPI, averaged over the counted months.</p>' +
-      '</div>' +
+  var intro = '<p class="text-label-xs text-text-muted mt-1">Avg KPI Score ' + avg.toFixed(2) + ': <strong class="text-text-secondary">' + total.toFixed(2) + ' points a month</strong> were not earned' +
+    (list.length ? ' across ' + plural(list.length, 'KPI') : '') + '. Points lost per KPI, averaged over the counted months.</p>';
+  var title = '<h3 class="flex items-center gap-1 text-title-md text-text-primary">Where the points go' + tipBtn('points-lost') + '</h3>';
+
+  if (pdf) {
+    return '<div class="rounded-xl border border-border-light p-space-md mt-space-md bg-white">' +
+      '<div class="mb-space-sm">' + title + intro + '</div>' + body +
+    '</div>';
+  }
+  var open = !!S.pointsGoOpen;
+  return '<section class="role-group pg-card shrink-0 mb-space-lg ' + (surface === 'modal' ? '' : 'shadow-level-1') + (open ? '' : ' is-collapsed') + '">' +
+    '<div class="role-group-head !p-4" role="button" tabindex="0" aria-expanded="' + (open ? 'true' : 'false') + '"' +
+      ' onclick="MGI.togglePointsGo()" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();MGI.togglePointsGo();}">' +
+      '<span class="material-symbols-outlined text-[20px] text-text-secondary" aria-hidden="true">' + (open ? 'expand_less' : 'expand_more') + '</span>' +
+      '<div class="min-w-0 flex-1">' + title + intro + '</div>' +
     '</div>' +
-    body +
-  '</div>';
+    '<div class="role-group-body !p-4">' + body + '</div>' +
+  '</section>';
+}
+
+function togglePointsGo() {
+  S.pointsGoOpen = !S.pointsGoOpen;
+  renderPerformanceReport();
 }
 
 function openPointsKpi(index) {

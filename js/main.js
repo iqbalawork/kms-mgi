@@ -8,6 +8,7 @@ var MGI = {
   blurTip: blurTip,
   tipGuide: tipGuide,
   openPointsKpi: openPointsKpi,
+  togglePointsGo: togglePointsGo,
   go: go,
   toggleSidebar: toggleSidebar,
   skipToContent: skipToContent,

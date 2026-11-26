@@ -59,6 +59,7 @@ var S = {
   submitConfirm: null,
   help:        { open: false, topic: '', note: '', roleKey: '' },
   tip:         null,
+  pointsGoOpen: false,
   helpWired:   false,
   helpScrollWired: false,
   dashJumps:   [],
