@@ -200,17 +200,7 @@ function cmpTierMix(side, months) {
 }
 
 function cmpPointsLost(side, months) {
-  var scoredMonths = months.filter(function (i) { return isNum(side.role.totals ? side.role.totals[i] : null); });
-  if (!scoredMonths.length) return [];
-  return (side.role.kpis || []).map(function (k) {
-    var lost = 0;
-    scoredMonths.forEach(function (i) {
-      var c = k.months ? k.months[i] : null;
-      if (!c || c.auto || !isNum(c.score)) return;
-      lost += Number(k.WeightPercent) * (1 - Number(c.score));
-    });
-    return { k: k, lost: cmpRound(lost / scoredMonths.length) };
-  }).filter(function (x) { return x.lost > 0; }).sort(function (x, y) { return y.lost - x.lost; });
+  return pointsLost(side.role, months);
 }
 
 function cmpLabelMix(side, months) {

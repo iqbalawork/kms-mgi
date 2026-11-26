@@ -300,6 +300,18 @@
   .kpi-status-help { display: none; }
   @media (max-width: 767px) { .kpi-status-help { display: flex; } }
   .pdf-sheet .tip-btn { display: none !important; }
+  .pg-list { display: flex; flex-direction: column; gap: .375rem; }
+  .pg-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(4rem, 12rem) 4.5rem; align-items: center; gap: .75rem; padding: .5rem .75rem; border-radius: .5rem; background: #F8FAFC; }
+  .pg-rest { background: transparent; }
+  .pg-name { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; font-size: 14px; font-weight: 600; color: #0F172A; text-decoration: underline; text-decoration-color: #CBD5E1; text-underline-offset: 3px; }
+  .pg-name:hover { color: #8B1E1E; text-decoration-color: #8B1E1E; }
+  .pg-name:focus-visible { outline: 2px solid #8B1E1E; outline-offset: 2px; border-radius: 2px; }
+  .pg-bar { display: block; height: .5rem; border-radius: 9999px; background: #E2E8F0; overflow: hidden; }
+  .pg-bar > span { display: block; height: 100%; border-radius: 9999px; background: #DC2626; }
+  .pg-lost { text-align: right; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; color: #B91C1C; white-space: nowrap; }
+  .pg-next { display: flex; align-items: flex-start; gap: .5rem; margin-top: .75rem; padding: .625rem .75rem; border-radius: .5rem; background: #EFF6FF; color: #1E3A8A; font-size: 13px; line-height: 1.45; }
+  .pg-next.is-top { background: #ECFDF5; color: #065F46; }
+  @media (max-width: 639px) { .pg-row { grid-template-columns: minmax(0, 1fr) 4.5rem; } .pg-bar { grid-column: 1 / -1; grid-row: 2; } }
   .dept-card-wrap { position: relative; }
   .dept-card { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; width: 100%; height: 100%; padding: .625rem .75rem; border-radius: .75rem; background: #fff; border: 1px solid #E2E8F0; box-shadow: 0 1px 2px rgba(15,23,42,.04); text-align: left; transition: all .15s; }
   .dept-card:not(.is-zero):hover { box-shadow: 0 4px 12px -4px rgba(15,23,42,.12); border-color: #CBD5E1; }

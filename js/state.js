@@ -249,6 +249,8 @@ var GLOSSARY = {
                   body: 'Active weight is the total weight of the active KPIs in this role, and it should be 100%. Partly active means some KPIs in the group are switched off. Used by shows how many employee mappings use this role group.' },
   'score-per-kpi': { title: 'Score per KPI',
                   body: 'Each chip is one KPI of the role, in the order of the role list (K1, K2, and so on). The number is its tier score on a 0 to 100 scale, so tier 0.8 shows as 80. A lock means the KPI is off-cycle that month.' },
+  'points-lost': { title: 'Points lost',
+                  body: 'The KPI score points a KPI costs in an average counted month: its weight × (1 − tier score). Added together they equal 100 minus the Avg KPI Score, so the top of the list is where improvement counts most.' },
   periods:      { title: 'Period states',
                   body: 'Open: employees can submit or change the month until the cut-off shown. Closed: the month was opened, but its cut-off has passed. Locked: the month is not open. Reopened: opened again after its regular cut-off. Early: opened before the month has started.' }
 };

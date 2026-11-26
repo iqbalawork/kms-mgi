@@ -120,7 +120,7 @@ function pdfCoverHtml(ctx) {
 function pdfMatrixHtml(ctx, rows, start, last) {
   var body = rows.map(function (k, n) { return matrixRowHtml(k, start + n); }).join('');
   return matrixCardHtml(ctx.data, ctx.role, body, last, start > 0 ? 'KPI Details (continued)' : 'KPI Details', false) +
-    (last ? matrixLegendHtml() : '');
+    (last ? matrixLegendHtml() + pointsGoHtml(ctx.data, ctx.role, 'pdf') : '');
 }
 
 function pdfDeepDiveHtml(ctx, k, i) {

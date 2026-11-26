@@ -225,7 +225,7 @@ function reportHtml(data, role, surface) {
 
   var panel = S.reportTab === 'analytics' ? deepDivePanelHtml(data, role, surface) : matrixPanelHtml(data, role, modal);
 
-  return header + '<div class="' + (modal ? 'p-space-lg' : '') + '">' + summary + viewTabs +
+  return header + '<div class="' + (modal ? 'p-space-lg' : '') + '">' + summary + pointsGoHtml(data, role, modal ? 'modal' : 'inline') + viewTabs +
     '<div class="mt-space-md">' + panel + '</div>' +
   '</div>';
 }
@@ -956,7 +956,7 @@ function deepDiveCardHtml(data, role, k, i, prefix) {
       deepDiveHeadInfoHtml(k, deepDiveStats(data, k)) +
     '</div>';
   var body = '<div class="role-group-body !gap-space-md">' + deepDiveBodyHtml(data, k, prefix + '-' + i) + '</div>';
-  return '<section class="role-group shadow-level-1 shrink-0 !mt-0' + (open ? '' : ' is-collapsed') + '">' + head + body + '</section>';
+  return '<section class="role-group shadow-level-1 shrink-0 !mt-0 scroll-mt-32' + (open ? '' : ' is-collapsed') + '" data-dd-kpi="' + esc(k.KPI_ID) + '">' + head + body + '</section>';
 }
 
 function deepDivePanelHtml(data, role, surface) {

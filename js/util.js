@@ -759,3 +759,21 @@ function wireTips() {
     pop.addEventListener('mouseleave', function () { if (S.tip && S.tip.mode === 'hover') closeTip(false); });
   }
 }
+
+function pointsLost(role, months) {
+  var scored = months.filter(function (i) { return isNum(role.totals ? role.totals[i] : null); });
+  if (!scored.length) return [];
+  return (role.kpis || []).map(function (k, index) {
+    var lost = 0;
+    var below = 0;
+    var counted = 0;
+    scored.forEach(function (i) {
+      var c = k.months ? k.months[i] : null;
+      if (!c || c.auto || !isNum(c.score)) return;
+      counted++;
+      if (Number(c.score) < 1) below++;
+      lost += Number(k.WeightPercent) * (1 - Number(c.score));
+    });
+    return { k: k, index: index, lost: Math.round(lost / scored.length * 100) / 100, below: below, counted: counted };
+  }).filter(function (x) { return x.lost > 0; }).sort(function (x, y) { return y.lost - x.lost; });
+}
