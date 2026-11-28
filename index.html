@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_drop_down,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,falling,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,notes,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,start,step,sticky_note_2,stop,style,support,support_agent,swap_horiz,swap_vert,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,tooltip,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?v=7aade80b">
-  <link rel="stylesheet" href="./css/tailwind.css?v=5775a603">
+  <link rel="stylesheet" href="./css/app.css?v=cb26014d">
+  <link rel="stylesheet" href="./css/tailwind.css?v=781edb3d">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
 
@@ -441,7 +441,7 @@
           <nav id="guide-nav" class="guide-nav no-print" aria-label="On this page">
             <span class="guide-nav-title">On this page</span>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-tiers')">Tiers</button>
-            <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-calc')">Simulator</button>
+            <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-calc')">Calculator</button>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-rating')">Index Colors</button>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-performance')">Performance Score</button>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-submit')">Submitting</button>
@@ -513,16 +513,39 @@
           </section>
 
           <section id="guide-calc" class="scroll-mt-32 bg-surface-card rounded-xl shadow-level-1 border border-border-light p-space-lg mb-space-lg">
-            <div class="flex flex-wrap items-start justify-between gap-space-md mb-space-md">
-              <div class="min-w-0 max-w-2xl">
-                <h2 class="text-title-lg text-text-primary">Index simulator</h2>
-                <p class="text-body-sm text-text-muted">Type a realization for each KPI to see its tier, its points, and the role index they add up to. It uses the same formula as your KPI page, and nothing here is saved.</p>
+            <div class="flex flex-wrap items-start justify-between gap-space-sm mb-space-md">
+              <div class="min-w-0">
+                <h2 class="text-title-lg text-text-primary">Try the calculator</h2>
+                <p class="text-body-sm text-text-muted">Enter a KPI setup and a realization to see the tier, the points it adds, and where each tier starts. It uses the same formula as your KPI page.</p>
               </div>
-              <div id="gc-tools" class="flex flex-wrap items-center gap-2"></div>
+              <div id="gc-pick"></div>
             </div>
-            <div id="gc-banner"></div>
-            <div id="gc-table" class="mb-space-lg"></div>
-            <div id="gc-result" aria-live="polite"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-space-lg">
+              <div class="lg:col-span-3">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-space-sm">
+                  <label class="flex flex-col"><span class="form-label">Target direction</span>
+                    <select id="gc-label" class="field" onchange="MGI.renderGuideCalc()"><option value="Increase">Higher is better</option><option value="Decrease" selected>Lower is better</option><option value="Binary">Must match target</option></select>
+                  </label>
+                  <label class="flex flex-col"><span class="form-label">Target</span>
+                    <input id="gc-target" type="number" step="any" class="field" value="30" oninput="MGI.renderGuideCalc()">
+                  </label>
+                  <label id="gc-multiplier-wrap" class="flex flex-col transition-opacity duration-150"><span class="form-label">Tier step</span>
+                    <input id="gc-multiplier" type="number" step="any" min="0" class="field" value="5" oninput="MGI.renderGuideCalc()">
+                  </label>
+                  <label class="flex flex-col"><span class="form-label">Weight (%)</span>
+                    <input id="gc-weight" type="number" step="any" min="0" max="100" class="field" value="20" oninput="MGI.renderGuideCalc()">
+                  </label>
+                  <label class="flex flex-col"><span class="form-label">Realization</span>
+                    <input id="gc-real" type="number" step="any" class="field" value="35" oninput="MGI.renderGuideCalc()">
+                  </label>
+                  <label class="flex items-center gap-2 self-end pb-2.5 cursor-pointer">
+                    <input id="gc-b" type="checkbox" class="w-4 h-4 rounded border-border-medium text-primary-container" onchange="MGI.renderGuideCalc()">
+                    <span class="text-body-sm text-text-secondary">Strict target</span>
+                  </label>
+                </div>
+              </div>
+              <div id="gc-result" class="lg:col-span-2" aria-live="polite"></div>
+            </div>
           </section>
 
           <section id="guide-rating" class="scroll-mt-32 bg-surface-card rounded-xl shadow-level-1 border border-border-light p-space-lg mb-space-lg">
@@ -1305,7 +1328,7 @@
 <script src="./js/auth.js?v=946f9a75"></script>
 <script src="./js/access-year.js?v=5cb5b1e2"></script>
 <script src="./js/account-help.js?v=82aaa20c"></script>
-<script src="./js/shell.js?v=9647d176"></script>
+<script src="./js/shell.js?v=a372f057"></script>
 <script src="./js/dashboard.js?v=0fe0c3b7"></script>
 <script src="./js/my-kpis.js?v=bfaff196"></script>
 <script src="./js/my-kpis-submit.js?v=77707fa3"></script>
@@ -1337,6 +1360,6 @@
 <script src="./js/departments.js?v=b1d567ac"></script>
 <script src="./js/guide-admin.js?v=f58e809b"></script>
 <script src="./js/guide-reviewer.js?v=773a1de1"></script>
-<script src="./js/main.js?v=2621f0b3"></script>
+<script src="./js/main.js?v=b01a91f7"></script>
 </body>
 </html>
