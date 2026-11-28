@@ -104,7 +104,7 @@ function reviewerGuideHtml() {
     rgSection('rg-reports', 'Dashboard and Summary Report', rgTable(['View', 'What it answers', 'Notes'], RG_THREE_TEXT, [
       ['Dashboard', 'How the company is doing this year.', 'Year to date average, completion rate, latest month, monthly trend, and average by division. Filter by Origin, Division, and Department.'],
       ['Monthly', 'Who submitted one period, and with what result.', 'Role index per employee for the chosen month, with missing KPIs and evidence. Admin can send reminders and allow one more change here.'],
-      ['Annual', 'How each employee did over the year.', 'Average KPI score over the months each person submitted, with its rating band. Trial months are left out.'],
+      ['Annual', 'How each employee did over the year.', 'Avg KPI Score over the months each person submitted, with its rating band. Trial months are left out.'],
       ['Compare', 'How two people differ.', 'See the sections below.'],
       ['PDF reports', 'A copy to share.', 'Company monthly report and the Performance Evaluation report. They carry a Draft mark until the year is released.'],
       ['Report Access', 'What you can see.', 'A Report Viewer with one division sees only that division, with a banner on each report.']

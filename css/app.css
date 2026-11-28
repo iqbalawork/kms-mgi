@@ -297,6 +297,7 @@
   .tip-pop-title { margin-bottom: .25rem; font-size: 12px; font-weight: 700; color: #fff; }
   .tip-pop-more { margin-top: .5rem; padding: 0; font-size: 12px; font-weight: 600; color: #FCA5A5; text-decoration: underline; text-underline-offset: 2px; }
   .tip-pop-more:focus-visible { outline: 2px solid #FCA5A5; outline-offset: 2px; border-radius: 2px; }
+  .kpi-input-table tfoot td { padding: .625rem .75rem; border-top: 1px solid #E2E8F0; background: #F8FAFC; }
   .kpi-status-help { display: none; }
   @media (max-width: 767px) { .kpi-status-help { display: flex; } }
   .pdf-sheet .tip-btn { display: none !important; }
@@ -982,6 +983,10 @@
     .kpi-input-table .kpi-name, .kpi-input-table .kpi-input, .kpi-input-table .kpi-status { grid-column: 1 / -1; }
     .kpi-input-table .kpi-input p[data-hint-for] { position: static; margin-top: .25rem; text-align: left; }
     .kpi-input-table .kpi-status > span { justify-content: flex-start; }
+    .kpi-input-table tfoot { display: block; width: 100%; }
+    .kpi-input-table tfoot tr { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .75rem 1rem; }
+    .kpi-input-table tfoot td { display: block; padding: 0 !important; text-align: left !important; }
+    .kpi-input-table tfoot td:last-child, .kpi-input-table tfoot .kpi-unit { display: none !important; }
   }
 
   .settings-picker { display: none; }

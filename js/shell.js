@@ -63,7 +63,7 @@ function renderGuideCalc() {
     host.innerHTML =
       '<div class="rounded-xl border border-dashed border-border-medium bg-surface-page p-space-lg h-full flex flex-col items-center justify-center text-center gap-2">' +
         '<span class="material-symbols-outlined text-[32px] text-text-muted">calculate</span>' +
-        '<p class="text-body-sm text-text-secondary">Fill in Target, Multiplier, and Realization to see the result.</p>' +
+        '<p class="text-body-sm text-text-secondary">Fill in Target, Tier step, and Realization to see the result.</p>' +
       '</div>';
     return;
   }
@@ -76,7 +76,7 @@ function renderGuideCalc() {
         '<span class="inline-flex items-center justify-center w-20 h-20 rounded-2xl text-3xl font-bold tabular-nums ' + tierClass(score) + '">' + score.toFixed(1) + '</span>' +
         '<p class="text-body-sm text-text-secondary">Realization <strong class="text-text-primary">' + esc(num(real, 2)) + '</strong> against target ' +
           '<strong class="text-text-primary">' + esc(targetLabel({ Label: label, Target: target })) + '</strong>' +
-          (binary ? '' : ' with multiplier <strong class="text-text-primary">' + esc(num(mult, 2)) + '</strong>') + '.</p>' +
+          (binary ? '' : ' with tier step <strong class="text-text-primary">' + esc(num(mult, 2)) + '</strong>') + '.</p>' +
       '</div>' +
       (isNum(weight)
         ? '<p class="text-body-md text-text-primary">With weight <strong>' + esc(num(weight, 2)) + '%</strong>, this KPI adds <strong>' +

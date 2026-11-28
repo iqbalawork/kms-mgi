@@ -411,7 +411,7 @@ function matrixFootHtml(role) {
 
 function matrixLegendHtml() {
   return '<div class="flex flex-wrap items-center gap-space-md mt-space-md text-label-xs text-text-secondary">' +
-    '<span class="font-semibold">Cell = Weight × Tier Score</span>' +
+    '<span class="font-semibold">Cell = points (Weight × Tier score)</span>' +
     [['mx-t10', '1.0'], ['mx-t08', '0.8'], ['mx-t06', '0.6'], ['mx-t04', '0.4'], ['mx-t02', '0.2']].map(function (x) {
       return '<span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded ' + x[0] + '"></span>Tier ' + x[1] + '</span>';
     }).join('') +
@@ -691,7 +691,7 @@ function deepDiveLegendHtml(k) {
     '<span class="inline-flex items-center gap-1"><span class="w-3 border-t-2 border-dashed" style="border-color:' + DASH_COLORS.warning + '"></span>Target</span>' +
     '<span class="inline-flex items-center gap-1"><span class="relative w-4 h-2.5 flex items-center"><span class="w-4 h-0.5 rounded-full" style="background:' + DD_INDEX_COLOR + '"></span>' +
       '<span class="absolute left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border-2" style="border-color:' + DD_INDEX_COLOR + '"></span></span>' +
-      'Index Score, lower lane (max ' + pct(k.WeightPercent) + ')</span>' +
+      'Points, lower lane (max ' + num(k.WeightPercent, 2) + ')</span>' +
   '</span>';
 }
 
@@ -701,7 +701,7 @@ function deepDiveLadderHtml(k) {
   return '<div class="rounded-lg border border-border-light bg-surface-card px-space-md py-space-sm">' +
     '<div class="flex flex-wrap items-center justify-between gap-2 mb-2">' +
       '<h4 class="text-title-md text-text-primary">How this KPI is scored</h4>' +
-      '<span class="text-label-xs text-text-muted">Each month the realization lands in one tier. Index Score = Weight x Tier.</span>' +
+      '<span class="text-label-xs text-text-muted">Each month the realization lands in one tier. Points = Weight (%) x Tier score.</span>' +
     '</div>' +
     '<div class="grid gap-1.5 ' + (steps.length > 2 ? 'grid-cols-2 sm:grid-cols-5' : 'grid-cols-2') + '">' +
       steps.map(function (st) {
@@ -773,7 +773,7 @@ function deepDiveChartConfig(data, k) {
         },
         {
           type: 'line',
-          label: 'Index Score',
+          label: 'Points',
           data: idx.map(function (i) { var c = cell(i); return c && isNum(c.weighted) ? c.weighted : null; }),
           yAxisID: 'y1',
           borderColor: DD_INDEX_COLOR,
@@ -806,7 +806,7 @@ function deepDiveChartConfig(data, k) {
           grid: { color: DASH_COLORS.grid },
           title: { display: true, text: 'Index %', color: DD_INDEX_COLOR },
           afterBuildTicks: function (axis) { axis.ticks = [{ value: 0 }, { value: weight }]; },
-          ticks: { color: DD_INDEX_COLOR, callback: function (v) { return num(v, 2) + '%'; } }
+          ticks: { color: DD_INDEX_COLOR, callback: function (v) { return num(v, 2); } }
         },
         y: {
           stack: 'dd',
@@ -828,7 +828,7 @@ function deepDiveChartConfig(data, k) {
               var c = cell(idx[ctx.dataIndex]);
               if (ctx.datasetIndex === 1) return ' Target: ' + fmtKpiValue(ctx.parsed.y, k.Unit || '');
               if (ctx.datasetIndex === 2) {
-                return ' Index Score: ' + num(ctx.parsed.y, 2) + '%' + (c && isNum(c.score) ? ' (Tier ' + Number(c.score).toFixed(1) + ')' : '');
+                return ' Points: ' + num(ctx.parsed.y, 2) + (c && isNum(c.score) ? ' (Tier ' + Number(c.score).toFixed(1) + ')' : '');
               }
               var f = flagOf(idx[ctx.dataIndex]);
               return ' Realization: ' + num(ctx.parsed.y, 2) + unitText +
@@ -905,7 +905,7 @@ function deepDiveTableHtml(data, k) {
           '<th class="!px-2 !py-2 text-right !tracking-normal">Realization</th>' +
           '<th class="!px-2 !py-2 text-right !tracking-normal">Gap to Target</th>' +
           '<th class="w-[64px] !px-2 !py-2 text-center !tracking-normal"><span class="inline-flex items-center gap-0.5">Tier' + tipBtn('tier', 'the tier score') + '</span></th>' +
-          '<th class="!px-2 !py-2 text-right !tracking-normal"><span class="inline-flex items-center justify-end gap-0.5">Index Score' + tipBtn('index-score', 'the index score') + '</span></th>' +
+          '<th class="!px-2 !py-2 text-right !tracking-normal"><span class="inline-flex items-center justify-end gap-0.5">Points' + tipBtn('index-score', 'points') + '</span></th>' +
         '</tr></thead>' +
         '<tbody>' + rows + '</tbody>' +
       '</table>' +

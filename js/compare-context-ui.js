@@ -253,6 +253,6 @@ function cmpHistoryChartConfig(A, B, ctx) {
     config.data.datasets.push({ label: z.label + ' from ' + bandNum(z.from), data: years.map(function () { return z.from; }),
       borderColor: 'rgba(100, 116, 139, .55)', borderWidth: 1, borderDash: [2, 4], pointRadius: 0, order: 3 });
   });
-  config.options.scales = { y: { min: 0, max: 100, title: { display: true, text: 'Average KPI score' } } };
+  config.options.scales = { y: { min: 0, max: 100, title: { display: true, text: 'Avg KPI Score' } } };
   return config;
 }

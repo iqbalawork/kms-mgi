@@ -24,7 +24,7 @@ function rowMyKpi(item, i) {
           (item.Metrics ? '<span class="text-body-sm text-text-muted mt-1">' + esc(item.Metrics) + '</span>' : '') +
         '</div>' +
       '</td>' +
-      '<td class="kpi-weight text-center" data-label="Weight"><span class="text-code-num font-bold text-text-primary">' + pct(item.WeightPercent) + '</span></td>' +
+      '<td class="kpi-weight text-center" data-label="Points">' + pointsCell(item) + '</td>' +
       '<td class="kpi-unit text-center" data-label="Unit">' +
         '<span class="inline-block max-w-full truncate align-middle text-label-xs px-2.5 py-1 rounded bg-surface-page text-text-secondary border border-border-light" title="' + esc(item.Unit || '-') + '">' +
           esc(item.Unit || '-') + '</span>' +
@@ -49,8 +49,22 @@ function rowMyKpi(item, i) {
         '<p class="absolute left-3 right-3 bottom-0.5 text-right text-[11px] font-semibold text-text-muted truncate pointer-events-none" data-hint-for="' + esc(item.Mapping_ID) + '">' +
           esc(scaleHint(item.Realization)) + '</p>' +
       '</td>' +
-      '<td class="kpi-status text-right" data-label="Status"><span class="flex justify-end min-w-0" data-status-for="' + esc(item.Mapping_ID) + '">' + statusPill(item) + '</span></td>' +
+      '<td class="kpi-status text-right" data-label="Achievement / Tier"><span class="flex justify-end min-w-0" data-status-for="' + esc(item.Mapping_ID) + '">' + statusPill(item) + '</span></td>' +
     '</tr>';
+}
+
+function kpiPoints(item) {
+  return isNum(item.Score) && isNum(item.WeightPercent) ? Math.round(item.WeightPercent * item.Score * 100) / 100 : null;
+}
+
+function pointsCell(item) {
+  var p = kpiPoints(item);
+  return '<span class="flex flex-col items-center leading-tight" title="' +
+      esc(p === null ? 'Points appear after you submit. Weight ' + pct(item.WeightPercent) + ' is the most this KPI can add.'
+                     : 'Weight ' + pct(item.WeightPercent) + ' x tier ' + Number(item.Score).toFixed(1) + ' = ' + num(p, 2) + ' points') + '">' +
+      '<span class="text-code-num font-bold ' + (p === null ? 'text-text-muted' : 'text-text-primary') + '">' + (p === null ? '-' : num(p, 2)) + '</span>' +
+      '<span class="text-[11px] text-text-muted whitespace-nowrap">of ' + esc(num(item.WeightPercent, 2)) + '</span>' +
+    '</span>';
 }
 
 function scaleHint(v) {
@@ -97,18 +111,12 @@ function statusPill(item, liveRealization) {
     return '<span class="pill pill-success"><span class="material-symbols-outlined text-[14px]">check_circle</span> Submitted</span>';
   }
   var ach = isNum(item.Achievement) ? item.Achievement : null;
-  var tone = score >= 0.8 ? 'success' : score >= 0.6 ? 'info' : score >= 0.4 ? 'warning' : 'danger';
-  var icon = score >= 0.8 ? 'trending_up' : score >= 0.4 ? 'trending_flat' : 'trending_down';
-  var word = score >= 0.8 ? 'Achieved' : score >= 0.6 ? 'Close' : score >= 0.4 ? 'Below' : 'Critical';
   var achText = ach === null ? '-' : ach > 999 ? '>999%' : ach < -999 ? '<-999%' : pct(ach, 0);
   var title = 'Submitted realization ' + num(saved, 2) + (item.Unit ? ' ' + item.Unit : '') +
               ', achievement ' + (ach === null ? '-' : num(ach, 1) + '%') + ', tier score ' + score.toFixed(1);
 
   return '<span class="inline-flex items-center justify-end gap-1.5 max-w-full min-w-0" title="' + esc(title) + '">' +
-           '<span class="pill pill-' + tone + ' min-w-0">' +
-             '<span class="material-symbols-outlined text-[14px]">' + icon + '</span>' +
-             '<span class="truncate">' + word + ' • ' + esc(achText) + '</span>' +
-           '</span>' +
+           '<span class="pill pill-neutral min-w-0 tabular-nums"><span class="truncate">' + esc(achText) + '</span></span>' +
            tierChip(score) +
          '</span>';
 }
@@ -206,9 +214,9 @@ function renderTableFooter(roleKey) {
     '<p class="text-body-sm text-text-muted flex items-center gap-1.5">' +
       (dirty
         ? '<span class="material-symbols-outlined text-[16px] text-status-info">edit_note</span> Your changes count after you submit. The index shows your last submission.'
-        : '<span class="material-symbols-outlined text-[16px]">info</span> Role index = Σ (Weight × Tier Score) × 100, calculated when you submit.') +
+        : '<span class="material-symbols-outlined text-[16px]">info</span> Role index = the total points of every KPI (Weight × Tier score), calculated when you submit.') +
     '</p>' +
-    '<p class="kpi-status-help text-body-sm text-text-muted flex items-center gap-1.5">What Achieved, Close, Below, and Critical mean' + tipBtn('status', 'status and achievement') + '</p>';
+    '<p class="kpi-status-help text-body-sm text-text-muted flex items-center gap-1.5">What achievement and tier mean' + tipBtn('status', 'achievement and tier') + '</p>';
 }
 
 function receiptHtml(r) {
@@ -233,9 +241,8 @@ function receiptHtml(r) {
       '<p class="submit-receipt-note">' + esc(note) + '</p>' +
     '</div>' +
     '<div class="submit-receipt-score">' +
-      '<span class="submit-receipt-label">Submitted Index</span>' +
-      '<span class="submit-receipt-value ' + tone + '">' + num(r.index) + '</span>' +
-      '<span class="pill pill-' + b.key + '">' + b.label + '</span>' +
+      '<span class="submit-receipt-label">Role index</span>' +
+      '<span class="submit-receipt-value ' + tone + '" title="' + b.label + '">' + num(r.index) + '</span>' +
     '</div>' +
   '</div>';
 }

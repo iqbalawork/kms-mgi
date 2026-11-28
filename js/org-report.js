@@ -18,7 +18,7 @@ var RPT_SECTIONS = {
     { key: 'topdiv',    label: 'Top 5 Department',               hint: 'The departments with the highest average Avg KPI' },
     { key: 'discipline', label: 'Top 5 Discipline',              hint: 'The highest Discipline Scores, with no SP ranked first on a tie' },
     { key: 'watch',     label: 'Development Watchlist',          hint: 'Everyone with Grade D or E' },
-    { key: 'trend',     label: 'KPI Trend Through the Year',     hint: 'Average KPI score and submission rate by month, with a heatmap' },
+    { key: 'trend',     label: 'KPI Trend Through the Year',     hint: 'Average role index and submission rate by month, with a heatmap' },
     { key: 'missing',   label: 'Missing Inputs',                 hint: 'Scorecards still waiting for inputs, shown only when there are any' },
     { key: 'results',   label: 'Appendix A: Individual Results', hint: 'Every scorecard with its components, score, and grade' },
     { key: 'months',    label: 'Appendix B: Monthly KPI Scores', hint: 'Every scorecard month by month' }

@@ -61,7 +61,7 @@ function renderSummaryTable() {
                   (it.AutoScore ? ', off-cycle, scored automatically' : isNum(it.Realization) ? ', realization ' + it.Realization : ', not filled');
       var val = !isNum(it.ScoreDisplay)
         ? (it.InCycle ? '-' : '<span class="material-symbols-outlined text-[12px] align-middle">lock</span>')
-        : '<strong class="text-text-primary">' + num(it.ScoreDisplay, 0) + '</strong>';
+        : '<strong class="text-text-primary">' + (it.ScoreDisplay / 100).toFixed(1) + '</strong>';
       return '<span class="px-2 py-0.5 rounded bg-surface-page border border-border-light text-label-xs text-text-secondary" title="' +
              esc(title) + '">K' + (ix + 1) + ': ' + val + '</span>';
     }).join('');

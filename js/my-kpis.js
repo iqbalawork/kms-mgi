@@ -458,6 +458,18 @@ function renderMyKpis() {
   renderRoleTabs();
 }
 
+function totalRowHtml(r) {
+  var b = band(r.index);
+  return '<tfoot class="kpi-total"><tr>' +
+      '<td colspan="2" class="text-right text-body-sm font-semibold text-text-primary">Role index <span class="font-normal text-text-muted">(total points)</span></td>' +
+      '<td class="text-center" data-total-for="' + esc(r.key) + '"><span class="flex flex-col items-center leading-tight" title="' + esc(b.label) + '">' +
+        '<span class="text-code-num font-bold text-status-' + b.key + '-text">' + num(r.index) + '</span>' +
+        '<span class="text-[11px] text-text-muted">of 100</span></span></td>' +
+      '<td class="kpi-unit"></td>' +
+      '<td colspan="4" class="text-body-sm text-text-muted">From your last submission. Each KPI adds Weight (%) x Tier score.</td>' +
+    '</tr></tfoot>';
+}
+
 function roleSection(r) {
   var d = S.dashboard;
   var key = esc(r.key);
@@ -500,7 +512,7 @@ function roleSection(r) {
           : progress.required ? progress.filled + ' of ' + progress.required + ' filled' : 'No KPI due this month') + '</span>' +
         (!readOnly && stage ? '<span class="pill ' + stage[0] + ' !text-[11px]"><span class="material-symbols-outlined text-[14px]">' + stage[1] + '</span>' + stage[2] + '</span>' : '') +
         changeChip +
-        (scored ? '<span class="inline-flex items-center gap-1"><span class="pill pill-' + band(r.index).key + '">Index ' + num(r.index) + '</span>' + tipBtn('index', 'the role index') + '</span>' : '') +
+        (scored ? '<span class="inline-flex items-center gap-1"><span class="pill pill-' + band(r.index).key + '">Role index ' + num(r.index) + '</span>' + tipBtn('index', 'the role index') + '</span>' : '') +
       '</span>' +
     '</div>';
 
@@ -527,15 +539,16 @@ function roleSection(r) {
         '<thead><tr>' +
           '<th class="w-12 text-center">No</th>' +
           '<th>KPI Code &amp; Name</th>' +
-          '<th class="w-[72px] text-center">Weight</th>' +
+          '<th class="w-[72px] text-center"><span class="inline-flex items-center gap-1">Points' + tipBtn('index-score', 'points') + '</span></th>' +
           '<th class="kpi-unit w-[100px] text-center">Unit</th>' +
-          '<th class="w-28 text-center">Duration</th>' +
+          '<th class="w-24 text-center">Duration</th>' +
           '<th class="w-[116px] 2xl:w-[176px] text-center"><span class="inline-flex items-center gap-1">Target' + tipBtn('target', 'the target direction') + '</span></th>' +
           '<th class="w-[212px] 2xl:w-[288px]"><span class="inline-flex items-center gap-1 text-primary-container">' +
             '<span class="material-symbols-outlined text-[16px]">edit</span> Realization (Input)</span></th>' +
-          '<th class="w-[208px] text-right"><span class="inline-flex items-center gap-1">Status / Achievement' + tipBtn('status', 'status and achievement') + '</span></th>' +
+          '<th class="w-[208px] text-right"><span class="inline-flex items-center gap-1">Achievement / Tier' + tipBtn('status', 'achievement and tier') + '</span></th>' +
         '</tr></thead>' +
         '<tbody>' + r.items.map(rowMyKpi).join('') + '</tbody>' +
+        (scored ? totalRowHtml(r) : '') +
       '</table>' +
     '</div>' +
     '<div class="p-space-md bg-surface-page border-t border-border-light flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm" data-role-footer="' + key + '"></div>';

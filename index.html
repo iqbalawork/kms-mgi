@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400..500,0..1,0&icon_names=account_circle,account_tree,add,admin_panel_settings,alarm,analytics,apartment,arrow_back,arrow_downward,arrow_forward,arrow_upward,assignment_ind,assignment_late,assignment_turned_in,badge,balance,bar_chart,block,box,calculate,calendar_month,calendar_view_month,cancel,category,check,check_circle,chevron_right,clear,close,cloud_done,cloud_off,cloud_upload,compare,compare_arrows,computer,content_copy,csv,dashboard,date_range,delete,description,done,download,draft,edit,edit_calendar,edit_note,edit_square,email,emoji_events,error,event,event_available,event_busy,event_repeat,event_upcoming,expand,expand_less,expand_more,fact_check,falling,favorite,filter_alt,filter_alt_off,flag,folder_open,gavel,grade,group,group_add,groups,help,history,hourglass_bottom,hourglass_empty,hourglass_top,inbox,info,input,insights,inventory_2,join_inner,key,keyboard_capslock,label,landscape,leaderboard,library_books,lightbulb,link,lock,lock_clock,lock_open,lock_reset,login,logout,mail,mark_email_unread,menu,menu_book,menu_open,military_tech,monitor_heart,monitoring,move,notes,notification_important,notifications_active,notifications_paused,overview,password,pending,pending_actions,people,person,person_add,person_alert,person_off,person_remove,person_search,picture_as_pdf,playlist_add,query_stats,radio,radio_button_unchecked,refresh,remove,report,resize,restart_alt,rule,save,schedule,schedule_send,science,score,script,search,search_off,send,settings,south,start,sticky_note_2,stop,style,support,support_agent,swap_horiz,swap_vert,switch,tab,table,table_chart,table_view,target,task_alt,thumb_up,toggle_off,toggle_on,tooltip,trending_down,trending_flat,trending_up,tune,undo,unfold_more,unsubscribe,upcoming,upload_file,verified,verified_user,visibility,visibility_off,warning,watch,weight,work,workspace_premium&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?v=5a8f1bc3">
+  <link rel="stylesheet" href="./css/app.css?v=cb26014d">
   <link rel="stylesheet" href="./css/tailwind.css?v=55c2f1b9">
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
 </head>
@@ -73,7 +73,7 @@
       <p class="mt-4 text-base text-white/90 leading-relaxed">Submit monthly results, keep your evidence in one place, and see exactly how every score is built.</p>
       <div class="login-cards" aria-hidden="true">
         <div class="login-card login-card-glass login-card-index">
-          <p class="login-card-label">Submitted Index<span class="material-symbols-outlined">trending_up</span></p>
+          <p class="login-card-label">Role index<span class="material-symbols-outlined">trending_up</span></p>
           <p class="login-card-figure"><span class="login-card-value">92.4</span><span class="login-card-band"><span class="material-symbols-outlined">workspace_premium</span>Excellent</span></p>
           <p class="login-card-note">October 2026</p>
         </div>
@@ -364,7 +364,7 @@
               <div class="px-5 py-4 border-b border-border-light flex flex-wrap items-center justify-between gap-space-sm">
                 <div>
                   <h2 id="dash-heatmap-title" class="text-title-lg text-text-primary">Monthly Heatmap by Division</h2>
-                  <p class="text-body-sm text-text-muted">Average KPI score per month, colored by rating band. Submitted is the share of due monthly scorecards filled.</p>
+                  <p class="text-body-sm text-text-muted">Average role index per month, colored by rating band. Submitted is the share of due monthly scorecards filled.</p>
                 </div>
                 <div class="flex flex-col items-start lg:items-end gap-space-sm">
                   <div id="dash-heatmap-group" class="seg" role="tablist" aria-label="Heatmap grouping"></div>
@@ -442,8 +442,8 @@
             <span class="guide-nav-title">On this page</span>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-tiers')">Tiers</button>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-calc')">Calculator</button>
-            <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-rating')">Rating Bands</button>
-            <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-performance')">Final Score</button>
+            <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-rating')">Index Colors</button>
+            <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-performance')">Performance Score</button>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-submit')">Submitting</button>
             <button type="button" class="guide-nav-link" onclick="MGI.guideJump('guide-faq')">FAQ</button>
           </nav>
@@ -475,40 +475,40 @@
               <span class="w-8 h-8 rounded-full bg-brand-50 text-primary-container flex items-center justify-center text-[14px] font-bold tabular-nums" aria-hidden="true">3</span>
               <h2 class="self-center text-title-md text-text-primary"><span class="sr-only">Step 3. </span>Weights build the role index</h2>
               <div class="col-start-2">
-                <p class="text-body-sm text-text-secondary mt-1">Role index = Σ (Weight × Tier Score) × 100, so heavier KPIs move the index more.</p>
-                <div class="mt-3"><span class="pill pill-neutral !text-[11px]">Example: 20% × 0.8 = 16 points</span></div>
+                <p class="text-body-sm text-text-secondary mt-1">Each KPI adds Weight (%) × Tier score in points. Your role index is the total, up to 100, so heavier KPIs move it more.</p>
+                <div class="mt-3"><span class="pill pill-neutral !text-[11px]">Example: 20 × 0.8 = 16 points</span></div>
               </div>
             </div>
           </div>
 
           <section id="guide-tiers" class="scroll-mt-32 bg-surface-card rounded-xl shadow-level-1 border border-border-light p-space-lg mb-space-lg">
             <h2 class="text-title-lg text-text-primary">Tier scoring by label</h2>
-            <p class="text-body-sm text-text-muted">T is the target and M is the multiplier, the tolerance step set for each KPI in the Master KPI Library.</p>
+            <p class="text-body-sm text-text-muted">T is the target and S is the tier step, how far the result can move before the tier score changes. Admin / HR sets both for each KPI (in the Master KPI Library the tier step is called Multiplier).</p>
             <div class="mt-space-md rounded-xl border border-border-light overflow-hidden">
               <div class="table-scroll">
                 <table class="w-full text-body-sm min-w-[640px]">
                   <thead class="bg-surface-page border-b border-border-light">
                     <tr class="text-left">
                       <th class="px-space-md py-space-sm text-label-xs font-semibold text-text-muted w-28">Tier score</th>
-                      <th class="px-space-md py-space-sm"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-status-success">trending_up</span><span class="text-title-md text-text-primary">Increase</span><span class="text-label-xs font-normal text-text-muted">Higher is better</span></span></th>
-                      <th class="px-space-md py-space-sm"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-status-info">trending_down</span><span class="text-title-md text-text-primary">Decrease</span><span class="text-label-xs font-normal text-text-muted">Lower is better</span></span></th>
-                      <th class="px-space-md py-space-sm"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-primary-container">toggle_on</span><span class="text-title-md text-text-primary">Binary</span><span class="text-label-xs font-normal text-text-muted">Met or not</span></span></th>
+                      <th class="px-space-md py-space-sm"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-status-success">trending_up</span><span class="text-title-md text-text-primary">Higher is better</span><span class="text-label-xs font-normal text-text-muted">Increase</span></span></th>
+                      <th class="px-space-md py-space-sm"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-status-info">trending_down</span><span class="text-title-md text-text-primary">Lower is better</span><span class="text-label-xs font-normal text-text-muted">Decrease</span></span></th>
+                      <th class="px-space-md py-space-sm"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-primary-container">toggle_on</span><span class="text-title-md text-text-primary">Must match target</span><span class="text-label-xs font-normal text-text-muted">Binary</span></span></th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-100">
                     <tr><td class="px-space-md py-2"><span class="px-2 py-0.5 rounded-md text-[11px] font-bold mx-t10">1.0</span></td><td class="px-space-md py-2 text-text-secondary">Realization ≥ T</td><td class="px-space-md py-2 text-text-secondary">Realization ≤ T</td><td class="px-space-md py-2 text-text-secondary">Realization equals T</td></tr>
-                    <tr><td class="px-space-md py-2"><span class="px-2 py-0.5 rounded-md text-[11px] font-bold mx-t08">0.8</span></td><td class="px-space-md py-2 text-text-secondary">Realization ≥ T - M</td><td class="px-space-md py-2 text-text-secondary">Realization ≤ T + M</td><td class="px-space-md py-2 text-text-muted">-</td></tr>
-                    <tr><td class="px-space-md py-2"><span class="px-2 py-0.5 rounded-md text-[11px] font-bold mx-t06">0.6</span></td><td class="px-space-md py-2 text-text-secondary">Realization ≥ T - 2M</td><td class="px-space-md py-2 text-text-secondary">Realization ≤ T + 2M</td><td class="px-space-md py-2 text-text-muted">-</td></tr>
-                    <tr><td class="px-space-md py-2"><span class="px-2 py-0.5 rounded-md text-[11px] font-bold mx-t04">0.4</span></td><td class="px-space-md py-2 text-text-secondary">Realization ≥ T - 3M</td><td class="px-space-md py-2 text-text-secondary">Realization ≤ T + 3M</td><td class="px-space-md py-2 text-text-muted">-</td></tr>
+                    <tr><td class="px-space-md py-2"><span class="px-2 py-0.5 rounded-md text-[11px] font-bold mx-t08">0.8</span></td><td class="px-space-md py-2 text-text-secondary">Realization ≥ T - S</td><td class="px-space-md py-2 text-text-secondary">Realization ≤ T + S</td><td class="px-space-md py-2 text-text-muted">-</td></tr>
+                    <tr><td class="px-space-md py-2"><span class="px-2 py-0.5 rounded-md text-[11px] font-bold mx-t06">0.6</span></td><td class="px-space-md py-2 text-text-secondary">Realization ≥ T - 2S</td><td class="px-space-md py-2 text-text-secondary">Realization ≤ T + 2S</td><td class="px-space-md py-2 text-text-muted">-</td></tr>
+                    <tr><td class="px-space-md py-2"><span class="px-2 py-0.5 rounded-md text-[11px] font-bold mx-t04">0.4</span></td><td class="px-space-md py-2 text-text-secondary">Realization ≥ T - 3S</td><td class="px-space-md py-2 text-text-secondary">Realization ≤ T + 3S</td><td class="px-space-md py-2 text-text-muted">-</td></tr>
                     <tr><td class="px-space-md py-2"><span class="px-2 py-0.5 rounded-md text-[11px] font-bold mx-t02">0.2</span></td><td class="px-space-md py-2 text-text-secondary">Anything lower</td><td class="px-space-md py-2 text-text-secondary">Anything higher</td><td class="px-space-md py-2 text-text-secondary">Anything else</td></tr>
                   </tbody>
                 </table>
               </div>
-              <p class="px-space-md py-space-sm text-label-xs text-text-muted border-t border-slate-100">Binary KPIs earn the full score only on an exact match, and the multiplier is not used.</p>
+              <p class="px-space-md py-space-sm text-label-xs text-text-muted border-t border-slate-100">Must match target KPIs earn the full score only on an exact match, and the tier step is not used.</p>
             </div>
             <div class="mt-space-md flex items-start gap-space-sm rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-body-sm text-amber-900">
               <span class="material-symbols-outlined text-[20px] shrink-0">workspace_premium</span>
-              <span><strong>Target is B.</strong> When a KPI is marked Target is B, only beating the target earns 1.0. Hitting it exactly earns 0.8, and each further step of M drops one more tier.</span>
+              <span><strong>Strict target.</strong> When a KPI has a strict target (Target is B in the Master KPI Library), only beating the target earns 1.0. Hitting it exactly earns 0.8, and each further step of S drops one more tier.</span>
             </div>
           </section>
 
@@ -518,13 +518,13 @@
                 <h2 class="text-title-lg text-text-primary">Try the calculator</h2>
                 <p class="text-body-sm text-text-muted mb-space-md">Enter a KPI setup and a realization to see the tier score and the points it adds. It uses the same formula as your KPI page.</p>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-space-sm">
-                  <label class="flex flex-col"><span class="form-label">Label</span>
-                    <select id="gc-label" class="field" onchange="MGI.renderGuideCalc()"><option>Increase</option><option selected>Decrease</option><option>Binary</option></select>
+                  <label class="flex flex-col"><span class="form-label">Target direction</span>
+                    <select id="gc-label" class="field" onchange="MGI.renderGuideCalc()"><option value="Increase">Higher is better</option><option value="Decrease" selected>Lower is better</option><option value="Binary">Must match target</option></select>
                   </label>
                   <label class="flex flex-col"><span class="form-label">Target</span>
                     <input id="gc-target" type="number" step="any" class="field" value="30" oninput="MGI.renderGuideCalc()">
                   </label>
-                  <label id="gc-multiplier-wrap" class="flex flex-col transition-opacity duration-150"><span class="form-label">Multiplier</span>
+                  <label id="gc-multiplier-wrap" class="flex flex-col transition-opacity duration-150"><span class="form-label">Tier step</span>
                     <input id="gc-multiplier" type="number" step="any" min="0" class="field" value="5" oninput="MGI.renderGuideCalc()">
                   </label>
                   <label class="flex flex-col"><span class="form-label">Weight (%)</span>
@@ -535,7 +535,7 @@
                   </label>
                   <label class="flex items-center gap-2 self-end pb-2.5 cursor-pointer">
                     <input id="gc-b" type="checkbox" class="w-4 h-4 rounded border-border-medium text-primary-container" onchange="MGI.renderGuideCalc()">
-                    <span class="text-body-sm text-text-secondary">Target is B</span>
+                    <span class="text-body-sm text-text-secondary">Strict target</span>
                   </label>
                 </div>
               </div>
@@ -544,8 +544,8 @@
           </section>
 
           <section id="guide-rating" class="scroll-mt-32 bg-surface-card rounded-xl shadow-level-1 border border-border-light p-space-lg mb-space-lg">
-            <h2 class="text-title-lg text-text-primary">Rating bands</h2>
-            <p class="text-body-sm text-text-muted mb-space-md">Your role index and your annual average both get a rating. Admin / HR decides where each band starts.</p>
+            <h2 class="text-title-lg text-text-primary">What the index colors mean</h2>
+            <p class="text-body-sm text-text-muted mb-space-md">Your role index and your Avg KPI Score are colored by these bands. Admin / HR decides where each band starts.</p>
             <div id="guide-bands"></div>
           </section>
 
@@ -569,11 +569,11 @@
                 </li>
                 <li class="flex items-start gap-space-sm">
                   <span class="w-9 h-9 rounded-lg bg-slate-50 ring-1 ring-slate-200/70 text-slate-600 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">science</span></span>
-                  <span class="text-body-sm text-text-secondary"><strong class="block text-text-primary">January is a trial month</strong>January scores are shown for practice but never count toward your annual average.</span>
+                  <span class="text-body-sm text-text-secondary"><strong class="block text-text-primary">January is a trial month</strong>January scores are shown for practice but never count toward your Avg KPI Score.</span>
                 </li>
                 <li class="flex items-start gap-space-sm">
                   <span class="w-9 h-9 rounded-lg bg-slate-50 ring-1 ring-slate-200/70 text-slate-600 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">monitoring</span></span>
-                  <span class="text-body-sm text-text-secondary"><strong class="block text-text-primary">Annual score</strong>The average of the counted months that have a score. Months without a submission are left out, not counted as zero.</span>
+                  <span class="text-body-sm text-text-secondary"><strong class="block text-text-primary">Avg KPI Score</strong>The average role index of the counted months that have a score. Months without a submission are left out, not counted as zero.</span>
                 </li>
               </ul>
             </section>
@@ -614,7 +614,7 @@
               </details>
               <details class="group py-3">
                 <summary class="flex items-center justify-between gap-space-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden text-body-md font-semibold text-text-primary">Why is there no score yet?<span class="material-symbols-outlined text-text-muted transition-transform duration-150 group-open:rotate-180">expand_more</span></summary>
-                <p class="mt-2 text-body-sm text-text-secondary">Scores appear after you submit. The annual average also waits for at least one counted month, and January never counts.</p>
+                <p class="mt-2 text-body-sm text-text-secondary">Scores appear after you submit. The Avg KPI Score also waits for at least one counted month, and January never counts.</p>
               </details>
               <details class="group py-3">
                 <summary class="flex items-center justify-between gap-space-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden text-body-md font-semibold text-text-primary">Can I change a submission?<span class="material-symbols-outlined text-text-muted transition-transform duration-150 group-open:rotate-180">expand_more</span></summary>
@@ -1318,15 +1318,15 @@
 <script src="./js/config.js?v=b6462838"></script>
 <script src="./js/core.js?v=1acd3b19"></script>
 <script src="./js/logo.js?v=6cd91d62"></script>
-<script src="./js/state.js?v=b6d50839"></script>
+<script src="./js/state.js?v=dc9c8430"></script>
 <script src="./js/util.js?v=058b044d"></script>
 <script src="./js/auth.js?v=946f9a75"></script>
 <script src="./js/access-year.js?v=5cb5b1e2"></script>
 <script src="./js/account-help.js?v=82aaa20c"></script>
-<script src="./js/shell.js?v=5e3f26a7"></script>
+<script src="./js/shell.js?v=784536fe"></script>
 <script src="./js/dashboard.js?v=0fe0c3b7"></script>
-<script src="./js/my-kpis.js?v=955a21c2"></script>
-<script src="./js/my-kpis-submit.js?v=eae5ffd3"></script>
+<script src="./js/my-kpis.js?v=bfaff196"></script>
+<script src="./js/my-kpis-submit.js?v=77707fa3"></script>
 <script src="./js/password-requests.js?v=77f45d5b"></script>
 <script src="./js/mapping.js?v=ca168276"></script>
 <script src="./js/mapping-workspace.js?v=26992ec7"></script>
@@ -1335,12 +1335,12 @@
 <script src="./js/master-kpis-edit.js?v=a30308a9"></script>
 <script src="./js/summary.js?v=f6d8f6c2"></script>
 <script src="./js/summary-periods.js?v=99a5a405"></script>
-<script src="./js/summary-table.js?v=a4e53719"></script>
+<script src="./js/summary-table.js?v=d7bd4b0f"></script>
 <script src="./js/annual.js?v=0772953c"></script>
-<script src="./js/perf-report.js?v=72be02e3"></script>
+<script src="./js/perf-report.js?v=427066cb"></script>
 <script src="./js/points-go.js?v=13944ad7"></script>
 <script src="./js/report-pdf.js?v=299b0594"></script>
-<script src="./js/org-report.js?v=20602f6a"></script>
+<script src="./js/org-report.js?v=b2a07f33"></script>
 <script src="./js/org-report-ui.js?v=330744b5"></script>
 <script src="./js/org-report-annual.js?v=2450f613"></script>
 <script src="./js/evaluation.js?v=7666e50b"></script>
@@ -1351,10 +1351,10 @@
 <script src="./js/compare.js?v=4d6cbc65"></script>
 <script src="./js/compare-ui.js?v=8596a9b8"></script>
 <script src="./js/compare-context.js?v=2118e075"></script>
-<script src="./js/compare-context-ui.js?v=3c3a93ef"></script>
+<script src="./js/compare-context-ui.js?v=4817be38"></script>
 <script src="./js/departments.js?v=b1d567ac"></script>
 <script src="./js/guide-admin.js?v=f58e809b"></script>
-<script src="./js/guide-reviewer.js?v=a731695c"></script>
+<script src="./js/guide-reviewer.js?v=773a1de1"></script>
 <script src="./js/main.js?v=4a4dbfcd"></script>
 </body>
 </html>
